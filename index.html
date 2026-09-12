@@ -166,6 +166,148 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   }
 }
 
+
+/* iPhone wizard: hard viewport lock — prevents any horizontal collapse/overflow */
+@media (max-width:760px){
+  html, body{
+    overflow-x:hidden!important;
+  }
+
+  #requestModal{
+    padding:0!important;
+    overflow:hidden!important;
+  }
+
+  #requestModal.on{
+    display:block!important;
+  }
+
+  #requestModal .modal{
+    position:fixed!important;
+    left:8px!important;
+    right:8px!important;
+    top:max(8px, env(safe-area-inset-top))!important;
+    bottom:max(8px, env(safe-area-inset-bottom))!important;
+    width:auto!important;
+    min-width:0!important;
+    max-width:none!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0!important;
+
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto auto minmax(0,1fr) auto!important;
+
+    overflow:hidden!important;
+    padding:14px!important;
+    border-radius:22px!important;
+  }
+
+  #requestModal .wizardTop{
+    grid-row:1!important;
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+    margin:0 0 8px!important;
+  }
+
+  #requestModal .wizardTop > div{
+    min-width:0!important;
+    max-width:calc(100% - 48px)!important;
+  }
+
+  #requestModal .wizardTop h2,
+  #requestModal .wizardTop p{
+    max-width:100%!important;
+    overflow-wrap:anywhere!important;
+  }
+
+  #requestModal .progressDots{
+    grid-row:2!important;
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+    margin:6px 0 12px!important;
+  }
+
+  #requestModal .wstep{
+    grid-row:3!important;
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding:0 2px 8px 0!important;
+  }
+
+  #requestModal .formgrid,
+  #requestModal .step2grid{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    gap:8px!important;
+  }
+
+  #requestModal .full{
+    grid-column:1!important;
+  }
+
+  #requestModal .field,
+  #requestModal .rolecard,
+  #requestModal .summaryBox,
+  #requestModal .artistPicker,
+  #requestModal .artistOption{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  #requestModal input,
+  #requestModal select,
+  #requestModal textarea{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+  }
+
+  #requestModal .rolecard{
+    overflow-wrap:anywhere!important;
+  }
+
+  #requestModal .modalactions{
+    grid-row:4!important;
+    grid-column:1!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+    gap:10px!important;
+    margin:8px 0 0!important;
+    padding:10px 0 0!important;
+    position:relative!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:auto!important;
+    background:rgba(17,25,29,.98)!important;
+    border-top:1px solid rgba(255,255,255,.07)!important;
+  }
+
+  #requestModal .modalactions .btn{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    margin:0!important;
+    white-space:nowrap!important;
+  }
+}
+
 </style>
 </head>
 <body>
