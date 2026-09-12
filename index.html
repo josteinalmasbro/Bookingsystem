@@ -1,40 +1,332 @@
 <!doctype html>
 <html lang="no">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Bookingsystem</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080c0f;color:#f6f7f8;font-family:system-ui,-apple-system,sans-serif}.wrap{max-width:1100px;margin:auto;padding:18px}.top{display:flex;align-items:center;gap:13px;padding:12px 0 18px}.logo{background:#e9c866;color:#111;font-weight:900;padding:13px;border-radius:13px}.muted{color:#94a0a8}.gold{color:#e9c866}.searchwrap{position:relative}.search{width:100%;padding:15px 18px;border-radius:14px;border:1px solid #334149;background:#11191e;color:white;font-size:16px}.results{position:absolute;left:0;right:0;background:#11191e;border:1px solid #35444d;border-radius:12px;z-index:5;display:none}.result{padding:12px;border-top:1px solid #263139;cursor:pointer}.hero{padding:24px 0}.eyebrow{color:#e9c866;font-weight:900;letter-spacing:.15em;font-size:12px}.hero h1{font-size:42px;margin:8px 0}.btn{border:1px solid #35444d;background:#11191e;color:#fff;border-radius:12px;padding:12px 16px;font-weight:800;cursor:pointer}.primary{background:#e9c866;color:#151515;border-color:#e9c866}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{background:#10171b;border:1px solid #2d3a42;border-radius:18px;padding:20px;margin:14px 0}.stat b{display:block;font-size:31px}.event{display:grid;grid-template-columns:62px 1fr auto;gap:15px;align-items:center;border-top:1px solid #253039;padding:17px 0;cursor:pointer}.date{border:1px solid #40505a;border-radius:13px;text-align:center;padding:8px}.date b{font-size:24px;display:block}.artist{color:#e9c866;font-weight:800;margin-top:3px}.pill{padding:7px 10px;border-radius:999px;background:#432023;color:#ff9a9f;font-weight:800;font-size:12px}.tabs{display:flex;gap:7px;overflow:auto;margin:12px 0}.tab{white-space:nowrap}.tab.on{background:#e9c866;color:#111}.panel{display:none}.panel.on{display:block}.row{padding:13px 0;border-top:1px solid #253039}.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:9}.modal.on{display:flex}.box{width:min(520px,100%);background:#11191e;border:1px solid #35444d;border-radius:18px;padding:20px}.field{margin:12px 0}.field label{display:block;color:#9aa6ad;font-size:13px;margin-bottom:5px}.field input,.field select{width:100%;padding:12px;border-radius:10px;border:1px solid #35444d;background:#080d10;color:#fff}.actions{display:flex;gap:9px;flex-wrap:wrap}@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.hero h1{font-size:34px}.event{grid-template-columns:55px 1fr}.event .pill{grid-column:2}}
-</style></head><body>
-<div class="wrap">
-<div class="top"><div class="logo">BK</div><div><b>BOOKINGBYRÅ</b><div class="muted">OPERATIV</div></div></div>
-<div class="searchwrap"><input id="search" class="search" placeholder="Søk artist, arrangør, kontaktperson, lydfirma, venue, sjåfør …"><div id="results" class="results"></div></div>
-<section class="hero"><div class="eyebrow">BOOKINGBYRÅETS KONTROLLROM</div><h1>God kveld.</h1><p class="muted">Alle bookinger, personer og alt som må være på plass før show — samlet i én arbeidsflate.</p><button class="btn primary" onclick="openNew()">+ Nytt arrangement</button></section>
-<div class="stats"><div class="card stat"><span class="muted">Kommende</span><b id="count">3</b><span class="gold">Neste 60 dager</span></div><div class="card stat"><span class="muted">Krever handling</span><b>2</b><span style="color:#ff858c">2 kritiske</span></div><div class="card stat"><span class="muted">Artister ute i dag</span><b>4</b><span style="color:#6bd7ae">Alle bekreftet</span></div><div class="card stat"><span class="muted">Bookingverdi</span><b>1,42m</b><span class="gold">NOK denne måneden</span></div></div>
-<div class="card"><h2>Krever oppmerksomhet</h2><p class="muted">Systemet samler alt som kan stoppe gjennomføringen.</p><div class="row"><b>Nordic Tech Festival</b><div class="artist">Hollywood Scandal</div><div class="muted">18. sep · København · Passinfo mangler fra 1 bandmedlem</div></div><div class="row"><b>Jubileumsfest</b><div class="artist">Neon Avenue</div><div class="muted">19. sep · Trondheim · Teknisk produksjon har ikke bekreftet monitorløsning</div></div></div>
-<div class="card"><h2>Kommende arrangement</h2><div id="events"></div></div>
-<div id="workspace" class="card" style="display:none"><button class="btn" onclick="closeEvent()">← Tilbake</button><div id="eventHead"></div><div class="tabs"><button class="btn tab on" data-p="overview">Oversikt</button><button class="btn tab" data-p="people">Personer</button><button class="btn tab" data-p="schedule">Kjøreplan</button><button class="btn tab" data-p="tech">Teknikk</button><button class="btn tab" data-p="travel">Reise</button></div>
-<div id="overview" class="panel on"><div class="row"><b>Status</b><div class="muted">Alt rundt arrangementet samles her.</div></div></div>
-<div id="people" class="panel"><button class="btn primary" onclick="openInvite()">+ Inviter person</button><div class="row"><b>Anne Larsen</b><div class="muted">Arrangør · Bekreftet</div></div><div id="inviteList"></div></div>
-<div id="schedule" class="panel"><div class="row"><b>15:00</b> · Load-in</div><div class="row"><b>17:00</b> · Soundcheck</div><div class="row"><b>21:00</b> · Show</div></div>
-<div id="tech" class="panel"><div class="row"><b>Monitor</b><div class="muted">Venter bekreftelse fra produksjon</div></div><div class="row"><b>Backline</b><div class="muted">Rider mottatt</div></div></div>
-<div id="travel" class="panel"><div class="row"><b>Hotell</b><div class="muted">Scandic Copenhagen · Bekreftet</div></div><div class="row"><b>Transport</b><div class="muted">Flydetaljer mangler</div></div></div></div>
+:root{
+  --bg:#080b0d;--panel:#10171b;--panel2:#141d22;--line:#2b3840;
+  --text:#f7f8f8;--muted:#95a2aa;--gold:#e7c86a;--green:#68d7a6;
+  --yellow:#f0c867;--red:#ff8189;--blue:#86bfff;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh}
+.top{position:sticky;top:0;z-index:50;background:rgba(8,11,13,.96);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.topin{max-width:1320px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900}.logo{width:40px;height:40px;border-radius:12px;background:var(--gold);color:#171717;display:grid;place-items:center}
+.user{display:flex;align-items:center;gap:9px;color:var(--muted)}.avatar{width:36px;height:36px;border-radius:50%;background:#26323a;display:grid;place-items:center;color:white;font-weight:900}
+.mobileNav{display:none}
+.layout{max-width:1320px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr)}
+aside{border-right:1px solid var(--line);padding:22px 14px;min-height:calc(100vh - 65px);position:sticky;top:65px;align-self:start}
+.group{font-size:.7rem;color:#6d7a82;text-transform:uppercase;letter-spacing:.15em;margin:5px 10px 9px}
+.nav{display:flex;align-items:center;gap:10px;color:#aeb7bc;text-decoration:none;padding:11px 12px;border-radius:10px;margin:3px 0}
+.nav.on{background:var(--panel2);color:white;border:1px solid #314049}
+.count{margin-left:auto;border-radius:99px;background:#312916;color:#f1d57e;padding:3px 7px;font-size:.7rem;font-weight:900}
+main{padding:24px 28px 80px;min-width:0}
+.view{display:none}.view.on{display:block}
+.searchwrap{position:relative;margin-bottom:20px}
+.search{width:100%;background:#0e1519;border:1px solid #35444d;color:white;border-radius:14px;padding:14px 16px 14px 44px;outline:none}
+.search:focus{border-color:#7a6634;box-shadow:0 0 0 3px rgba(231,200,106,.08)}
+.searchicon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#8e9aa1}
+.results{display:none;position:absolute;left:0;right:0;top:54px;z-index:60;background:#11191d;border:1px solid #34434b;border-radius:14px;box-shadow:0 24px 70px #000a;overflow:hidden}
+.results.on{display:block}
+.result{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;padding:12px;border-top:1px solid #222d33;cursor:pointer}.result:first-child{border-top:0}.result:hover{background:#172026}
+.ricon{width:38px;height:38px;border-radius:10px;background:#243038;display:grid;place-items:center;font-size:.75rem;font-weight:900}.rtype{font-size:.67rem;color:#75828a;text-transform:uppercase;letter-spacing:.08em}.rmeta{font-size:.76rem;color:#9ca8ae}
+.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:900}
+h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1;margin:8px 0 10px}.lead{color:var(--muted);max-width:760px;line-height:1.55}
+.headrow{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.actions{display:flex;gap:9px;flex-wrap:wrap}
+.btn{border:1px solid #334149;background:#11191d;color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}
+.btn.primary{background:var(--gold);border-color:var(--gold);color:#151515}
+.btn.danger{border-color:#5b2b31;color:#ff9ba1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.card{background:linear-gradient(180deg,#11191d,#0e1418);border:1px solid var(--line);border-radius:17px;padding:18px}
+.stat span{color:var(--muted);font-size:.8rem}.stat strong{display:block;font-size:1.7rem;margin:5px 0}
+.green{color:var(--green)!important}.yellow{color:var(--yellow)!important}.red{color:var(--red)!important}.blue{color:var(--blue)!important}.gold{color:var(--gold)!important}
+.grid2{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}.sub{color:var(--muted);font-size:.86rem;margin-top:3px}
+.todo{display:flex;gap:10px;padding:12px 0;border-top:1px solid #202b31;cursor:pointer}.todo:first-of-type{border-top:0}.dot{width:10px;height:10px;border-radius:50%;margin-top:7px;background:var(--yellow)}.dot.red{background:var(--red)}.dot.green{background:var(--green)}
+.attentionArtist{color:var(--gold);font-weight:800;margin-top:2px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}
+.eventlist{display:flex;flex-direction:column;gap:9px}.eventrow{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;background:#0c1215;border:1px solid #263139;border-radius:13px;padding:13px;cursor:pointer}
+.datebox{border:1px solid #3a4851;border-radius:11px;text-align:center;padding:8px 5px}.datebox b{display:block;font-size:1.2rem}.datebox small{color:var(--muted)}
+.eventTitle{font-weight:900;font-size:1.05rem}.artistTitle{color:var(--gold);font-weight:800;margin-top:3px}.meta{color:var(--muted);font-size:.8rem;margin-top:4px}
+.badge{display:inline-block;border-radius:99px;padding:5px 8px;font-size:.68rem;font-weight:900}.bg-red{background:#3b1c20;color:#ff9ca2}.bg-yellow{background:#392f16;color:#f0d379}.bg-green{background:#123427;color:#7ce0ad}.bg-blue{background:#172b40;color:#99c9ff}
+.calendarHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.dow{text-align:center;color:#77858d;font-size:.72rem;padding:3px}.day{min-height:88px;border:1px solid #222d33;border-radius:11px;padding:7px;background:#0a0f12}.day .num{font-size:.75rem;color:#8c989f}.day.has{background:#151208;border-color:#5b4d28}.calEvent{margin-top:7px;background:#2d2513;color:#f2d98b;padding:5px;border-radius:7px;font-size:.66rem;font-weight:800;line-height:1.25}
+.artistgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.artistcard{background:#0c1215;border:1px solid #263139;border-radius:14px;padding:15px;cursor:pointer}.artistcard h3{margin:0 0 4px}.progress{height:7px;background:#1d272d;border-radius:99px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:var(--gold)}
+.workspace{display:none;margin-top:18px}.workspace.on{display:block}.workspaceTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.tabs{display:flex;gap:7px;overflow:auto;margin:16px 0}.tab{white-space:nowrap;border-radius:999px}.tab.on{background:var(--gold);color:#111;border-color:var(--gold)}
+.panel{display:none}.panel.on{display:block}.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.rolecard{background:#0b1114;border:1px solid #263139;border-radius:12px;padding:13px}.rolecard small{color:var(--muted)}.roleline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.timeline{border-left:2px solid #2e3a41;padding-left:18px;margin-left:8px}.timeitem{margin-bottom:16px}.timeitem small{color:var(--muted)}
+.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin:0 0 12px}.field label{display:block;color:#aab5bb;font-size:.76rem;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#0a1013;color:#fff;border:1px solid #2d3940;border-radius:10px;padding:11px}.field textarea{min-height:90px}
+.modalback{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modalback.on{display:flex}.modal{width:min(540px,100%);background:#11191d;border:1px solid #37454e;border-radius:17px;padding:20px;box-shadow:0 30px 100px #000b}.modal h2{margin:0 0 6px}.modal p{color:var(--muted);font-size:.87rem}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#f2eddf;color:#111;border-radius:11px;padding:12px 16px;font-weight:900;opacity:0;transition:.2s;z-index:120;pointer-events:none}.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:980px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.artistgrid{grid-template-columns:1fr 1fr}.rolegrid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.layout{display:block}aside{display:none}.topin{padding:10px 12px}.user .words{display:none}.mobileNav{display:flex;gap:7px;overflow:auto;padding:8px 11px;border-top:1px solid var(--line)}.mobileNav button{white-space:nowrap;background:#11191d;border:1px solid #29363e;color:#aeb7bc;padding:8px 10px;border-radius:999px}.mobileNav button.on{color:#fff;border-color:#6a592e}main{padding:16px 13px 70px}.stats{grid-template-columns:1fr 1fr}.headrow{display:block}.actions{margin-top:12px}.eventrow{grid-template-columns:52px 1fr}.eventrow>.badge{grid-column:2}.artistgrid,.rolegrid,.profilegrid{grid-template-columns:1fr}.day{min-height:70px;padding:5px}.cal{gap:4px}.calEvent{font-size:.58rem;padding:4px}.workspaceTop{display:block}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="topin">
+    <div class="brand"><div class="logo">BK</div><div>BOOKINGSYSTEM <span style="color:#66747c;font-weight:600">/ OPERATIV</span></div></div>
+    <div class="user"><div class="words"><strong style="color:white">Demo Agency</strong><br><small>Bookingadministrator</small></div><div class="avatar">DA</div></div>
+  </div>
+  <div class="mobileNav">
+    <button class="on" data-view="dashboard">Oversikt</button>
+    <button data-view="calendar">Kalender</button>
+    <button data-view="events">Arrangement</button>
+    <button data-view="artists">Artister</button>
+  </div>
+</header>
+
+<div class="layout">
+<aside>
+  <div class="group">Arbeidsflate</div>
+  <a class="nav on" href="#" data-view="dashboard">▦ Oversikt</a>
+  <a class="nav" href="#" data-view="calendar">□ Kalender</a>
+  <a class="nav" href="#" data-view="events">◉ Arrangement <span class="count" id="navEventCount">3</span></a>
+  <a class="nav" href="#" data-view="artists">★ Artister</a>
+  <div class="group" style="margin-top:22px">System</div>
+  <a class="nav" href="#" onclick="toast('Innstillinger kommer i neste steg');return false">⚙ Innstillinger</a>
+</aside>
+
+<main>
+  <div class="searchwrap">
+    <span class="searchicon">⌕</span>
+    <input id="globalSearch" class="search" type="search" autocomplete="off" placeholder="Søk artist, arrangør, kontaktperson, lydfirma, venue, tourmanager, sjåfør eller arrangement …">
+    <div id="searchResults" class="results"></div>
+  </div>
+
+  <section id="dashboard" class="view on">
+    <div class="headrow">
+      <div><div class="eyebrow">Bookingbyråets kontrollrom</div><h1>God kveld.</h1><div class="lead">Alle bookinger, alle personer og alt som må være på plass før show — samlet i én arbeidsflate.</div></div>
+      <div class="actions"><button class="btn primary" onclick="openNewEvent()">+ Nytt arrangement</button></div>
+    </div>
+
+    <div class="stats">
+      <div class="card stat"><span>Kommende arrangement</span><strong id="statEvents">3</strong><span class="blue">Neste 60 dager</span></div>
+      <div class="card stat"><span>Krever handling</span><strong>2</strong><span class="red">2 kritiske</span></div>
+      <div class="card stat"><span>Artister ute i dag</span><strong>4</strong><span class="green">Alle bekreftet</span></div>
+      <div class="card stat"><span>Bookingverdi</span><strong>1,42m</strong><span class="gold">NOK denne måneden</span></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="calendarHead"><div><h2 style="margin:0">Arrangementskalender</h2><div class="sub">Alle arrangement hvor byrået har artister inne.</div></div><button class="btn" onclick="showView('calendar')">Åpne kalender</button></div>
+        <div id="miniCalendar" class="cal"></div>
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0">Krever oppmerksomhet</h2>
+        <div class="sub">Systemet samler alt som kan stoppe gjennomføringen.</div>
+        <div class="todo" onclick="openEvent(0)"><div class="dot red"></div><div><b>Nordic Tech Festival</b><div class="attentionArtist">Hollywood Scandal</div><div class="meta">18. sep · København · Passinfo mangler fra 1 bandmedlem</div></div></div>
+        <div class="todo" onclick="openEvent(1)"><div class="dot red"></div><div><b>Jubileumsfest</b><div class="attentionArtist">Neon Avenue</div><div class="meta">19. sep · Trondheim · Monitorløsning ikke bekreftet</div></div></div>
+        <div class="todo"><div class="dot green"></div><div><b>Høstkonferansen</b><div class="attentionArtist">Neon Avenue</div><div class="meta">12. okt · Stavanger · Alt klart</div></div></div>
+      </div>
+    </div>
+
+    <div class="sectionTitle"><h2 style="margin:0">Kommende arrangement</h2><button class="btn" onclick="showView('events')">Se alle</button></div>
+    <div id="dashboardEvents" class="eventlist"></div>
+  </section>
+
+  <section id="calendar" class="view">
+    <div class="headrow"><div><div class="eyebrow">Masterkalender</div><h1>Alle jobber.</h1><div class="lead">Én kalender for hele bookingbyrået. Filtrering på artist, by og status kommer etter hvert.</div></div></div>
+    <div class="card"><div class="calendarHead"><h2 style="margin:0">September 2026</h2><button class="btn" onclick="toast('Månedsvelger kommer')">September 2026 ▾</button></div><div id="fullCalendar" class="cal"></div></div>
+  </section>
+
+  <section id="events" class="view">
+    <div class="headrow"><div><div class="eyebrow">Arrangement</div><h1>Alle arrangement.</h1><div class="lead">Åpne en jobb og bruk arrangementet som kontrollrom for alt rundt gjennomføringen.</div></div><div class="actions"><button class="btn primary" onclick="openNewEvent()">+ Nytt arrangement</button></div></div>
+    <div id="allEvents" class="eventlist" style="margin-top:18px"></div>
+  </section>
+
+  <section id="artists" class="view">
+    <div class="headrow"><div><div class="eyebrow">Artiststall</div><h1>Artistene.</h1><div class="lead">Artistprofilene brukes direkte i arrangementene: medlemmer, tilgjengelighet, allergier, monitor, backline og vikarer.</div></div></div>
+    <div id="artistGrid" class="artistgrid" style="margin-top:18px"></div>
+  </section>
+
+  <section id="workspace" class="workspace card">
+    <div class="workspaceTop"><div><div class="eyebrow">Arrangement</div><h2 id="wsEvent" style="font-size:1.7rem;margin:6px 0 2px"></h2><div id="wsArtist" class="artistTitle" style="font-size:1.1rem"></div><div id="wsMeta" class="sub"></div></div><span id="wsStatus" class="badge bg-red">IKKE KLAR</span></div>
+    <div class="tabs">
+      <button class="btn tab on" data-tab="overview">Oversikt</button>
+      <button class="btn tab" data-tab="people">Personer & roller</button>
+      <button class="btn tab" data-tab="schedule">Tidsplan</button>
+      <button class="btn tab" data-tab="tech">Teknikk</button>
+      <button class="btn tab" data-tab="travel">Reise & hotell</button>
+      <button class="btn tab" data-tab="artistdata">Artistdata</button>
+    </div>
+    <div id="overview" class="panel on"></div>
+    <div id="people" class="panel"></div>
+    <div id="schedule" class="panel"></div>
+    <div id="tech" class="panel"></div>
+    <div id="travel" class="panel"></div>
+    <div id="artistdata" class="panel"></div>
+  </section>
+</main>
 </div>
-<div id="newModal" class="modal"><div class="box"><h2>Nytt arrangement</h2><div class="field"><label>Arrangement</label><input id="nName"></div><div class="field"><label>Artist</label><input id="nArtist"></div><div class="field"><label>Dato</label><input id="nDate" type="date"></div><div class="field"><label>By</label><input id="nCity"></div><div class="actions"><button class="btn" onclick="closeNew()">Avbryt</button><button class="btn primary" onclick="createEvent()">Opprett</button></div></div></div>
-<div id="inviteModal" class="modal"><div class="box"><h2>Inviter til arrangement</h2><div class="field"><label>Rolle</label><select id="iRole"><option>Arrangør</option><option>Kontaktperson</option><option>Teknisk produksjon</option><option>Tourmanager</option><option>Sjåfør</option><option>Artist / band</option></select></div><div class="field"><label>Navn / firma</label><input id="iName"></div><div class="field"><label>E-post</label><input id="iEmail"></div><div class="actions"><button class="btn" onclick="closeInvite()">Avbryt</button><button class="btn primary" onclick="invite()">Send invitasjon</button></div></div></div>
+</div>
+
+<div class="modalback" id="eventModal">
+  <div class="modal">
+    <h2>Nytt arrangement</h2>
+    <p>Opprett jobben først. Invitasjoner legges deretter inne på arrangementet.</p>
+    <div class="profilegrid">
+      <div class="field" style="grid-column:1/-1"><label>Arrangement</label><input id="evName" placeholder="F.eks. Sommerfest 2027"></div>
+      <div class="field"><label>Artist</label><select id="evArtist"></select></div>
+      <div class="field"><label>Dato</label><input id="evDate" type="date"></div>
+      <div class="field"><label>By</label><input id="evCity" placeholder="Trondheim"></div>
+      <div class="field"><label>Venue</label><input id="evVenue" placeholder="Venue / hotell"></div>
+    </div>
+    <div class="modalactions"><button class="btn" onclick="closeNewEvent()">Avbryt</button><button class="btn primary" onclick="createEvent()">Opprett arrangement</button></div>
+  </div>
+</div>
+
+<div class="modalback" id="inviteModal">
+  <div class="modal">
+    <h2>Inviter til arrangement</h2>
+    <p id="inviteContext"></p>
+    <div class="field"><label>Rolle</label><select id="inviteRole"><option>Arrangør</option><option>Kontaktperson</option><option>Teknisk produksjon</option><option>Tourmanager</option><option>Sjåfør</option><option>Artist / band</option><option>Annet</option></select></div>
+    <div class="field"><label>Navn / firma</label><input id="inviteName"></div>
+    <div class="field"><label>E-post</label><input id="inviteEmail"></div>
+    <div class="field"><label>Mobil</label><input id="invitePhone"></div>
+    <div class="modalactions"><button class="btn" onclick="closeInvite()">Avbryt</button><button class="btn primary" onclick="sendInvite()">Send invitasjon</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-const defaults=[{name:'Nordic Tech Festival',artist:'Hollywood Scandal',date:'18 SEP',city:'København',status:'2 MANGLER'},{name:'Jubileumsfest',artist:'Neon Avenue',date:'19 SEP',city:'Trondheim',status:'TEKNIKK'},{name:'Bryllup',artist:'Acoustic Duo',date:'26 SEP',city:'Ålesund',status:'SJÅFØR'}];
-let events=JSON.parse(localStorage.getItem('bk-events')||'null')||defaults,current=0;
-function save(){localStorage.setItem('bk-events',JSON.stringify(events))}
-function render(){count.textContent=events.length;document.getElementById('events').innerHTML=events.map((e,i)=>`<div class="event" onclick="openEvent(${i})"><div class="date"><b>${e.date.split(' ')[0]}</b><small>${e.date.split(' ')[1]||''}</small></div><div><b>${e.name}</b><div class="artist">${e.artist}</div><div class="muted">${e.city}</div></div><span class="pill">${e.status||'NY'}</span></div>`).join('')}
-function openEvent(i){current=i;let e=events[i];eventHead.innerHTML=`<h1>${e.name}</h1><h2 class="gold">${e.artist}</h2><p class="muted">${e.date} · ${e.city}</p>`;workspace.style.display='block';workspace.scrollIntoView({behavior:'smooth'})}
-function closeEvent(){workspace.style.display='none'}
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById(b.dataset.p).classList.add('on')});
-function openNew(){newModal.classList.add('on')}function closeNew(){newModal.classList.remove('on')}
-function createEvent(){if(!nName.value||!nArtist.value||!nDate.value)return alert('Fyll inn arrangement, artist og dato');let d=new Date(nDate.value+'T12:00:00'),m=['JAN','FEB','MAR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DES'][d.getMonth()];events.unshift({name:nName.value,artist:nArtist.value,date:d.getDate()+' '+m,city:nCity.value||'Sted ikke satt',status:'NY'});save();render();closeNew();nName.value=nArtist.value=nDate.value=nCity.value=''}
-function openInvite(){inviteModal.classList.add('on')}function closeInvite(){inviteModal.classList.remove('on')}
-function invite(){if(!iName.value)return alert('Legg inn navn eller firma');inviteList.innerHTML+=`<div class="row"><b>${iName.value}</b><div class="muted">${iRole.value} · Invitasjon sendt</div></div>`;closeInvite();iName.value=iEmail.value=''}
-const fixed=[['Artist','Hollywood Scandal'],['Artist','Neon Avenue'],['Arrangør','Nordic Events AS'],['Kontaktperson','Anne Larsen'],['Teknisk produksjon','StageWorks DK'],['Venue','Bella Center'],['Tourmanager','Marius Berg'],['Sjåfør','Thomas Dahl']];
-search.oninput=()=>{let q=search.value.toLowerCase().trim();if(!q){results.style.display='none';return}let data=fixed.concat(events.map(e=>['Arrangement',e.name+' — '+e.artist+' — '+e.city])),hits=data.filter(x=>x.join(' ').toLowerCase().includes(q));results.innerHTML=hits.length?hits.map(x=>`<div class="result"><small class="gold">${x[0]}</small><br><b>${x[1]}</b></div>`).join(''):'<div class="result muted">Ingen treff</div>';results.style.display='block'};
-document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))results.style.display='none'});render();
-</script></body></html>
+const KEY='booking-system-v2';
+const artists=[
+ {id:'hs',name:'Hollywood Scandal',genre:'Rock / party',members:5,profile:92,monitor:'In-ear / wedge',allergies:'1 medlem med nøtteallergi',backline:'Egen gitar/pedalboard · lokal backline etter godkjenning'},
+ {id:'na',name:'Neon Avenue',genre:'Pop / rock',members:6,profile:86,monitor:'In-ear',allergies:'Ingen registrerte',backline:'Krever lokal trommerigg og bassamp'},
+ {id:'ad',name:'Acoustic Duo',genre:'Akustisk',members:2,profile:100,monitor:'Wedge',allergies:'Laktosefri catering',backline:'Tar med alt selv'}
+];
+const defaults=[
+ {id:1,name:'Nordic Tech Festival',artistId:'hs',date:'2026-09-18',city:'København',venue:'Bella Center',status:'critical',issues:['Passinfo mangler fra 1 bandmedlem','Sjåfør ikke satt'],people:[{role:'Arrangør',name:'Nordic Events AS',status:'Aktiv'},{role:'Kontaktperson',name:'Anne Larsen',status:'Aktiv'},{role:'Teknisk produksjon',name:'StageWorks DK',status:'Venter'},{role:'Tourmanager',name:'Marius Berg',status:'Aktiv'}]},
+ {id:2,name:'Jubileumsfest',artistId:'na',date:'2026-09-19',city:'Trondheim',venue:'Scandic Nidelven',status:'warning',issues:['Monitorløsning ikke bekreftet'],people:[{role:'Arrangør',name:'Trøndelag Event AS',status:'Aktiv'},{role:'Teknisk produksjon',name:'Midt-Norsk Lyd',status:'Venter'}]},
+ {id:3,name:'Bryllup',artistId:'ad',date:'2026-09-26',city:'Ålesund',venue:'Hotel Brosundet',status:'warning',issues:['Sjåfør ikke invitert'],people:[{role:'Arrangør',name:'Privat arrangement',status:'Aktiv'}]}
+];
+let state;
+try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!state) state={events:defaults,invites:[]};
+let currentEventId=null;
+
+const $=id=>document.getElementById(id);
+const artistBy=id=>artists.find(a=>a.id===id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove('on'),2200)}
+function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DES'];return {day:d.getDate(),mon:m[d.getMonth()]}}
+function statusBadge(e){if(e.status==='critical')return '<span class="badge bg-red">IKKE KLAR</span>';if(e.status==='warning')return '<span class="badge bg-yellow">MANGLER INFO</span>';return '<span class="badge bg-green">KLAR</span>'}
+
+function showView(id){
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
+ document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));
+ $('workspace').classList.remove('on');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();showView(n.dataset.view)}));
+
+function renderEvents(targetId){
+ $(targetId).innerHTML=state.events.map(e=>{
+   const a=artistBy(e.artistId),d=fmtDate(e.date);
+   return `<div class="eventrow" onclick="openEvent(${e.id})">
+    <div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div>
+    <div><div class="eventTitle">${esc(e.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(e.city)} · ${esc(e.venue)}</div></div>
+    ${statusBadge(e)}
+   </div>`;
+ }).join('');
+}
+function renderArtists(){
+ $('artistGrid').innerHTML=artists.map(a=>`<div class="artistcard" onclick="toast('${esc(a.name)} · ${a.members} medlemmer')">
+   <h3>${esc(a.name)}</h3><div class="artistTitle">${esc(a.genre)}</div>
+   <div class="progress"><i style="width:${a.profile}%"></i></div>
+   <div class="meta">Profil ${a.profile}% · ${a.members} medlemmer</div>
+   <div class="meta">Monitor: ${esc(a.monitor)}</div>
+ </div>`).join('');
+}
+function renderCalendar(targetId){
+ const first=new Date('2026-09-01T12:00:00'),start=(first.getDay()+6)%7,days=30;
+ let html=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join('');
+ for(let i=0;i<start;i++) html+='<div class="day"></div>';
+ for(let day=1;day<=days;day++){
+   const iso=`2026-09-${String(day).padStart(2,'0')}`,evs=state.events.filter(e=>e.date===iso);
+   html+=`<div class="day ${evs.length?'has':''}"><div class="num">${day}</div>${evs.map(e=>`<div class="calEvent" onclick="openEvent(${e.id});event.stopPropagation()">${esc(e.name)}<br>${esc(artistBy(e.artistId).name)}</div>`).join('')}</div>`;
+ }
+ $(targetId).innerHTML=html;
+}
+function renderAll(){
+ $('statEvents').textContent=state.events.length;$('navEventCount').textContent=state.events.length;
+ renderEvents('dashboardEvents');renderEvents('allEvents');renderArtists();renderCalendar('miniCalendar');renderCalendar('fullCalendar');
+ $('evArtist').innerHTML=artists.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+}
+
+function openEvent(id){
+ currentEventId=id;const e=state.events.find(x=>x.id===id),a=artistBy(e.artistId);if(!e)return;
+ $('wsEvent').textContent=e.name;$('wsArtist').textContent=a.name;$('wsMeta').textContent=`${e.date} · ${e.city} · ${e.venue}`;
+ $('wsStatus').outerHTML=statusBadge(e).replace('<span','<span id="wsStatus"');
+ $('overview').innerHTML=`<div class="rolegrid">
+  <div class="rolecard"><b>Status</b><small><br>${e.issues.length?esc(e.issues.join(' · ')):'Alt klart'}</small></div>
+  <div class="rolecard"><b>Artist</b><small><br>${esc(a.name)} · ${a.members} medlemmer</small></div>
+  <div class="rolecard"><b>Venue</b><small><br>${esc(e.venue)} · ${esc(e.city)}</small></div>
+ </div>`;
+ $('people').innerHTML=`<button class="btn primary" onclick="openInvite()">+ Inviter person</button><div style="margin-top:12px">${e.people.map(p=>`<div class="rolecard" style="margin-bottom:8px"><b>${esc(p.role)}</b><small><br>${esc(p.name)}</small><div class="roleline"><span class="badge ${p.status==='Aktiv'?'bg-green':'bg-yellow'}">${esc(p.status.toUpperCase())}</span></div></div>`).join('')}</div>`;
+ $('schedule').innerHTML=`<div class="timeline"><div class="timeitem"><b>12:00 · Ankomst venue</b><small>Band + tourmanager</small></div><div class="timeitem"><b>13:00 · Load-in</b><small>Produksjon + crew</small></div><div class="timeitem"><b>15:00 · Soundcheck</b><small>Teknisk må være avklart før dette</small></div><div class="timeitem"><b>18:00 · Middag</b><small>Catering / backstage</small></div><div class="timeitem"><b>21:30 · Show</b><small>Artist på scenen</small></div></div>`;
+ $('tech').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Monitor</b><small><br>${esc(a.monitor)}</small></div><div class="rolecard"><b>Backline</b><small><br>${esc(a.backline)}</small></div><div class="rolecard"><b>Produksjonsstatus</b><small><br>${e.issues.some(i=>i.toLowerCase().includes('monitor'))?'Monitor må bekreftes':'Ingen kritiske tekniske mangler registrert'}</small></div></div>`;
+ $('travel').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Transport</b><small><br>${e.city==='København'?'Fly + lokal transport':'Bil / lokal transport'}</small></div><div class="rolecard"><b>Hotell</b><small><br>${e.city==='København'?'Hotell må knyttes til bookingen':'Ikke registrert ennå'}</small></div><div class="rolecard"><b>Dokumentkrav</b><small><br>${e.city==='København'?'Passinfo kreves':'Ingen ekstra dokumentkrav'}</small></div></div>`;
+ $('artistdata').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Allergier</b><small><br>${esc(a.allergies)}</small></div><div class="rolecard"><b>Monitorpreferanse</b><small><br>${esc(a.monitor)}</small></div><div class="rolecard"><b>Backline</b><small><br>${esc(a.backline)}</small></div></div>`;
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('.tab[data-tab="overview"]').classList.add('on');
+ document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));$('overview').classList.add('on');
+ $('workspace').classList.add('on');setTimeout(()=>$('workspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on')}));
+
+function openNewEvent(){$('eventModal').classList.add('on')}function closeNewEvent(){$('eventModal').classList.remove('on')}
+function createEvent(){
+ const name=$('evName').value.trim(),artistId=$('evArtist').value,date=$('evDate').value,city=$('evCity').value.trim(),venue=$('evVenue').value.trim();
+ if(!name||!date){toast('Fyll inn arrangement og dato');return}
+ state.events.push({id:Date.now(),name,artistId,date,city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',status:'warning',issues:['Nytt arrangement – detaljer må fylles ut'],people:[]});
+ save();renderAll();closeNewEvent();['evName','evDate','evCity','evVenue'].forEach(id=>$(id).value='');toast('✓ Arrangement opprettet');showView('events');
+}
+function openInvite(){
+ const e=state.events.find(x=>x.id===currentEventId);$('inviteContext').textContent=e?`Invitasjonen knyttes til ${e.name}.`:'Invitasjonen knyttes til valgt arrangement.';$('inviteModal').classList.add('on');
+}
+function closeInvite(){$('inviteModal').classList.remove('on')}
+function sendInvite(){
+ const e=state.events.find(x=>x.id===currentEventId),name=$('inviteName').value.trim(),role=$('inviteRole').value;
+ if(!e||!name){toast('Legg inn navn eller firma');return}
+ e.people.push({role,name,status:'Invitert'});state.invites.push({eventId:e.id,role,name,email:$('inviteEmail').value,phone:$('invitePhone').value});
+ save();closeInvite();['inviteName','inviteEmail','invitePhone'].forEach(id=>$(id).value='');openEvent(e.id);toast('✓ Invitasjon lagt til arrangementet');
+}
+document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
+
+function searchData(){
+ const fixed=[
+  {type:'Arrangør',name:'Nordic Events AS',meta:'København',icon:'NE'},
+  {type:'Kontaktperson',name:'Anne Larsen',meta:'Nordic Events AS',icon:'AL'},
+  {type:'Teknisk produksjon',name:'StageWorks DK',meta:'Nordic Tech Festival',icon:'SW'},
+  {type:'Venue',name:'Bella Center',meta:'København',icon:'BC'},
+  {type:'Tourmanager',name:'Marius Berg',meta:'Hollywood Scandal',icon:'MB'},
+  {type:'Sjåfør',name:'Thomas Dahl',meta:'2 kommende oppdrag',icon:'TD'}
+ ];
+ return fixed
+  .concat(artists.map(a=>({type:'Artist',name:a.name,meta:`${a.members} medlemmer · ${a.genre}`,icon:a.name.split(' ').map(x=>x[0]).join('').slice(0,2)})))
+  .concat(state.events.map(e=>({type:'Arrangement',name:e.name,meta:`${artistBy(e.artistId).name} · ${e.city} · ${e.venue}`,icon:'EV',eventId:e.id})));
+}
+const search=$('globalSearch'),resultBox=$('searchResults');
+function renderSearch(q){
+ q=q.trim().toLowerCase();if(!q){resultBox.classList.remove('on');resultBox.innerHTML='';return}
+ const hits=searchData().filter(x=>(x.type+' '+x.name+' '+x.meta).toLowerCase().includes(q)).slice(0,10);
+ resultBox.innerHTML=hits.length?hits.map((x,i)=>`<div class="result" data-i="${i}"><div class="ricon">${esc(x.icon)}</div><div><div class="rtype">${esc(x.type)}</div><b>${esc(x.name)}</b><div class="rmeta">${esc(x.meta)}</div></div><span>→</span></div>`).join(''):`<div style="padding:16px;color:var(--muted)">Ingen treff</div>`;
+ resultBox.classList.add('on');
+ resultBox.querySelectorAll('.result').forEach((el,i)=>el.onclick=()=>{const x=hits[i];resultBox.classList.remove('on');search.blur();if(x.eventId)openEvent(x.eventId);else toast(`${x.type}: ${x.name}`)});
+}
+search.addEventListener('input',e=>renderSearch(e.target.value));
+document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))resultBox.classList.remove('on')});
+
+renderAll();
+</script>
+</body>
+</html>
