@@ -148,6 +148,24 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   }
 }
 
+
+@media(max-width:760px){
+  #requestModal .modal{
+    width:calc(100vw - 16px)!important;
+    max-width:calc(100vw - 16px)!important;
+    margin:0 auto!important;
+  }
+  #requestModal .modalactions{
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+  }
+  #requestModal .modalactions .btn{
+    max-width:48%;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -286,7 +304,6 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
     <div class="field compactField"><label>By</label><input id="rqCity" placeholder="Trondheim"></div>
     <div class="field compactField"><label>Venue</label><input id="rqVenue" placeholder="Hotell / venue"></div>
    </div>
-  </div>
   </div>
 
   <div class="wstep" data-step="3">
