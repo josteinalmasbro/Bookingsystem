@@ -308,6 +308,44 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   }
 }
 
+
+.availabilityBox{
+  margin-top:10px;
+  border:1px solid #2d3940;
+  border-radius:14px;
+  padding:12px;
+  background:rgba(8,13,16,.62);
+}
+.availabilityBox.hidden{display:none}
+.availabilityHead{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+.availabilityIcon{
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;flex:0 0 28px;
+  font-size:.82rem;font-weight:900;
+}
+.availabilityBox.free{border-color:#285b45;background:rgba(17,52,39,.34)}
+.availabilityBox.free .availabilityIcon{background:#173d2e;color:#7ce0ad}
+.availabilityBox.warn{border-color:#735f2b;background:rgba(57,47,22,.34)}
+.availabilityBox.warn .availabilityIcon{background:#3a3016;color:#f0d57d}
+.availabilityBox.busy{border-color:#6d2f36;background:rgba(59,28,32,.38)}
+.availabilityBox.busy .availabilityIcon{background:#3b1c20;color:#ff9da3}
+.availabilityTitle{font-weight:900}
+.availabilityText{color:var(--muted);font-size:.78rem;margin-top:2px;line-height:1.35}
+.conflictList{margin-top:10px;border-top:1px solid rgba(255,255,255,.07)}
+.conflictItem{padding:9px 0;border-top:1px solid rgba(255,255,255,.06)}
+.conflictItem:first-child{border-top:0}
+.conflictTop{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.conflictItem b{font-size:.86rem}
+.conflictMeta{font-size:.73rem;color:var(--muted);margin-top:3px}
+@media(max-width:760px){
+  .availabilityBox{padding:10px;margin-top:8px}
+  .conflictItem{padding:8px 0}
+}
+
 </style>
 </head>
 <body>
@@ -440,7 +478,8 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   <div class="wstep" data-step="2">
    <div class="formgrid step2grid">
     <div class="field full compactField"><label>Arrangement / anledning</label><input id="rqName" placeholder="F.eks. Firmafest 2027"></div>
-    <div class="field compactField"><label>Dato</label><input id="rqDate" type="date"></div>
+    <div class="field compactField"><label>Dato</label><input id="rqDate" type="date" onchange="checkArtistAvailability()"></div>
+    <div id="artistAvailability" class="availabilityBox hidden full"></div>
     <div class="field compactField"><label>Type jobb</label><select id="rqType"><option>Firmafest</option><option>Julebord</option><option>Festival</option><option>Bryllup</option><option>Konferanse</option><option>Utland</option><option>Annet</option></select></div>
     <div class="field full compactField"><label>Foreslått honorar</label><input id="rqFee" inputmode="numeric" type="number" placeholder="45000"></div>
     <div class="field compactField"><label>By</label><input id="rqCity" placeholder="Trondheim"></div>
@@ -543,6 +582,7 @@ function openNewRequest(){
  wizardStep=1;
  selectedArtistId=selectedArtistId||artists[0].id;
  $('artistSearchInput').value='';
+ if($('rqDate')) $('rqDate').value='';
  renderArtistPicker();
  updateWizard();
  $('requestModal').classList.add('on');
@@ -554,7 +594,71 @@ function renderArtistPicker(){
  $('artistPicker').innerHTML=rows.map(a=>`<div class="artistOption ${a.id===selectedArtistId?'on':''}" onclick="selectArtist('${a.id}')"><div><b>${esc(a.name)}</b><small>${esc(a.meta||'Artist i stallen')}</small></div><div class="artistTick">${a.id===selectedArtistId?'✓':''}</div></div>`).join('');
 }
 function filterArtists(){renderArtistPicker()}
-function selectArtist(id){selectedArtistId=id;renderArtistPicker()}
+function selectArtist(id){selectedArtistId=id;renderArtistPicker();checkArtistAvailability()}
+
+function requestStageText(stage){
+  return stage==='new'?'Forespørsel':
+         stage==='offer'?'Tilbud / forhandling':
+         stage==='contract'?'Kontrakt sendt':
+         stage==='signed'?'Bekreftet jobb':'Bookingcase';
+}
+function requestStageClass(stage){
+  return stage==='signed'?'bg-red':stage==='contract'?'bg-orange':stage==='offer'?'bg-blue':'bg-yellow';
+}
+function sameDateCases(){
+  const date=$('rqDate')?.value;
+  if(!date||!selectedArtistId)return [];
+  return state.requests.filter(r=>r.artistId===selectedArtistId && r.date===date);
+}
+function checkArtistAvailability(){
+  const box=$('artistAvailability');
+  if(!box)return {blocked:false,cases:[]};
+  const date=$('rqDate')?.value;
+  const artist=artistBy(selectedArtistId);
+  if(!date||!artist){
+    box.className='availabilityBox hidden full';
+    box.innerHTML='';
+    return {blocked:false,cases:[]};
+  }
+
+  const cases=sameDateCases();
+  const confirmed=cases.filter(r=>r.stage==='signed');
+  const open=cases.filter(r=>r.stage!=='signed');
+
+  if(!cases.length){
+    box.className='availabilityBox free full';
+    box.innerHTML=`<div class="availabilityHead">
+      <div class="availabilityIcon">✓</div>
+      <div><div class="availabilityTitle">${esc(artist.name)} er ledig</div>
+      <div class="availabilityText">Ingen andre forespørsler eller bekreftede jobber er registrert denne datoen.</div></div>
+    </div>`;
+    return {blocked:false,cases};
+  }
+
+  const list=cases.map(r=>`<div class="conflictItem">
+    <div class="conflictTop"><b>${esc(r.name)}</b><span class="badge ${requestStageClass(r.stage)}">${requestStageText(r.stage).toUpperCase()}</span></div>
+    <div class="conflictMeta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee||0).toLocaleString('nb-NO')} kr</div>
+  </div>`).join('');
+
+  if(confirmed.length){
+    box.className='availabilityBox busy full';
+    box.innerHTML=`<div class="availabilityHead">
+      <div class="availabilityIcon">!</div>
+      <div><div class="availabilityTitle">${esc(artist.name)} er opptatt denne datoen</div>
+      <div class="availabilityText">Det finnes allerede en signert/bekreftet jobb. Du kan se hvilken jobb som ligger på datoen under.</div></div>
+    </div><div class="conflictList">${list}</div>`;
+    return {blocked:true,cases};
+  }
+
+  box.className='availabilityBox warn full';
+  box.innerHTML=`<div class="availabilityHead">
+    <div class="availabilityIcon">${open.length}</div>
+    <div><div class="availabilityTitle">${open.length===1?'Det finnes allerede en bookingcase':'Det finnes allerede flere bookingcases'} denne datoen</div>
+    <div class="availabilityText">Ingen er signert ennå. Det er derfor mulig å sende flere tilbud dersom bookingbyrået ønsker det.</div></div>
+  </div><div class="conflictList">${list}</div>`;
+  return {blocked:false,cases};
+}
+
 function updateWizard(){
  const titles=[
   ['Velg artist','Velg en artist fra stallen. Du kan også søke.'],
@@ -569,12 +673,15 @@ function updateWizard(){
  $('wizardHelp').textContent=titles[wizardStep-1][1];
  $('wizardBack').style.visibility=wizardStep===1?'hidden':'visible';
  $('wizardNext').textContent=wizardStep===4?'Opprett forespørsel':'Neste →';
+ if(wizardStep===2) setTimeout(checkArtistAvailability,0);
  if(wizardStep===4) renderRequestSummary();
 }
 function wizardNext(){
  if(wizardStep===1 && !selectedArtistId){toast('Velg artist først');return}
  if(wizardStep===2){
   if(!$('rqName').value.trim()||!$('rqDate').value){toast('Fyll inn arrangement og dato');return}
+  const availability=checkArtistAvailability();
+  if(availability.blocked){toast('Artisten har allerede en bekreftet jobb denne datoen');return}
  }
  if(wizardStep===3 && !$('rqOrganizer').value.trim()){toast('Fyll inn arrangør');return}
  if(wizardStep===4){createRequest();return}
@@ -594,9 +701,12 @@ function renderRequestSummary(){
 function createRequest(){
  const name=$('rqName').value.trim(),artistId=selectedArtistId,date=$('rqDate').value,organizer=$('rqOrganizer').value.trim(),contact=$('rqContact').value.trim(),city=$('rqCity').value.trim(),venue=$('rqVenue').value.trim(),fee=Number($('rqFee').value||0),type=$('rqType').value;
  if(!name||!date||!organizer){toast('Mangler nødvendig informasjon');return}
+ const availability=checkArtistAvailability();
+ if(availability.blocked){toast('Kan ikke opprette: artisten har en bekreftet jobb denne datoen');return}
  state.requests.unshift({id:Date.now(),name,artistId,date,organizer,contact:contact||'Ikke satt',city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',fee,type,stage:'new',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0});
  save();renderAll();closeNewRequest();
  ['rqName','rqDate','rqOrganizer','rqContact','rqCity','rqVenue','rqFee'].forEach(id=>$(id).value='');
+ if($('artistAvailability')){$('artistAvailability').className='availabilityBox hidden full';$('artistAvailability').innerHTML=''}
  toast('✓ Forespørsel opprettet');showView('requests');
 }
 document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
