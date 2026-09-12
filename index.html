@@ -3,329 +3,259 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bookingsystem</title>
+<title>Bookingsystem – Booking → Arrangement</title>
 <style>
 :root{
-  --bg:#080b0d;--panel:#10171b;--panel2:#141d22;--line:#2b3840;
-  --text:#f7f8f8;--muted:#95a2aa;--gold:#e7c86a;--green:#68d7a6;
-  --yellow:#f0c867;--red:#ff8189;--blue:#86bfff;
+ --bg:#080b0d;--panel:#10171b;--panel2:#151d22;--line:#2a3740;
+ --text:#f7f8f8;--muted:#96a3aa;--gold:#e7c86a;--green:#69d7a7;
+ --yellow:#efc86b;--orange:#ef9b5f;--red:#ff838b;--blue:#8ec5ff;
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.app{min-height:100vh}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
 .top{position:sticky;top:0;z-index:50;background:rgba(8,11,13,.96);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
-.topin{max-width:1320px;margin:auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:900}.logo{width:40px;height:40px;border-radius:12px;background:var(--gold);color:#171717;display:grid;place-items:center}
-.user{display:flex;align-items:center;gap:9px;color:var(--muted)}.avatar{width:36px;height:36px;border-radius:50%;background:#26323a;display:grid;place-items:center;color:white;font-weight:900}
-.mobileNav{display:none}
-.layout{max-width:1320px;margin:auto;display:grid;grid-template-columns:230px minmax(0,1fr)}
+.topin{max-width:1380px;margin:auto;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900}.logo{width:40px;height:40px;border-radius:12px;background:var(--gold);color:#151515;display:grid;place-items:center}
+.user{display:flex;align-items:center;gap:9px;color:var(--muted)}.avatar{width:36px;height:36px;border-radius:50%;background:#26323a;display:grid;place-items:center;color:#fff;font-weight:900}
+.layout{max-width:1380px;margin:auto;display:grid;grid-template-columns:238px minmax(0,1fr)}
 aside{border-right:1px solid var(--line);padding:22px 14px;min-height:calc(100vh - 65px);position:sticky;top:65px;align-self:start}
-.group{font-size:.7rem;color:#6d7a82;text-transform:uppercase;letter-spacing:.15em;margin:5px 10px 9px}
-.nav{display:flex;align-items:center;gap:10px;color:#aeb7bc;text-decoration:none;padding:11px 12px;border-radius:10px;margin:3px 0}
-.nav.on{background:var(--panel2);color:white;border:1px solid #314049}
-.count{margin-left:auto;border-radius:99px;background:#312916;color:#f1d57e;padding:3px 7px;font-size:.7rem;font-weight:900}
-main{padding:24px 28px 80px;min-width:0}
-.view{display:none}.view.on{display:block}
-.searchwrap{position:relative;margin-bottom:20px}
-.search{width:100%;background:#0e1519;border:1px solid #35444d;color:white;border-radius:14px;padding:14px 16px 14px 44px;outline:none}
-.search:focus{border-color:#7a6634;box-shadow:0 0 0 3px rgba(231,200,106,.08)}
-.searchicon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#8e9aa1}
-.results{display:none;position:absolute;left:0;right:0;top:54px;z-index:60;background:#11191d;border:1px solid #34434b;border-radius:14px;box-shadow:0 24px 70px #000a;overflow:hidden}
-.results.on{display:block}
-.result{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;padding:12px;border-top:1px solid #222d33;cursor:pointer}.result:first-child{border-top:0}.result:hover{background:#172026}
-.ricon{width:38px;height:38px;border-radius:10px;background:#243038;display:grid;place-items:center;font-size:.75rem;font-weight:900}.rtype{font-size:.67rem;color:#75828a;text-transform:uppercase;letter-spacing:.08em}.rmeta{font-size:.76rem;color:#9ca8ae}
-.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;color:var(--gold);font-weight:900}
-h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1;margin:8px 0 10px}.lead{color:var(--muted);max-width:760px;line-height:1.55}
-.headrow{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.actions{display:flex;gap:9px;flex-wrap:wrap}
-.btn{border:1px solid #334149;background:#11191d;color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}
-.btn.primary{background:var(--gold);border-color:var(--gold);color:#151515}
-.btn.danger{border-color:#5b2b31;color:#ff9ba1}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
-.card{background:linear-gradient(180deg,#11191d,#0e1418);border:1px solid var(--line);border-radius:17px;padding:18px}
-.stat span{color:var(--muted);font-size:.8rem}.stat strong{display:block;font-size:1.7rem;margin:5px 0}
-.green{color:var(--green)!important}.yellow{color:var(--yellow)!important}.red{color:var(--red)!important}.blue{color:var(--blue)!important}.gold{color:var(--gold)!important}
-.grid2{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}.sub{color:var(--muted);font-size:.86rem;margin-top:3px}
-.todo{display:flex;gap:10px;padding:12px 0;border-top:1px solid #202b31;cursor:pointer}.todo:first-of-type{border-top:0}.dot{width:10px;height:10px;border-radius:50%;margin-top:7px;background:var(--yellow)}.dot.red{background:var(--red)}.dot.green{background:var(--green)}
-.attentionArtist{color:var(--gold);font-weight:800;margin-top:2px}
-.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}
-.eventlist{display:flex;flex-direction:column;gap:9px}.eventrow{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;background:#0c1215;border:1px solid #263139;border-radius:13px;padding:13px;cursor:pointer}
+.group{font-size:.7rem;color:#6d7b83;text-transform:uppercase;letter-spacing:.15em;margin:5px 10px 9px}
+.nav{display:flex;align-items:center;gap:10px;color:#adb7bc;text-decoration:none;padding:11px 12px;border-radius:10px;margin:3px 0}
+.nav.on{background:var(--panel2);color:#fff;border:1px solid #314049}.count{margin-left:auto;background:#312915;color:#f2d47a;padding:3px 7px;border-radius:99px;font-size:.7rem;font-weight:900}
+main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:block}
+.searchwrap{position:relative;margin-bottom:20px}.search{width:100%;background:#0e1519;border:1px solid #34434c;color:#fff;border-radius:14px;padding:14px 16px 14px 44px;outline:none}
+.searchicon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#8d9aa1}.results{display:none;position:absolute;left:0;right:0;top:54px;z-index:80;background:#11191d;border:1px solid #34434c;border-radius:14px;box-shadow:0 24px 70px #000a;overflow:hidden}.results.on{display:block}
+.result{display:grid;grid-template-columns:38px 1fr auto;gap:11px;align-items:center;padding:12px;border-top:1px solid #222d33;cursor:pointer}.result:first-child{border-top:0}.result:hover{background:#162026}
+.ricon{width:38px;height:38px;border-radius:10px;background:#243038;display:grid;place-items:center;font-size:.75rem;font-weight:900}.rtype{font-size:.67rem;color:#77858d;text-transform:uppercase;letter-spacing:.08em}.rmeta{font-size:.76rem;color:#9ca8ae}
+.eyebrow{font-size:.74rem;color:var(--gold);text-transform:uppercase;letter-spacing:.15em;font-weight:900}h1{font-size:clamp(2rem,5vw,3.45rem);line-height:1;margin:8px 0 10px}.lead{color:var(--muted);max-width:820px;line-height:1.55}
+.headrow{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:1px solid #34434c;background:#11191d;color:#fff;border-radius:11px;padding:10px 13px;font-weight:800}.btn.primary{background:var(--gold);border-color:var(--gold);color:#151515}.btn.danger{border-color:#5c2b31;color:#ff9ba2}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}.card{background:linear-gradient(180deg,#11191d,#0e1418);border:1px solid var(--line);border-radius:17px;padding:18px}.stat span{color:var(--muted);font-size:.8rem}.stat strong{display:block;font-size:1.75rem;margin:5px 0}
+.gold{color:var(--gold)!important}.green{color:var(--green)!important}.yellow{color:var(--yellow)!important}.orange{color:var(--orange)!important}.red{color:var(--red)!important}.blue{color:var(--blue)!important}
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.pipe{background:#0d1316;border:1px solid #2c3941;border-radius:14px;padding:15px}.pipe strong{display:block;font-size:1.4rem;margin-top:4px}.pipe small{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.35fr .85fr;gap:14px}.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}
+.caseList,.eventList{display:flex;flex-direction:column;gap:9px}.case,.eventrow{display:grid;grid-template-columns:62px 1fr auto;gap:12px;align-items:center;background:#0c1215;border:1px solid #263139;border-radius:13px;padding:13px;cursor:pointer}
 .datebox{border:1px solid #3a4851;border-radius:11px;text-align:center;padding:8px 5px}.datebox b{display:block;font-size:1.2rem}.datebox small{color:var(--muted)}
-.eventTitle{font-weight:900;font-size:1.05rem}.artistTitle{color:var(--gold);font-weight:800;margin-top:3px}.meta{color:var(--muted);font-size:.8rem;margin-top:4px}
-.badge{display:inline-block;border-radius:99px;padding:5px 8px;font-size:.68rem;font-weight:900}.bg-red{background:#3b1c20;color:#ff9ca2}.bg-yellow{background:#392f16;color:#f0d379}.bg-green{background:#123427;color:#7ce0ad}.bg-blue{background:#172b40;color:#99c9ff}
-.calendarHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.dow{text-align:center;color:#77858d;font-size:.72rem;padding:3px}.day{min-height:88px;border:1px solid #222d33;border-radius:11px;padding:7px;background:#0a0f12}.day .num{font-size:.75rem;color:#8c989f}.day.has{background:#151208;border-color:#5b4d28}.calEvent{margin-top:7px;background:#2d2513;color:#f2d98b;padding:5px;border-radius:7px;font-size:.66rem;font-weight:800;line-height:1.25}
-.artistgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.artistcard{background:#0c1215;border:1px solid #263139;border-radius:14px;padding:15px;cursor:pointer}.artistcard h3{margin:0 0 4px}.progress{height:7px;background:#1d272d;border-radius:99px;overflow:hidden;margin:10px 0}.progress i{display:block;height:100%;background:var(--gold)}
+.caseTitle,.eventTitle{font-weight:900;font-size:1.05rem}.artistTitle{color:var(--gold);font-weight:800;margin-top:3px}.meta{color:var(--muted);font-size:.8rem;margin-top:4px}
+.badge{display:inline-block;border-radius:999px;padding:5px 8px;font-size:.68rem;font-weight:900}.bg-yellow{background:#3a3016;color:#f0d57d}.bg-orange{background:#432817;color:#f5b37e}.bg-green{background:#123427;color:#7ce0ad}.bg-red{background:#3b1c20;color:#ff9da3}.bg-blue{background:#172b40;color:#9bcaff}
+.stagebar{display:flex;gap:8px;overflow:auto;margin:16px 0}.stage{white-space:nowrap;border:1px solid #334149;border-radius:999px;padding:9px 12px;color:#aeb8bd;background:#0d1417}.stage.done{background:#102b20;color:#87e2b5;border-color:#2a6147}.stage.current{background:#2e2613;color:#f3db8d;border-color:#756330}
 .workspace{display:none;margin-top:18px}.workspace.on{display:block}.workspaceTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.tabs{display:flex;gap:7px;overflow:auto;margin:16px 0}.tab{white-space:nowrap;border-radius:999px}.tab.on{background:var(--gold);color:#111;border-color:var(--gold)}
 .panel{display:none}.panel.on{display:block}.rolegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.rolecard{background:#0b1114;border:1px solid #263139;border-radius:12px;padding:13px}.rolecard small{color:var(--muted)}.roleline{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.contract{background:#0b1114;border:1px solid #354149;border-radius:14px;padding:18px}.contract h3{margin:0 0 10px}.contractRow{display:grid;grid-template-columns:180px 1fr;gap:12px;padding:9px 0;border-top:1px solid #202b31}.contractRow:first-of-type{border-top:0}.contractRow span:first-child{color:var(--muted)}
+.signgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.signcard{background:#0c1215;border:1px solid #263139;border-radius:12px;padding:14px}.signcard b{display:block;margin-bottom:6px}
+.field{margin:0 0 12px}.field label{display:block;color:#aab5bb;font-size:.76rem;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#0a1013;color:#fff;border:1px solid #2d3940;border-radius:10px;padding:11px}.field textarea{min-height:90px}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
 .timeline{border-left:2px solid #2e3a41;padding-left:18px;margin-left:8px}.timeitem{margin-bottom:16px}.timeitem small{color:var(--muted)}
-.profilegrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin:0 0 12px}.field label{display:block;color:#aab5bb;font-size:.76rem;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#0a1013;color:#fff;border:1px solid #2d3940;border-radius:10px;padding:11px}.field textarea{min-height:90px}
-.modalback{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modalback.on{display:flex}.modal{width:min(540px,100%);background:#11191d;border:1px solid #37454e;border-radius:17px;padding:20px;box-shadow:0 30px 100px #000b}.modal h2{margin:0 0 6px}.modal p{color:var(--muted);font-size:.87rem}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.dow{text-align:center;color:#77858d;font-size:.72rem;padding:3px}.day{min-height:88px;border:1px solid #222d33;border-radius:11px;padding:7px;background:#0a0f12}.day .num{font-size:.75rem;color:#8c989f}.calItem{margin-top:6px;padding:5px;border-radius:7px;font-size:.64rem;font-weight:800;line-height:1.25}.hold{background:#392f16;color:#f0d57d}.signed{background:#123427;color:#7ce0ad}.contractSent{background:#432817;color:#f5b37e}
+.modalback{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:18px;z-index:100}.modalback.on{display:flex}.modal{width:min(560px,100%);background:#11191d;border:1px solid #37454e;border-radius:17px;padding:20px;box-shadow:0 30px 100px #000b}.modal h2{margin:0 0 6px}.modal p{color:var(--muted);font-size:.87rem}.modalactions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
 .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#f2eddf;color:#111;border-radius:11px;padding:12px 16px;font-weight:900;opacity:0;transition:.2s;z-index:120;pointer-events:none}.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:980px){.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.artistgrid{grid-template-columns:1fr 1fr}.rolegrid{grid-template-columns:1fr 1fr}}
-@media(max-width:760px){.layout{display:block}aside{display:none}.topin{padding:10px 12px}.user .words{display:none}.mobileNav{display:flex;gap:7px;overflow:auto;padding:8px 11px;border-top:1px solid var(--line)}.mobileNav button{white-space:nowrap;background:#11191d;border:1px solid #29363e;color:#aeb7bc;padding:8px 10px;border-radius:999px}.mobileNav button.on{color:#fff;border-color:#6a592e}main{padding:16px 13px 70px}.stats{grid-template-columns:1fr 1fr}.headrow{display:block}.actions{margin-top:12px}.eventrow{grid-template-columns:52px 1fr}.eventrow>.badge{grid-column:2}.artistgrid,.rolegrid,.profilegrid{grid-template-columns:1fr}.day{min-height:70px;padding:5px}.cal{gap:4px}.calEvent{font-size:.58rem;padding:4px}.workspaceTop{display:block}}
+.mobileNav{display:none}
+@media(max-width:980px){.stats,.pipeline{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.rolegrid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.layout{display:block}aside{display:none}.topin{padding:10px 12px}.user .words{display:none}.mobileNav{display:flex;gap:7px;overflow:auto;padding:8px 11px;border-top:1px solid var(--line)}.mobileNav button{white-space:nowrap;background:#11191d;border:1px solid #29363e;color:#aeb7bc;padding:8px 10px;border-radius:999px}.mobileNav button.on{color:#fff;border-color:#6a592e}main{padding:16px 13px 70px}.stats,.pipeline{grid-template-columns:1fr 1fr}.headrow{display:block}.actions{margin-top:12px}.case,.eventrow{grid-template-columns:52px 1fr}.case>.badge,.eventrow>.badge{grid-column:2}.rolegrid,.signgrid,.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.day{min-height:70px;padding:5px}.cal{gap:4px}.calItem{font-size:.57rem;padding:4px}.workspaceTop{display:block}.contractRow{grid-template-columns:1fr;gap:3px}}
 </style>
 </head>
 <body>
-<div class="app">
-<header class="top">
-  <div class="topin">
-    <div class="brand"><div class="logo">BK</div><div>BOOKINGSYSTEM <span style="color:#66747c;font-weight:600">/ OPERATIV</span></div></div>
-    <div class="user"><div class="words"><strong style="color:white">Demo Agency</strong><br><small>Bookingadministrator</small></div><div class="avatar">DA</div></div>
-  </div>
-  <div class="mobileNav">
-    <button class="on" data-view="dashboard">Oversikt</button>
-    <button data-view="calendar">Kalender</button>
-    <button data-view="events">Arrangement</button>
-    <button data-view="artists">Artister</button>
-  </div>
-</header>
+<div class="top">
+ <div class="topin">
+  <div class="brand"><div class="logo">BK</div><div>BOOKINGSYSTEM <span style="color:#66747b;font-weight:600">/ OPERATIV</span></div></div>
+  <div class="user"><div class="words"><strong style="color:#fff">Demo Agency</strong><br><small>Bookingadministrator</small></div><div class="avatar">DA</div></div>
+ </div>
+ <div class="mobileNav">
+  <button class="on" data-view="dashboard">Oversikt</button>
+  <button data-view="requests">Forespørsler</button>
+  <button data-view="calendar">Kalender</button>
+  <button data-view="events">Arrangement</button>
+ </div>
+</div>
 
 <div class="layout">
 <aside>
-  <div class="group">Arbeidsflate</div>
-  <a class="nav on" href="#" data-view="dashboard">▦ Oversikt</a>
-  <a class="nav" href="#" data-view="calendar">□ Kalender</a>
-  <a class="nav" href="#" data-view="events">◉ Arrangement <span class="count" id="navEventCount">3</span></a>
-  <a class="nav" href="#" data-view="artists">★ Artister</a>
-  <div class="group" style="margin-top:22px">System</div>
-  <a class="nav" href="#" onclick="toast('Innstillinger kommer i neste steg');return false">⚙ Innstillinger</a>
+ <div class="group">Booking</div>
+ <a href="#" class="nav on" data-view="dashboard">▦ Oversikt</a>
+ <a href="#" class="nav" data-view="requests">◉ Forespørsler <span class="count" id="requestCount">0</span></a>
+ <a href="#" class="nav" data-view="calendar">□ Kalender</a>
+ <div class="group" style="margin-top:20px">Produksjon</div>
+ <a href="#" class="nav" data-view="events">★ Bekreftede arrangement <span class="count" id="eventCount">0</span></a>
 </aside>
 
 <main>
-  <div class="searchwrap">
-    <span class="searchicon">⌕</span>
-    <input id="globalSearch" class="search" type="search" autocomplete="off" placeholder="Søk artist, arrangør, kontaktperson, lydfirma, venue, tourmanager, sjåfør eller arrangement …">
-    <div id="searchResults" class="results"></div>
+<div class="searchwrap">
+ <span class="searchicon">⌕</span>
+ <input id="globalSearch" class="search" placeholder="Søk forespørsel, artist, arrangør, kontaktperson, lydfirma, venue eller arrangement …">
+ <div id="searchResults" class="results"></div>
+</div>
+
+<section id="dashboard" class="view on">
+ <div class="headrow">
+  <div><div class="eyebrow">Bookingbyråets kontrollrom</div><h1>Fra forespørsel til show.</h1><div class="lead">Først booking og kontrakt. Deretter produksjon og gjennomføring. Ingen jobb blir et bekreftet arrangement før begge kontraktspartene har signert.</div></div>
+  <div class="actions"><button class="btn primary" onclick="openNewRequest()">+ Ny forespørsel</button></div>
+ </div>
+
+ <div class="pipeline">
+  <div class="pipe"><small>NYE / AVKLARING</small><strong id="pipeNew">0</strong><span class="yellow">Forespørsler</span></div>
+  <div class="pipe"><small>TILBUD / FORHANDLING</small><strong id="pipeOffer">0</strong><span class="blue">Bookingcases</span></div>
+  <div class="pipe"><small>KONTRAKT / SIGNERING</small><strong id="pipeContract">0</strong><span class="orange">Venter signatur</span></div>
+  <div class="pipe"><small>BEKREFTET</small><strong id="pipeSigned">0</strong><span class="green">Arrangement</span></div>
+ </div>
+
+ <div class="stats">
+  <div class="card stat"><span>Aktive bookingcases</span><strong id="statRequests">0</strong><span class="yellow">Før signering</span></div>
+  <div class="card stat"><span>Kontrakter ute</span><strong id="statContracts">0</strong><span class="orange">Sendt til signering</span></div>
+  <div class="card stat"><span>Bekreftede arrangement</span><strong id="statEvents">0</strong><span class="green">Begge signert</span></div>
+  <div class="card stat"><span>Bookingverdi</span><strong>1,42m</strong><span class="gold">NOK denne måneden</span></div>
+ </div>
+
+ <div class="grid2">
+  <div class="card"><h2 style="margin-top:0">Aktive forespørsler</h2><div class="meta">Klikk på en forespørsel for å jobbe den frem til signert kontrakt.</div><div id="dashboardRequests" class="caseList" style="margin-top:12px"></div></div>
+  <div class="card"><h2 style="margin-top:0">Neste steg</h2>
+   <div class="rolecard"><b>1. Opprett forespørsel</b><small><br>Artist, dato, arrangør, sted og rammer.</small></div>
+   <div class="rolecard" style="margin-top:8px"><b>2. Avklar og send tilbud</b><small><br>Honoraret og betingelsene forhandles.</small></div>
+   <div class="rolecard" style="margin-top:8px"><b>3. Generer kontrakt</b><small><br>Data gjenbrukes fra bookingcaset.</small></div>
+   <div class="rolecard" style="margin-top:8px"><b>4. Begge signerer</b><small><br>Byrå + arrangør. Først da opprettes arrangementet.</small></div>
   </div>
+ </div>
+</section>
 
-  <section id="dashboard" class="view on">
-    <div class="headrow">
-      <div><div class="eyebrow">Bookingbyråets kontrollrom</div><h1>God kveld.</h1><div class="lead">Alle bookinger, alle personer og alt som må være på plass før show — samlet i én arbeidsflate.</div></div>
-      <div class="actions"><button class="btn primary" onclick="openNewEvent()">+ Nytt arrangement</button></div>
-    </div>
+<section id="requests" class="view">
+ <div class="headrow"><div><div class="eyebrow">Fase 1 · Booking</div><h1>Forespørsler.</h1><div class="lead">Alt fra første henvendelse til signert kontrakt ligger her.</div></div><div class="actions"><button class="btn primary" onclick="openNewRequest()">+ Ny forespørsel</button></div></div>
+ <div id="allRequests" class="caseList" style="margin-top:18px"></div>
+</section>
 
-    <div class="stats">
-      <div class="card stat"><span>Kommende arrangement</span><strong id="statEvents">3</strong><span class="blue">Neste 60 dager</span></div>
-      <div class="card stat"><span>Krever handling</span><strong>2</strong><span class="red">2 kritiske</span></div>
-      <div class="card stat"><span>Artister ute i dag</span><strong>4</strong><span class="green">Alle bekreftet</span></div>
-      <div class="card stat"><span>Bookingverdi</span><strong>1,42m</strong><span class="gold">NOK denne måneden</span></div>
-    </div>
+<section id="calendar" class="view">
+ <div><div class="eyebrow">Masterkalender</div><h1>Hold og bekreftet.</h1><div class="lead">Gul = forespørsel/HOLD. Oransje = kontrakt sendt. Grønn = signert og bekreftet arrangement.</div></div>
+ <div class="card" style="margin-top:18px"><h2 style="margin-top:0">September 2026</h2><div id="calendarGrid" class="cal"></div></div>
+</section>
 
-    <div class="grid2">
-      <div class="card">
-        <div class="calendarHead"><div><h2 style="margin:0">Arrangementskalender</h2><div class="sub">Alle arrangement hvor byrået har artister inne.</div></div><button class="btn" onclick="showView('calendar')">Åpne kalender</button></div>
-        <div id="miniCalendar" class="cal"></div>
-      </div>
-      <div class="card">
-        <h2 style="margin-top:0">Krever oppmerksomhet</h2>
-        <div class="sub">Systemet samler alt som kan stoppe gjennomføringen.</div>
-        <div class="todo" onclick="openEvent(0)"><div class="dot red"></div><div><b>Nordic Tech Festival</b><div class="attentionArtist">Hollywood Scandal</div><div class="meta">18. sep · København · Passinfo mangler fra 1 bandmedlem</div></div></div>
-        <div class="todo" onclick="openEvent(1)"><div class="dot red"></div><div><b>Jubileumsfest</b><div class="attentionArtist">Neon Avenue</div><div class="meta">19. sep · Trondheim · Monitorløsning ikke bekreftet</div></div></div>
-        <div class="todo"><div class="dot green"></div><div><b>Høstkonferansen</b><div class="attentionArtist">Neon Avenue</div><div class="meta">12. okt · Stavanger · Alt klart</div></div></div>
-      </div>
-    </div>
+<section id="events" class="view">
+ <div><div class="eyebrow">Fase 2 · Produksjon</div><h1>Bekreftede arrangement.</h1><div class="lead">Kun jobber hvor bookingbyrå og arrangør har signert kontrakten vises her.</div></div>
+ <div id="allEvents" class="eventList" style="margin-top:18px"></div>
+</section>
 
-    <div class="sectionTitle"><h2 style="margin:0">Kommende arrangement</h2><button class="btn" onclick="showView('events')">Se alle</button></div>
-    <div id="dashboardEvents" class="eventlist"></div>
-  </section>
+<section id="bookingWorkspace" class="workspace card">
+ <div class="workspaceTop">
+  <div><div class="eyebrow">Bookingcase</div><h2 id="bwTitle" style="font-size:1.7rem;margin:6px 0 2px"></h2><div id="bwArtist" class="artistTitle"></div><div id="bwMeta" class="meta"></div></div>
+  <span id="bwStatus" class="badge bg-yellow">FORES PØRSEL</span>
+ </div>
+ <div id="stageBar" class="stagebar"></div>
+ <div class="tabs">
+  <button class="btn tab on" data-btab="caseOverview">Oversikt</button>
+  <button class="btn tab" data-btab="offer">Tilbud</button>
+  <button class="btn tab" data-btab="contract">Kontrakt</button>
+  <button class="btn tab" data-btab="signing">Signering</button>
+ </div>
+ <div id="caseOverview" class="panel on"></div>
+ <div id="offer" class="panel"></div>
+ <div id="contract" class="panel"></div>
+ <div id="signing" class="panel"></div>
+</section>
 
-  <section id="calendar" class="view">
-    <div class="headrow"><div><div class="eyebrow">Masterkalender</div><h1>Alle jobber.</h1><div class="lead">Én kalender for hele bookingbyrået. Filtrering på artist, by og status kommer etter hvert.</div></div></div>
-    <div class="card"><div class="calendarHead"><h2 style="margin:0">September 2026</h2><button class="btn" onclick="toast('Månedsvelger kommer')">September 2026 ▾</button></div><div id="fullCalendar" class="cal"></div></div>
-  </section>
+<section id="eventWorkspace" class="workspace card">
+ <div class="workspaceTop">
+  <div><div class="eyebrow">Bekreftet arrangement</div><h2 id="ewTitle" style="font-size:1.7rem;margin:6px 0 2px"></h2><div id="ewArtist" class="artistTitle"></div><div id="ewMeta" class="meta"></div></div>
+  <span class="badge bg-green">BEKREFTET</span>
+ </div>
+ <div class="tabs">
+  <button class="btn tab on" data-etab="eventOverview">Oversikt</button>
+  <button class="btn tab" data-etab="people">Personer & roller</button>
+  <button class="btn tab" data-etab="schedule">Tidsplan</button>
+  <button class="btn tab" data-etab="tech">Teknikk</button>
+  <button class="btn tab" data-etab="travel">Reise & hotell</button>
+ </div>
+ <div id="eventOverview" class="panel on"></div><div id="people" class="panel"></div><div id="schedule" class="panel"></div><div id="tech" class="panel"></div><div id="travel" class="panel"></div>
+</section>
 
-  <section id="events" class="view">
-    <div class="headrow"><div><div class="eyebrow">Arrangement</div><h1>Alle arrangement.</h1><div class="lead">Åpne en jobb og bruk arrangementet som kontrollrom for alt rundt gjennomføringen.</div></div><div class="actions"><button class="btn primary" onclick="openNewEvent()">+ Nytt arrangement</button></div></div>
-    <div id="allEvents" class="eventlist" style="margin-top:18px"></div>
-  </section>
-
-  <section id="artists" class="view">
-    <div class="headrow"><div><div class="eyebrow">Artiststall</div><h1>Artistene.</h1><div class="lead">Artistprofilene brukes direkte i arrangementene: medlemmer, tilgjengelighet, allergier, monitor, backline og vikarer.</div></div></div>
-    <div id="artistGrid" class="artistgrid" style="margin-top:18px"></div>
-  </section>
-
-  <section id="workspace" class="workspace card">
-    <div class="workspaceTop"><div><div class="eyebrow">Arrangement</div><h2 id="wsEvent" style="font-size:1.7rem;margin:6px 0 2px"></h2><div id="wsArtist" class="artistTitle" style="font-size:1.1rem"></div><div id="wsMeta" class="sub"></div></div><span id="wsStatus" class="badge bg-red">IKKE KLAR</span></div>
-    <div class="tabs">
-      <button class="btn tab on" data-tab="overview">Oversikt</button>
-      <button class="btn tab" data-tab="people">Personer & roller</button>
-      <button class="btn tab" data-tab="schedule">Tidsplan</button>
-      <button class="btn tab" data-tab="tech">Teknikk</button>
-      <button class="btn tab" data-tab="travel">Reise & hotell</button>
-      <button class="btn tab" data-tab="artistdata">Artistdata</button>
-    </div>
-    <div id="overview" class="panel on"></div>
-    <div id="people" class="panel"></div>
-    <div id="schedule" class="panel"></div>
-    <div id="tech" class="panel"></div>
-    <div id="travel" class="panel"></div>
-    <div id="artistdata" class="panel"></div>
-  </section>
 </main>
 </div>
-</div>
 
-<div class="modalback" id="eventModal">
-  <div class="modal">
-    <h2>Nytt arrangement</h2>
-    <p>Opprett jobben først. Invitasjoner legges deretter inne på arrangementet.</p>
-    <div class="profilegrid">
-      <div class="field" style="grid-column:1/-1"><label>Arrangement</label><input id="evName" placeholder="F.eks. Sommerfest 2027"></div>
-      <div class="field"><label>Artist</label><select id="evArtist"></select></div>
-      <div class="field"><label>Dato</label><input id="evDate" type="date"></div>
-      <div class="field"><label>By</label><input id="evCity" placeholder="Trondheim"></div>
-      <div class="field"><label>Venue</label><input id="evVenue" placeholder="Venue / hotell"></div>
-    </div>
-    <div class="modalactions"><button class="btn" onclick="closeNewEvent()">Avbryt</button><button class="btn primary" onclick="createEvent()">Opprett arrangement</button></div>
+<div class="modalback" id="requestModal">
+ <div class="modal">
+  <h2>Ny forespørsel</h2><p>Dette oppretter en bookingcase, ikke et arrangement.</p>
+  <div class="formgrid">
+   <div class="field full"><label>Arrangement / anledning</label><input id="rqName" placeholder="F.eks. Firmafest 2027"></div>
+   <div class="field"><label>Artist</label><select id="rqArtist"></select></div>
+   <div class="field"><label>Dato</label><input id="rqDate" type="date"></div>
+   <div class="field"><label>Arrangør</label><input id="rqOrganizer" placeholder="Firma / organisasjon"></div>
+   <div class="field"><label>Kontaktperson</label><input id="rqContact" placeholder="Navn"></div>
+   <div class="field"><label>By</label><input id="rqCity" placeholder="Trondheim"></div>
+   <div class="field"><label>Venue</label><input id="rqVenue" placeholder="Hotell / venue"></div>
+   <div class="field"><label>Foreslått honorar</label><input id="rqFee" type="number" placeholder="45000"></div>
+   <div class="field"><label>Type jobb</label><select id="rqType"><option>Firmafest</option><option>Julebord</option><option>Festival</option><option>Bryllup</option><option>Konferanse</option><option>Utland</option><option>Annet</option></select></div>
   </div>
-</div>
-
-<div class="modalback" id="inviteModal">
-  <div class="modal">
-    <h2>Inviter til arrangement</h2>
-    <p id="inviteContext"></p>
-    <div class="field"><label>Rolle</label><select id="inviteRole"><option>Arrangør</option><option>Kontaktperson</option><option>Teknisk produksjon</option><option>Tourmanager</option><option>Sjåfør</option><option>Artist / band</option><option>Annet</option></select></div>
-    <div class="field"><label>Navn / firma</label><input id="inviteName"></div>
-    <div class="field"><label>E-post</label><input id="inviteEmail"></div>
-    <div class="field"><label>Mobil</label><input id="invitePhone"></div>
-    <div class="modalactions"><button class="btn" onclick="closeInvite()">Avbryt</button><button class="btn primary" onclick="sendInvite()">Send invitasjon</button></div>
-  </div>
+  <div class="modalactions"><button class="btn" onclick="closeNewRequest()">Avbryt</button><button class="btn primary" onclick="createRequest()">Opprett forespørsel</button></div>
+ </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-const KEY='booking-system-v2';
-const artists=[
- {id:'hs',name:'Hollywood Scandal',genre:'Rock / party',members:5,profile:92,monitor:'In-ear / wedge',allergies:'1 medlem med nøtteallergi',backline:'Egen gitar/pedalboard · lokal backline etter godkjenning'},
- {id:'na',name:'Neon Avenue',genre:'Pop / rock',members:6,profile:86,monitor:'In-ear',allergies:'Ingen registrerte',backline:'Krever lokal trommerigg og bassamp'},
- {id:'ad',name:'Acoustic Duo',genre:'Akustisk',members:2,profile:100,monitor:'Wedge',allergies:'Laktosefri catering',backline:'Tar med alt selv'}
-];
+const KEY='booking-system-phase-v1';
+const artists=[{id:'hs',name:'Hollywood Scandal'},{id:'na',name:'Neon Avenue'},{id:'ad',name:'Acoustic Duo'}];
 const defaults=[
- {id:1,name:'Nordic Tech Festival',artistId:'hs',date:'2026-09-18',city:'København',venue:'Bella Center',status:'critical',issues:['Passinfo mangler fra 1 bandmedlem','Sjåfør ikke satt'],people:[{role:'Arrangør',name:'Nordic Events AS',status:'Aktiv'},{role:'Kontaktperson',name:'Anne Larsen',status:'Aktiv'},{role:'Teknisk produksjon',name:'StageWorks DK',status:'Venter'},{role:'Tourmanager',name:'Marius Berg',status:'Aktiv'}]},
- {id:2,name:'Jubileumsfest',artistId:'na',date:'2026-09-19',city:'Trondheim',venue:'Scandic Nidelven',status:'warning',issues:['Monitorløsning ikke bekreftet'],people:[{role:'Arrangør',name:'Trøndelag Event AS',status:'Aktiv'},{role:'Teknisk produksjon',name:'Midt-Norsk Lyd',status:'Venter'}]},
- {id:3,name:'Bryllup',artistId:'ad',date:'2026-09-26',city:'Ålesund',venue:'Hotel Brosundet',status:'warning',issues:['Sjåfør ikke invitert'],people:[{role:'Arrangør',name:'Privat arrangement',status:'Aktiv'}]}
+ {id:101,name:'Nordic Tech Festival',artistId:'hs',date:'2026-09-18',organizer:'Nordic Events AS',contact:'Anne Larsen',city:'København',venue:'Bella Center',fee:48000,type:'Utland',stage:'contract',agencySigned:true,organizerSigned:false,offerAccepted:true,contractVersion:2},
+ {id:102,name:'Jubileumsfest',artistId:'na',date:'2026-09-19',organizer:'Trøndelag Event AS',contact:'Lars Moen',city:'Trondheim',venue:'Scandic Nidelven',fee:45000,type:'Firmafest',stage:'offer',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0},
+ {id:103,name:'Bryllup',artistId:'ad',date:'2026-09-26',organizer:'Privat',contact:'Kari Hansen',city:'Ålesund',venue:'Hotel Brosundet',fee:24000,type:'Bryllup',stage:'new',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0},
+ {id:104,name:'Høstkonferansen',artistId:'na',date:'2026-09-12',organizer:'Vest Event AS',contact:'Oda Vik',city:'Stavanger',venue:'Clarion Energy',fee:52000,type:'Konferanse',stage:'signed',agencySigned:true,organizerSigned:true,offerAccepted:true,contractVersion:1}
 ];
-let state;
-try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!state) state={events:defaults,invites:[]};
-let currentEventId=null;
-
-const $=id=>document.getElementById(id);
-const artistBy=id=>artists.find(a=>a.id===id);
-const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state)state={requests:defaults};
+let currentRequestId=null,currentEventId=null;
+const $=id=>document.getElementById(id), artistBy=id=>artists.find(a=>a.id===id), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(window.__t);window.__t=setTimeout(()=>t.classList.remove('on'),2200)}
-function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DES'];return {day:d.getDate(),mon:m[d.getMonth()]}}
-function statusBadge(e){if(e.status==='critical')return '<span class="badge bg-red">IKKE KLAR</span>';if(e.status==='warning')return '<span class="badge bg-yellow">MANGLER INFO</span>';return '<span class="badge bg-green">KLAR</span>'}
-
-function showView(id){
- document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));
- document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));
- $('workspace').classList.remove('on');
- window.scrollTo({top:0,behavior:'smooth'});
-}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('on'),2200)}
+function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DES'];return{day:d.getDate(),mon:m[d.getMonth()]}}
+function stageLabel(s){return s==='new'?'FORespørsel':s==='offer'?'TILBUD':s==='contract'?'KONTRAKT SENDT':'SIGNERT'}
+function stageBadge(s){return s==='new'?'<span class="badge bg-yellow">FORESPØRSEL</span>':s==='offer'?'<span class="badge bg-blue">TILBUD</span>':s==='contract'?'<span class="badge bg-orange">KONTRAKT UTE</span>':'<span class="badge bg-green">BEKREFTET</span>'}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));$('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');window.scrollTo({top:0,behavior:'smooth'})}
 document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();showView(n.dataset.view)}));
 
-function renderEvents(targetId){
- $(targetId).innerHTML=state.events.map(e=>{
-   const a=artistBy(e.artistId),d=fmtDate(e.date);
-   return `<div class="eventrow" onclick="openEvent(${e.id})">
-    <div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div>
-    <div><div class="eventTitle">${esc(e.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(e.city)} · ${esc(e.venue)}</div></div>
-    ${statusBadge(e)}
-   </div>`;
- }).join('');
+function renderCaseList(id,limit){
+ let arr=state.requests.filter(r=>r.stage!=='signed');if(limit)arr=arr.slice(0,limit);
+ $(id).innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee).toLocaleString('nb-NO')} kr</div></div>${stageBadge(r.stage)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen aktive forespørsler.</div></div>';
 }
-function renderArtists(){
- $('artistGrid').innerHTML=artists.map(a=>`<div class="artistcard" onclick="toast('${esc(a.name)} · ${a.members} medlemmer')">
-   <h3>${esc(a.name)}</h3><div class="artistTitle">${esc(a.genre)}</div>
-   <div class="progress"><i style="width:${a.profile}%"></i></div>
-   <div class="meta">Profil ${a.profile}% · ${a.members} medlemmer</div>
-   <div class="meta">Monitor: ${esc(a.monitor)}</div>
- </div>`).join('');
+function renderEvents(){
+ const arr=state.requests.filter(r=>r.stage==='signed');
+ $('allEvents').innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="eventrow" onclick="openEvent(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="eventTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.city)} · ${esc(r.venue)}</div></div><span class="badge bg-green">BEKREFTET</span></div>`}).join(''):'<div class="card"><div class="meta">Ingen bekreftede arrangement ennå.</div></div>';
 }
-function renderCalendar(targetId){
- const first=new Date('2026-09-01T12:00:00'),start=(first.getDay()+6)%7,days=30;
- let html=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join('');
- for(let i=0;i<start;i++) html+='<div class="day"></div>';
- for(let day=1;day<=days;day++){
-   const iso=`2026-09-${String(day).padStart(2,'0')}`,evs=state.events.filter(e=>e.date===iso);
-   html+=`<div class="day ${evs.length?'has':''}"><div class="num">${day}</div>${evs.map(e=>`<div class="calEvent" onclick="openEvent(${e.id});event.stopPropagation()">${esc(e.name)}<br>${esc(artistBy(e.artistId).name)}</div>`).join('')}</div>`;
- }
- $(targetId).innerHTML=html;
+function renderCalendar(){
+ let html=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join('');const first=new Date('2026-09-01T12:00:00'),start=(first.getDay()+6)%7;for(let i=0;i<start;i++)html+='<div class="day"></div>';
+ for(let d=1;d<=30;d++){let iso=`2026-09-${String(d).padStart(2,'0')}`,rs=state.requests.filter(r=>r.date===iso);html+=`<div class="day"><div class="num">${d}</div>${rs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="${r.stage==='signed'?'openEvent':'openRequest'}(${r.id});event.stopPropagation()">${esc(r.name)}<br>${esc(artistBy(r.artistId).name)}</div>`).join('')}</div>`} $('calendarGrid').innerHTML=html;
 }
 function renderAll(){
- $('statEvents').textContent=state.events.length;$('navEventCount').textContent=state.events.length;
- renderEvents('dashboardEvents');renderEvents('allEvents');renderArtists();renderCalendar('miniCalendar');renderCalendar('fullCalendar');
- $('evArtist').innerHTML=artists.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+ const active=state.requests.filter(r=>r.stage!=='signed'),signed=state.requests.filter(r=>r.stage==='signed');
+ $('requestCount').textContent=active.length;$('eventCount').textContent=signed.length;$('statRequests').textContent=active.length;$('statContracts').textContent=state.requests.filter(r=>r.stage==='contract').length;$('statEvents').textContent=signed.length;
+ $('pipeNew').textContent=state.requests.filter(r=>r.stage==='new').length;$('pipeOffer').textContent=state.requests.filter(r=>r.stage==='offer').length;$('pipeContract').textContent=state.requests.filter(r=>r.stage==='contract').length;$('pipeSigned').textContent=signed.length;
+ renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();$('rqArtist').innerHTML=artists.map(a=>`<option value="${a.id}">${a.name}</option>`).join('');
 }
+function stages(r){const order=['new','offer','contract','signed'],labels=['Forespørsel','Tilbud / forhandling','Kontrakt / signering','Bekreftet arrangement'];return labels.map((l,i)=>`<div class="stage ${order.indexOf(r.stage)>i?'done':order.indexOf(r.stage)===i?'current':''}">${order.indexOf(r.stage)>i?'✓ ':''}${l}</div>`).join('')}
+function openRequest(id){
+ currentRequestId=id;const r=state.requests.find(x=>x.id===id),a=artistBy(r.artistId);if(!r)return;if(r.stage==='signed'){openEvent(id);return}
+ $('bwTitle').textContent=r.name;$('bwArtist').textContent=a.name;$('bwMeta').textContent=`${r.date} · ${r.organizer} · ${r.city} · ${r.venue}`;$('bwStatus').outerHTML=stageBadge(r.stage).replace('<span','<span id="bwStatus"');$('stageBar').innerHTML=stages(r);
+ $('caseOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div><div class="rolecard"><b>Ønsket dato</b><small><br>${esc(r.date)} · HOLD</small></div><div class="rolecard"><b>Type jobb</b><small><br>${esc(r.type)}</small></div><div class="rolecard"><b>Venue</b><small><br>${esc(r.venue)} · ${esc(r.city)}</small></div><div class="rolecard"><b>Honorarramme</b><small><br>${Number(r.fee).toLocaleString('nb-NO')} kr</small></div></div>${r.stage==='new'?'<div style="margin-top:14px"><button class="btn primary" onclick="moveToOffer()">Start tilbud / forhandling</button></div>':''}`;
+ $('offer').innerHTML=`<div class="contract"><h3>Tilbud</h3><div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div><div class="contractRow"><span>Honorartilbud</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div><div class="contractRow"><span>Dato / sted</span><b>${esc(r.date)} · ${esc(r.city)}</b></div><div class="contractRow"><span>Arrangør</span><b>${esc(r.organizer)}</b></div></div><div style="margin-top:14px">${r.stage==='offer'?'<button class="btn primary" onclick="acceptOffer()">Godkjenn vilkår og lag kontrakt</button>':r.offerAccepted?'<span class="badge bg-green">VILKÅR GODKJENT</span>':'<span class="meta">Tilbudet er ikke åpnet ennå.</span>'}</div>`;
+ $('contract').innerHTML=r.contractVersion?`<div class="contract"><h3>Kontrakt v${r.contractVersion}</h3><div class="contractRow"><span>Kontraktspart 1</span><b>Bookingbyrået</b></div><div class="contractRow"><span>Kontraktspart 2</span><b>${esc(r.organizer)}</b></div><div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div><div class="contractRow"><span>Arrangement</span><b>${esc(r.name)}</b></div><div class="contractRow"><span>Dato / venue</span><b>${esc(r.date)} · ${esc(r.venue)}, ${esc(r.city)}</b></div><div class="contractRow"><span>Honorar</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div></div>${r.stage==='contract'?'<div style="margin-top:14px"><span class="badge bg-orange">SENDT TIL SIGNERING</span></div>':''}`:`<div class="rolecard"><b>Ingen kontrakt ennå</b><small><br>Kontrakten genereres når vilkårene er godkjent.</small></div>`;
+ $('signing').innerHTML=r.contractVersion?`<div class="signgrid"><div class="signcard"><b>Bookingbyrå</b>${r.agencySigned?'<span class="badge bg-green">✓ SIGNERT</span>':'<button class="btn primary" onclick="signAgency()">Signer som bookingbyrå</button>'}</div><div class="signcard"><b>Arrangør · ${esc(r.organizer)}</b>${r.organizerSigned?'<span class="badge bg-green">✓ SIGNERT</span>':'<button class="btn primary" onclick="signOrganizer()">Simuler arrangørs signatur</button>'}</div></div><div class="rolecard" style="margin-top:12px"><b>Regel</b><small><br>Arrangementet opprettes automatisk først når begge parter har signert.</small></div>`:`<div class="rolecard"><b>Signering ikke tilgjengelig</b><small><br>Kontrakt må genereres først.</small></div>`;
+ document.querySelectorAll('[data-btab]').forEach(x=>x.classList.remove('on'));document.querySelector('[data-btab="caseOverview"]').classList.add('on');['caseOverview','offer','contract','signing'].forEach(id=>$ (id).classList.toggle('on',id==='caseOverview'));$('bookingWorkspace').classList.add('on');$('eventWorkspace').classList.remove('on');setTimeout(()=>$('bookingWorkspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+document.querySelectorAll('[data-btab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-btab]').forEach(x=>x.classList.remove('on'));['caseOverview','offer','contract','signing'].forEach(id=>$(id).classList.remove('on'));b.classList.add('on');$(b.dataset.btab).classList.add('on')}));
+function moveToOffer(){let r=state.requests.find(x=>x.id===currentRequestId);r.stage='offer';save();renderAll();openRequest(r.id);toast('Forespørselen er flyttet til tilbud / forhandling')}
+function acceptOffer(){let r=state.requests.find(x=>x.id===currentRequestId);r.offerAccepted=true;r.contractVersion=(r.contractVersion||0)+1;r.stage='contract';save();renderAll();openRequest(r.id);toast('✓ Kontrakt generert og sendt til signering')}
+function maybeComplete(r){if(r.agencySigned&&r.organizerSigned){r.stage='signed';save();renderAll();toast('✓ Begge har signert – arrangementet er opprettet');setTimeout(()=>openEvent(r.id),400);return true}save();renderAll();openRequest(r.id);return false}
+function signAgency(){let r=state.requests.find(x=>x.id===currentRequestId);r.agencySigned=true;maybeComplete(r)}
+function signOrganizer(){let r=state.requests.find(x=>x.id===currentRequestId);r.organizerSigned=true;maybeComplete(r)}
+function openEvent(id){currentEventId=id;const r=state.requests.find(x=>x.id===id),a=artistBy(r.artistId);if(!r||r.stage!=='signed')return;$('ewTitle').textContent=r.name;$('ewArtist').textContent=a.name;$('ewMeta').textContent=`${r.date} · ${r.city} · ${r.venue}`;
+ $('eventOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Kontrakt</b><small><br>Signert av bookingbyrå og arrangør</small><div class="roleline"><span class="badge bg-green">✓ SIGNERT</span></div></div><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div></div>`;
+ $('people').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)}</small></div><div class="rolecard"><b>Kontaktperson</b><small><br>${esc(r.contact)}</small></div><div class="rolecard"><b>Teknisk produksjon</b><small><br>Ikke invitert</small><div class="roleline"><button class="btn primary" onclick="toast('Invitasjonsflyt åpnes her')">Inviter</button></div></div><div class="rolecard"><b>Tourmanager</b><small><br>Ikke satt</small></div><div class="rolecard"><b>Sjåfør</b><small><br>Ikke satt</small></div></div>`;
+ $('schedule').innerHTML=`<div class="timeline"><div class="timeitem"><b>12:00 · Ankomst</b><small>Band + tourmanager</small></div><div class="timeitem"><b>15:00 · Soundcheck</b><small>Teknisk avklaring før dette</small></div><div class="timeitem"><b>21:30 · Show</b><small>${esc(a.name)}</small></div></div>`;
+ $('tech').innerHTML=`<div class="rolecard"><b>Teknisk produksjon</b><small><br>Stageplot, inputliste, monitor, PA, lys og backline knyttes til arrangementet her.</small></div>`;
+ $('travel').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Reise</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Hotell</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Lokal transport</b><small><br>Ikke registrert</small></div></div>`;
+ document.querySelectorAll('[data-etab]').forEach(x=>x.classList.remove('on'));document.querySelector('[data-etab="eventOverview"]').classList.add('on');['eventOverview','people','schedule','tech','travel'].forEach(id=>$(id).classList.toggle('on',id==='eventOverview'));$('eventWorkspace').classList.add('on');$('bookingWorkspace').classList.remove('on');setTimeout(()=>$('eventWorkspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
+document.querySelectorAll('[data-etab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-etab]').forEach(x=>x.classList.remove('on'));['eventOverview','people','schedule','tech','travel'].forEach(id=>$(id).classList.remove('on'));b.classList.add('on');$(b.dataset.etab).classList.add('on')}));
 
-function openEvent(id){
- currentEventId=id;const e=state.events.find(x=>x.id===id),a=artistBy(e.artistId);if(!e)return;
- $('wsEvent').textContent=e.name;$('wsArtist').textContent=a.name;$('wsMeta').textContent=`${e.date} · ${e.city} · ${e.venue}`;
- $('wsStatus').outerHTML=statusBadge(e).replace('<span','<span id="wsStatus"');
- $('overview').innerHTML=`<div class="rolegrid">
-  <div class="rolecard"><b>Status</b><small><br>${e.issues.length?esc(e.issues.join(' · ')):'Alt klart'}</small></div>
-  <div class="rolecard"><b>Artist</b><small><br>${esc(a.name)} · ${a.members} medlemmer</small></div>
-  <div class="rolecard"><b>Venue</b><small><br>${esc(e.venue)} · ${esc(e.city)}</small></div>
- </div>`;
- $('people').innerHTML=`<button class="btn primary" onclick="openInvite()">+ Inviter person</button><div style="margin-top:12px">${e.people.map(p=>`<div class="rolecard" style="margin-bottom:8px"><b>${esc(p.role)}</b><small><br>${esc(p.name)}</small><div class="roleline"><span class="badge ${p.status==='Aktiv'?'bg-green':'bg-yellow'}">${esc(p.status.toUpperCase())}</span></div></div>`).join('')}</div>`;
- $('schedule').innerHTML=`<div class="timeline"><div class="timeitem"><b>12:00 · Ankomst venue</b><small>Band + tourmanager</small></div><div class="timeitem"><b>13:00 · Load-in</b><small>Produksjon + crew</small></div><div class="timeitem"><b>15:00 · Soundcheck</b><small>Teknisk må være avklart før dette</small></div><div class="timeitem"><b>18:00 · Middag</b><small>Catering / backstage</small></div><div class="timeitem"><b>21:30 · Show</b><small>Artist på scenen</small></div></div>`;
- $('tech').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Monitor</b><small><br>${esc(a.monitor)}</small></div><div class="rolecard"><b>Backline</b><small><br>${esc(a.backline)}</small></div><div class="rolecard"><b>Produksjonsstatus</b><small><br>${e.issues.some(i=>i.toLowerCase().includes('monitor'))?'Monitor må bekreftes':'Ingen kritiske tekniske mangler registrert'}</small></div></div>`;
- $('travel').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Transport</b><small><br>${e.city==='København'?'Fly + lokal transport':'Bil / lokal transport'}</small></div><div class="rolecard"><b>Hotell</b><small><br>${e.city==='København'?'Hotell må knyttes til bookingen':'Ikke registrert ennå'}</small></div><div class="rolecard"><b>Dokumentkrav</b><small><br>${e.city==='København'?'Passinfo kreves':'Ingen ekstra dokumentkrav'}</small></div></div>`;
- $('artistdata').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Allergier</b><small><br>${esc(a.allergies)}</small></div><div class="rolecard"><b>Monitorpreferanse</b><small><br>${esc(a.monitor)}</small></div><div class="rolecard"><b>Backline</b><small><br>${esc(a.backline)}</small></div></div>`;
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelector('.tab[data-tab="overview"]').classList.add('on');
- document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));$('overview').classList.add('on');
- $('workspace').classList.add('on');setTimeout(()=>$('workspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
-}
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));b.classList.add('on');$(b.dataset.tab).classList.add('on')}));
-
-function openNewEvent(){$('eventModal').classList.add('on')}function closeNewEvent(){$('eventModal').classList.remove('on')}
-function createEvent(){
- const name=$('evName').value.trim(),artistId=$('evArtist').value,date=$('evDate').value,city=$('evCity').value.trim(),venue=$('evVenue').value.trim();
- if(!name||!date){toast('Fyll inn arrangement og dato');return}
- state.events.push({id:Date.now(),name,artistId,date,city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',status:'warning',issues:['Nytt arrangement – detaljer må fylles ut'],people:[]});
- save();renderAll();closeNewEvent();['evName','evDate','evCity','evVenue'].forEach(id=>$(id).value='');toast('✓ Arrangement opprettet');showView('events');
-}
-function openInvite(){
- const e=state.events.find(x=>x.id===currentEventId);$('inviteContext').textContent=e?`Invitasjonen knyttes til ${e.name}.`:'Invitasjonen knyttes til valgt arrangement.';$('inviteModal').classList.add('on');
-}
-function closeInvite(){$('inviteModal').classList.remove('on')}
-function sendInvite(){
- const e=state.events.find(x=>x.id===currentEventId),name=$('inviteName').value.trim(),role=$('inviteRole').value;
- if(!e||!name){toast('Legg inn navn eller firma');return}
- e.people.push({role,name,status:'Invitert'});state.invites.push({eventId:e.id,role,name,email:$('inviteEmail').value,phone:$('invitePhone').value});
- save();closeInvite();['inviteName','inviteEmail','invitePhone'].forEach(id=>$(id).value='');openEvent(e.id);toast('✓ Invitasjon lagt til arrangementet');
-}
+function openNewRequest(){$('requestModal').classList.add('on')}function closeNewRequest(){$('requestModal').classList.remove('on')}
+function createRequest(){const name=$('rqName').value.trim(),artistId=$('rqArtist').value,date=$('rqDate').value,organizer=$('rqOrganizer').value.trim(),contact=$('rqContact').value.trim(),city=$('rqCity').value.trim(),venue=$('rqVenue').value.trim(),fee=Number($('rqFee').value||0),type=$('rqType').value;if(!name||!date||!organizer){toast('Fyll inn arrangement, dato og arrangør');return}state.requests.unshift({id:Date.now(),name,artistId,date,organizer,contact:contact||'Ikke satt',city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',fee,type,stage:'new',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0});save();renderAll();closeNewRequest();['rqName','rqDate','rqOrganizer','rqContact','rqCity','rqVenue','rqFee'].forEach(id=>$(id).value='');toast('✓ Forespørsel opprettet');showView('requests')}
 document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
 
-function searchData(){
- const fixed=[
-  {type:'Arrangør',name:'Nordic Events AS',meta:'København',icon:'NE'},
-  {type:'Kontaktperson',name:'Anne Larsen',meta:'Nordic Events AS',icon:'AL'},
-  {type:'Teknisk produksjon',name:'StageWorks DK',meta:'Nordic Tech Festival',icon:'SW'},
-  {type:'Venue',name:'Bella Center',meta:'København',icon:'BC'},
-  {type:'Tourmanager',name:'Marius Berg',meta:'Hollywood Scandal',icon:'MB'},
-  {type:'Sjåfør',name:'Thomas Dahl',meta:'2 kommende oppdrag',icon:'TD'}
- ];
- return fixed
-  .concat(artists.map(a=>({type:'Artist',name:a.name,meta:`${a.members} medlemmer · ${a.genre}`,icon:a.name.split(' ').map(x=>x[0]).join('').slice(0,2)})))
-  .concat(state.events.map(e=>({type:'Arrangement',name:e.name,meta:`${artistBy(e.artistId).name} · ${e.city} · ${e.venue}`,icon:'EV',eventId:e.id})));
-}
-const search=$('globalSearch'),resultBox=$('searchResults');
-function renderSearch(q){
- q=q.trim().toLowerCase();if(!q){resultBox.classList.remove('on');resultBox.innerHTML='';return}
- const hits=searchData().filter(x=>(x.type+' '+x.name+' '+x.meta).toLowerCase().includes(q)).slice(0,10);
- resultBox.innerHTML=hits.length?hits.map((x,i)=>`<div class="result" data-i="${i}"><div class="ricon">${esc(x.icon)}</div><div><div class="rtype">${esc(x.type)}</div><b>${esc(x.name)}</b><div class="rmeta">${esc(x.meta)}</div></div><span>→</span></div>`).join(''):`<div style="padding:16px;color:var(--muted)">Ingen treff</div>`;
- resultBox.classList.add('on');
- resultBox.querySelectorAll('.result').forEach((el,i)=>el.onclick=()=>{const x=hits[i];resultBox.classList.remove('on');search.blur();if(x.eventId)openEvent(x.eventId);else toast(`${x.type}: ${x.name}`)});
-}
-search.addEventListener('input',e=>renderSearch(e.target.value));
-document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))resultBox.classList.remove('on')});
-
+function searchData(){return state.requests.map(r=>({type:r.stage==='signed'?'Arrangement':'Bookingcase',name:r.name,meta:`${artistBy(r.artistId).name} · ${r.organizer} · ${r.city}`,id:r.id,signed:r.stage==='signed'})).concat(artists.map(a=>({type:'Artist',name:a.name,meta:'Artiststall',artist:true})))}
+const search=$('globalSearch'),res=$('searchResults');function renderSearch(q){q=q.trim().toLowerCase();if(!q){res.classList.remove('on');return}const hits=searchData().filter(x=>(x.type+' '+x.name+' '+x.meta).toLowerCase().includes(q)).slice(0,10);res.innerHTML=hits.length?hits.map((x,i)=>`<div class="result" data-i="${i}"><div class="ricon">${x.type==='Artist'?'AR':x.signed?'EV':'BK'}</div><div><div class="rtype">${esc(x.type)}</div><b>${esc(x.name)}</b><div class="rmeta">${esc(x.meta)}</div></div><span>→</span></div>`).join(''):'<div style="padding:16px;color:var(--muted)">Ingen treff</div>';res.classList.add('on');res.querySelectorAll('.result').forEach((el,i)=>el.onclick=()=>{const x=hits[i];res.classList.remove('on');search.blur();if(x.id)(x.signed?openEvent:openRequest)(x.id);else toast('Artist: '+x.name)})}
+search.addEventListener('input',e=>renderSearch(e.target.value));document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))res.classList.remove('on')});
 renderAll();
 </script>
 </body>
