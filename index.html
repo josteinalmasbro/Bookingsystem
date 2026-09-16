@@ -43,7 +43,19 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 .signgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.signcard{background:#0c1215;border:1px solid #263139;border-radius:12px;padding:14px}.signcard b{display:block;margin-bottom:6px}
 .field{margin:0 0 12px}.field label{display:block;color:#aab5bb;font-size:.76rem;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#0a1013;color:#fff;border:1px solid #2d3940;border-radius:10px;padding:11px}.field textarea{min-height:90px}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.full{grid-column:1/-1}
-.timeline{border-left:2px solid #2e3a41;padding-left:18px;margin-left:8px}.timeitem{margin-bottom:16px}.timeitem small{color:var(--muted)}
+.timeline{border-left:2px solid #2e3a41;padding-left:22px;margin-left:8px;display:grid;gap:12px}
+.timeitem{display:grid;grid-template-columns:76px minmax(0,1fr);gap:14px;align-items:start;margin:0;padding:10px 0}
+.timeitem .time{font-weight:900;color:#fff;white-space:nowrap}
+.timeitem .timecontent{min-width:0}
+.timeitem .timecontent b{display:block;font-size:.98rem;line-height:1.25}
+.timeitem .timecontent small{display:block;color:var(--muted);margin-top:4px;line-height:1.4}
+@media(max-width:760px){
+ .timeline{padding-left:16px;margin-left:3px;gap:8px}
+ .timeitem{grid-template-columns:62px minmax(0,1fr);gap:10px;padding:8px 0}
+ .timeitem .time{font-size:.86rem}
+ .timeitem .timecontent b{font-size:.9rem}
+ .timeitem .timecontent small{font-size:.76rem}
+}
 .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.dow{text-align:center;color:#77858d;font-size:.72rem;padding:3px}.day{min-height:88px;border:1px solid #222d33;border-radius:11px;padding:7px;background:#0a0f12}.day .num{font-size:.75rem;color:#8c989f}.calItem{margin-top:6px;padding:5px;border-radius:7px;font-size:.64rem;font-weight:800;line-height:1.25}.hold{background:#392f16;color:#f0d57d}.signed{background:#123427;color:#7ce0ad}.contractSent{background:#432817;color:#f5b37e}
 .modalback{position:fixed;inset:0;background:rgba(3,7,9,.62);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:14px;z-index:100}.modalback.on{display:flex}
 .modal{width:min(560px,100%);max-height:calc(100dvh - 28px);overflow:hidden;background:rgba(17,25,29,.86);backdrop-filter:blur(26px) saturate(120%);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:18px;box-shadow:0 28px 90px rgba(0,0,0,.65)}
@@ -508,6 +520,110 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
  .dashboardFlowTitle{align-items:start}
 }
 
+
+/* === Artist profile glass editors === */
+.profileGlassOverlay{
+  position:fixed;inset:0;z-index:1200;
+  background:rgba(2,5,7,.62);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;
+  padding:18px;
+}
+.profileGlassOverlay.on{display:flex}
+.profileGlassModal{
+  width:min(760px,calc(100vw - 28px));
+  max-height:min(820px,calc(100dvh - 28px));
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:24px;
+  background:linear-gradient(145deg,rgba(18,27,32,.92),rgba(8,13,16,.86));
+  box-shadow:0 28px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto;
+}
+.profileGlassHead{
+  display:flex;justify-content:space-between;gap:16px;align-items:flex-start;
+  padding:20px 20px 14px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.profileGlassHead h2{margin:4px 0 0;font-size:1.65rem}
+.profileGlassClose{
+  width:42px;height:42px;border-radius:50%;border:1px solid #425059;
+  background:rgba(255,255,255,.035);color:#fff;font-size:1.3rem;
+  display:grid;place-items:center;cursor:pointer;flex:0 0 42px;
+}
+.profileGlassBody{
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:18px 20px 22px;
+}
+.profileGlassFoot{
+  padding:13px 20px 18px;
+  border-top:1px solid rgba(255,255,255,.07);
+  display:flex;justify-content:flex-end;gap:10px;
+  background:rgba(8,13,16,.52);
+}
+.glassSection{
+  padding:14px;border:1px solid rgba(255,255,255,.09);
+  border-radius:15px;background:rgba(4,9,12,.38);margin-bottom:12px
+}
+.glassSection:last-child{margin-bottom:0}
+.glassSection h3{margin:0 0 4px;font-size:1rem}
+.glassDesc{color:var(--muted);font-size:.78rem;line-height:1.45;margin-bottom:11px}
+.glassFormGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.glassField{min-width:0}
+.glassField.full{grid-column:1/-1}
+.glassField label{display:block;color:#aeb8bd;font-size:.72rem;margin:0 0 5px}
+.glassField input,.glassField select,.glassField textarea{
+  width:100%;box-sizing:border-box;
+  border:1px solid #344149;border-radius:11px;
+  background:rgba(5,10,13,.75);color:#fff;
+  padding:11px 12px;font:inherit;outline:none
+}
+.glassField textarea{min-height:84px;resize:vertical}
+.glassField input:focus,.glassField select:focus,.glassField textarea:focus{border-color:#927c3c}
+.glassChips{display:flex;gap:8px;flex-wrap:wrap}
+.glassChip{
+  border:1px solid #344149;background:#0b1114;color:#dfe6e9;
+  border-radius:99px;padding:8px 11px;font-size:.74rem;font-weight:800;cursor:pointer
+}
+.glassChip.on{border-color:#8e7737;background:rgba(231,200,106,.12);color:#f0d574}
+.memberRow{
+  display:grid;grid-template-columns:1.3fr 1fr auto;gap:8px;align-items:end;
+  padding:10px 0;border-top:1px solid rgba(255,255,255,.07)
+}
+.memberRow:first-child{border-top:0;padding-top:0}
+.memberAvatar{
+  width:38px;height:38px;border-radius:11px;background:#1b252b;
+  display:grid;place-items:center;font-weight:900;color:var(--gold)
+}
+.uploadDrop{
+  min-height:110px;border:1px dashed #4a5962;border-radius:14px;
+  display:grid;place-items:center;text-align:center;padding:18px;
+  background:rgba(255,255,255,.02);color:#aab5ba;cursor:pointer
+}
+.uploadDrop b{color:#fff}
+.glassNotice{
+  border:1px solid #6b5a2d;background:rgba(231,200,106,.06);
+  border-radius:13px;padding:11px 12px;color:#d8c682;font-size:.78rem;line-height:1.4
+}
+@media(max-width:760px){
+  .profileGlassOverlay{padding:8px;align-items:flex-end}
+  .profileGlassModal{
+    width:100%;max-width:none;max-height:calc(100dvh - 12px);
+    border-radius:24px 24px 14px 14px;
+  }
+  .profileGlassHead{padding:16px 16px 12px}
+  .profileGlassHead h2{font-size:1.42rem}
+  .profileGlassBody{padding:14px 16px 18px}
+  .profileGlassFoot{padding:11px 16px max(14px,env(safe-area-inset-bottom))}
+  .glassFormGrid{grid-template-columns:1fr}
+  .glassField.full{grid-column:1}
+  .memberRow{grid-template-columns:1fr}
+  .memberRow .btn{width:100%}
+}
+
 </style>
 </head>
 <body>
@@ -692,12 +808,12 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
  </div>
 
  <div class="profileRows" style="margin-top:12px">
-  <div class="profileBox"><b>Medlemmer</b><small id="profileMembers">5 medlemmer · personlige profiler koblet.</small><button class="btn" style="margin-top:10px" onclick="toast('Medlemsprofiler åpnes her')">Administrer medlemmer</button></div>
-  <div class="profileBox"><b>Monitor</b><small>In-ear / wedge og personlige monitorpreferanser.</small><button class="btn" style="margin-top:10px" onclick="toast('Monitorprofil åpnes her')">Åpne monitorprofil</button></div>
-  <div class="profileBox"><b>Backline</b><small>Hva bandet tar med selv, og hva som må finnes på stedet.</small><button class="btn" style="margin-top:10px" onclick="toast('Backlineprofil åpnes her')">Rediger backline</button></div>
-  <div class="profileBox"><b>Vikarer</b><small>Aktuelle vikarer per rolle når fast medlem ikke er tilgjengelig.</small><button class="btn" style="margin-top:10px" onclick="toast('Vikarbank åpnes her')">Vikarbank</button></div>
-  <div class="profileBox"><b>Hospitality</b><small>Matpreferanser og personlige behov ligger på medlemsnivå.</small><button class="btn" style="margin-top:10px" onclick="toast('Medlemsbehov åpnes her')">Se status</button></div>
-  <div class="profileBox"><b>Teknisk rider</b><small>Stageplot, inputliste og tekniske dokumenter.</small><button class="btn" style="margin-top:10px" onclick="showView('artistMedia')">Dokumenter</button></div>
+  <div class="profileBox"><b>Medlemmer</b><small id="profileMembers">5 medlemmer · personlige profiler koblet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('members')">Administrer medlemmer</button></div>
+  <div class="profileBox"><b>Monitor</b><small>In-ear / wedge og personlige monitorpreferanser.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('monitor')">Åpne monitorprofil</button></div>
+  <div class="profileBox"><b>Backline</b><small>Hva bandet tar med selv, og hva som må finnes på stedet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('backline')">Rediger backline</button></div>
+  <div class="profileBox"><b>Vikarer</b><small>Aktuelle vikarer per rolle når fast medlem ikke er tilgjengelig.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('substitutes')">Vikarbank</button></div>
+  <div class="profileBox"><b>Hospitality</b><small>Matpreferanser og personlige behov ligger på medlemsnivå.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('hospitality')">Se status</button></div>
+  <div class="profileBox"><b>Teknisk rider</b><small>Stageplot, inputliste og tekniske dokumenter.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('rider')">Dokumenter</button></div>
  </div>
 </section>
 
@@ -1137,6 +1253,144 @@ function refreshPeopleViews(id){
   renderArtistDriver();
 }
 
+
+const PROFILE_EDITOR_KEY='artist-profile-editors-v1';
+let profileEditorState;try{profileEditorState=JSON.parse(localStorage.getItem(PROFILE_EDITOR_KEY))}catch(e){}
+if(!profileEditorState)profileEditorState={};
+let activeProfileEditor=null;
+
+function profileData(){
+  if(!profileEditorState[currentPortalArtistId])profileEditorState[currentPortalArtistId]={};
+  return profileEditorState[currentPortalArtistId];
+}
+function persistProfileEditors(){localStorage.setItem(PROFILE_EDITOR_KEY,JSON.stringify(profileEditorState))}
+function chipToggle(el){el.classList.toggle('on')}
+
+function openProfileEditor(type){
+  activeProfileEditor=type;
+  const a=artistBy(currentPortalArtistId)||artists[0],d=profileData(),body=$('profileEditorBody');
+  $('profileEditorEyebrow').textContent=a.name+' · artistprofil';
+
+  if(type==='members'){
+    $('profileEditorTitle').textContent='Medlemmer';
+    body.innerHTML=`<div class="glassSection">
+      <h3>Bandmedlemmer</h3><div class="glassDesc">Personlige profiler kan senere kobles til kalender, vikarer, allergier og tekniske behov.</div>
+      <div class="memberRow">
+       <div class="glassField"><label>Navn</label><input data-pe="member1name" value="${esc(d.member1name||'Jostein Almåsbro')}"></div>
+       <div class="glassField"><label>Rolle</label><input data-pe="member1role" value="${esc(d.member1role||'Vokal')}"></div>
+       <button class="btn" onclick="toast('Personlig profil åpnes senere')">Profil</button>
+      </div>
+      <div class="memberRow">
+       <div class="glassField"><label>Navn</label><input data-pe="member2name" value="${esc(d.member2name||'Bandmedlem 2')}"></div>
+       <div class="glassField"><label>Rolle</label><input data-pe="member2role" value="${esc(d.member2role||'Gitar')}"></div>
+       <button class="btn" onclick="toast('Personlig profil åpnes senere')">Profil</button>
+      </div>
+      <div style="margin-top:10px"><button class="btn" onclick="toast('Nytt medlem legges til i neste versjon')">+ Legg til medlem</button></div>
+    </div>`;
+  }
+
+  if(type==='monitor'){
+    $('profileEditorTitle').textContent='Monitorprofil';
+    body.innerHTML=`<div class="glassSection">
+      <h3>Standard monitorløsning</h3><div class="glassDesc">Dette følger bandets bookingprofil og kan overstyres på enkeltjobber.</div>
+      <div class="glassChips">
+       <button class="glassChip ${d.monitorInEar!==false?'on':''}" data-save-chip="monitorInEar" onclick="chipToggle(this)">✓ In-ear</button>
+       <button class="glassChip ${d.monitorWedge!==false?'on':''}" data-save-chip="monitorWedge" onclick="chipToggle(this)">✓ Wedge</button>
+       <button class="glassChip ${d.monitorOwnRig?'on':''}" data-save-chip="monitorOwnRig" onclick="chipToggle(this)">Egen monitor-rigg</button>
+      </div>
+    </div>
+    <div class="glassSection"><div class="glassFormGrid">
+      <div class="glassField"><label>Foretrukket løsning</label><select data-pe="monitorPreferred">
+       <option ${d.monitorPreferred==='Begge fungerer'?'selected':''}>Begge fungerer</option>
+       <option ${d.monitorPreferred==='Primært in-ear'?'selected':''}>Primært in-ear</option>
+       <option ${d.monitorPreferred==='Kun in-ear'?'selected':''}>Kun in-ear</option>
+       <option ${d.monitorPreferred==='Kun wedge'?'selected':''}>Kun wedge</option>
+      </select></div>
+      <div class="glassField"><label>Eget in-ear utstyr</label><select data-pe="monitorGear">
+       <option ${d.monitorGear==='Komplett rigg'?'selected':''}>Komplett rigg</option>
+       <option ${d.monitorGear==='Kun propper'?'selected':''}>Kun propper</option>
+       <option ${d.monitorGear==='Nei'?'selected':''}>Nei</option>
+      </select></div>
+      <div class="glassField full"><label>Notat til lydtekniker</label><textarea data-pe="monitorNote" placeholder="Trådløse frekvenser, ønsket miks, egne sendere ...">${esc(d.monitorNote||'')}</textarea></div>
+    </div></div>`;
+  }
+
+  if(type==='backline'){
+    $('profileEditorTitle').textContent='Backline';
+    body.innerHTML=`<div class="glassSection"><div class="glassFormGrid">
+      <div class="glassField full"><label>Dette tar bandet med selv</label><textarea data-pe="backlineOwn" placeholder="Instrumenter, pedalbrett, mikrofoner, rack ...">${esc(d.backlineOwn||'')}</textarea></div>
+      <div class="glassField full"><label>Dette må finnes på stedet</label><textarea data-pe="backlineVenue" placeholder="Trommesett, gitarforsterker, keyboardstativ ...">${esc(d.backlineVenue||'')}</textarea></div>
+      <div class="glassField"><label>Strøm / scenekrav</label><input data-pe="backlinePower" value="${esc(d.backlinePower||'230V på scenen')}"></div>
+      <div class="glassField"><label>Riggetid</label><input data-pe="backlineSetup" value="${esc(d.backlineSetup||'60 min')}"></div>
+    </div></div>
+    <div class="glassNotice">Disse kravene kan senere kopieres automatisk inn i produksjonsdelen på hvert arrangement.</div>`;
+  }
+
+  if(type==='substitutes'){
+    $('profileEditorTitle').textContent='Vikarbank';
+    body.innerHTML=`<div class="glassSection"><h3>Aktuelle vikarer</h3><div class="glassDesc">Koble vikar til rolle slik at bookingansvarlig raskt ser alternativer hvis et medlem er opptatt.</div>
+      <div class="glassFormGrid">
+       <div class="glassField"><label>Navn</label><input data-pe="sub1name" value="${esc(d.sub1name||'')} " placeholder="Navn"></div>
+       <div class="glassField"><label>Rolle</label><input data-pe="sub1role" value="${esc(d.sub1role||'')} " placeholder="F.eks. bass"></div>
+       <div class="glassField"><label>Telefon</label><input data-pe="sub1phone" value="${esc(d.sub1phone||'')}" placeholder="+47 ..."></div>
+       <div class="glassField"><label>E-post</label><input data-pe="sub1email" value="${esc(d.sub1email||'')}" placeholder="navn@epost.no"></div>
+      </div>
+      <div style="margin-top:10px"><button class="btn" onclick="toast('Flere vikarer kan legges til i neste versjon')">+ Legg til vikar</button></div>
+    </div>`;
+  }
+
+  if(type==='hospitality'){
+    $('profileEditorTitle').textContent='Hospitality';
+    body.innerHTML=`<div class="glassSection">
+      <h3>Mat og personlige behov</h3><div class="glassDesc">Bandets felles standard. Personlige allergier kan senere ligge på hvert medlems profil.</div>
+      <div class="glassChips" style="margin-bottom:12px">
+       <button class="glassChip ${d.foodVegetarian?'on':''}" data-save-chip="foodVegetarian" onclick="chipToggle(this)">Vegetar</button>
+       <button class="glassChip ${d.foodVegan?'on':''}" data-save-chip="foodVegan" onclick="chipToggle(this)">Vegan</button>
+       <button class="glassChip ${d.foodGluten?'on':''}" data-save-chip="foodGluten" onclick="chipToggle(this)">Gluten</button>
+       <button class="glassChip ${d.foodLactose?'on':''}" data-save-chip="foodLactose" onclick="chipToggle(this)">Laktose</button>
+      </div>
+      <div class="glassFormGrid">
+       <div class="glassField full"><label>Felles hospitality-notat</label><textarea data-pe="hospitalityNote" placeholder="Måltider, drikke, garderobe, håndklær ...">${esc(d.hospitalityNote||'')}</textarea></div>
+       <div class="glassField"><label>Antall personer catering</label><input type="number" min="1" data-pe="cateringCount" value="${esc(d.cateringCount||'5')}"></div>
+       <div class="glassField"><label>Kontakt ved spørsmål</label><input data-pe="hospitalityContact" value="${esc(d.hospitalityContact||'')}"></div>
+      </div>
+    </div>`;
+  }
+
+  if(type==='rider'){
+    $('profileEditorTitle').textContent='Teknisk rider';
+    body.innerHTML=`<div class="glassSection">
+      <h3>Dokumenter</h3><div class="glassDesc">Last opp masterdokumentene som produksjon og arrangør skal bruke.</div>
+      <div class="uploadDrop" onclick="toast('Filopplasting kobles til backend senere')"><div>＋<br><b>Stageplot</b><br><small>PDF / PNG</small></div></div>
+      <div class="uploadDrop" style="margin-top:10px" onclick="toast('Filopplasting kobles til backend senere')"><div>＋<br><b>Inputliste / teknisk rider</b><br><small>PDF / XLSX</small></div></div>
+    </div>
+    <div class="glassSection"><div class="glassFormGrid">
+      <div class="glassField"><label>Antall inputkanaler</label><input type="number" data-pe="riderInputs" value="${esc(d.riderInputs||'24')}"></div>
+      <div class="glassField"><label>Minimum scene</label><input data-pe="riderStage" value="${esc(d.riderStage||'6 x 4 m')}"></div>
+      <div class="glassField full"><label>Teknisk merknad</label><textarea data-pe="riderNote">${esc(d.riderNote||'')}</textarea></div>
+    </div></div>`;
+  }
+
+  $('profileGlassOverlay').classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
+function closeProfileEditor(e){
+  if(e && e.target!==$('profileGlassOverlay'))return;
+  $('profileGlassOverlay').classList.remove('on');
+  document.body.style.overflow='';
+  activeProfileEditor=null;
+}
+function saveProfileEditor(){
+  if(!activeProfileEditor)return closeProfileEditor();
+  const d=profileData();
+  $('profileEditorBody').querySelectorAll('[data-pe]').forEach(el=>d[el.dataset.pe]=el.value.trim());
+  $('profileEditorBody').querySelectorAll('[data-save-chip]').forEach(el=>d[el.dataset.saveChip]=el.classList.contains('on'));
+  persistProfileEditors();
+  closeProfileEditor();
+  toast('✓ Lagret i artistprofilen');
+}
+
 function renderAll(){
  const active=state.requests.filter(r=>r.stage!=='signed'),signed=state.requests.filter(r=>r.stage==='signed');
  $('requestCount').textContent=active.length;$('eventCount').textContent=signed.length;$('statRequests').textContent=active.length;$('statContracts').textContent=state.requests.filter(r=>r.stage==='contract').length;$('statEvents').textContent=signed.length;
@@ -1199,7 +1453,11 @@ function signOrganizer(){let r=state.requests.find(x=>x.id===currentRequestId);r
 function openEvent(id){currentEventId=id;const r=state.requests.find(x=>x.id===id),a=artistBy(r.artistId);if(!r||r.stage!=='signed')return;$('ewTitle').textContent=r.name;$('ewArtist').textContent=a.name;$('ewMeta').textContent=`${r.date} · ${r.city} · ${r.venue}`;
  $('eventOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Kontrakt</b><small><br>Signert av ${esc(ownerLabel(r))} og ${esc(r.organizer)}</small><div class="roleline"><span class="badge bg-green">✓ SIGNERT</span></div></div><div class="rolecard"><b>Booking håndteres av</b><small><br>${esc(ownerLabel(r))}</small>${ownerBadge(r)}</div><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div></div>`;
  $('people').innerHTML=bookingAgencyPeopleHtml(r);
- $('schedule').innerHTML=`<div class="timeline"><div class="timeitem"><b>12:00 · Ankomst</b><small>Band + tourmanager</small></div><div class="timeitem"><b>15:00 · Soundcheck</b><small>Teknisk avklaring før dette</small></div><div class="timeitem"><b>21:30 · Show</b><small>${esc(a.name)}</small></div></div>`;
+ $('schedule').innerHTML=`<div class="timeline">
+  <div class="timeitem"><div class="time">12:00</div><div class="timecontent"><b>Ankomst</b><small>Band + tourmanager</small></div></div>
+  <div class="timeitem"><div class="time">15:00</div><div class="timecontent"><b>Soundcheck</b><small>Teknisk avklaring før dette</small></div></div>
+  <div class="timeitem"><div class="time">21:30</div><div class="timecontent"><b>Show</b><small>${esc(a.name)}</small></div></div>
+ </div>`;
  $('tech').innerHTML=`<div class="rolecard"><b>Teknisk produksjon</b><small><br>Stageplot, inputliste, monitor, PA, lys og backline knyttes til arrangementet her.</small></div>`;
  $('travel').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Reise</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Hotell</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Lokal transport</b><small><br>Ikke registrert</small></div></div>`;
  document.querySelectorAll('[data-etab]').forEach(x=>x.classList.remove('on'));document.querySelector('[data-etab="eventOverview"]').classList.add('on');['eventOverview','people','schedule','tech','travel'].forEach(id=>$(id).classList.toggle('on',id==='eventOverview'));$('eventWorkspace').classList.add('on');$('bookingWorkspace').classList.remove('on');setTimeout(()=>$('eventWorkspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
@@ -1375,6 +1633,10 @@ else if(currentRole==='organizer'){const r=state.requests.find(x=>x.stage==='sig
 document.addEventListener('keydown',e=>{
  const el=e.target.closest?.('.pipe[role="button"]');
  if(el&&(e.key==='Enter'||e.key===' ')){e.preventDefault();el.click()}
+});
+
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape'&&$('profileGlassOverlay')?.classList.contains('on'))closeProfileEditor();
 });
 </script>
 </body>
