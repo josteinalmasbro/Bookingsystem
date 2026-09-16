@@ -1179,10 +1179,10 @@ function renderArtistPortal(){
  $('artistRequestList').innerHTML=cases.length?cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{const d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee||0).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen forespørsler eller jobber.</div></div>';
  let cal=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join(''),start=(new Date('2026-09-01T12:00:00').getDay()+6)%7;
  for(let i=0;i<start;i++)cal+='<div class="day"></div>';
- for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<button type="button" class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="currentRequestId=null;openRequest(${r.id})">${esc(r.name)}</button>`).join('');if(p.busy.includes(iso))chips+=`<button type="button" class="calItem artistPrivate" onclick="openPrivateCalendarEntry('${iso}')">Privat opptatt</button>`;cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
+ for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<button type="button" class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="currentRequestId=null;openRequest(${r.id})">${esc(r.name)}</button>`).join('');chips+=privateCalendarChip(iso);cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
  $('artistCalendarGrid').innerHTML=cal;renderArtistCaseFilter();renderProfileCompletion();
 }
-function addPrivateBusy(){const raw=prompt('Skriv dato som YYYY-MM-DD (demo)');if(!raw)return;const p=artistProfiles[currentPortalArtistId]||(artistProfiles[currentPortalArtistId]={pct:80,members:1,busy:[]});if(!p.busy.includes(raw))p.busy.push(raw);renderArtistPortal();toast('Dato markert som privat opptatt')}
+function addPrivateBusy(){openPrivateCalendarEntry()}
 
 
 function phoneHref(phone){return 'tel:'+String(phone||'').replace(/[^\d+]/g,'')}
@@ -1329,6 +1329,7 @@ function drawProfile(){
 }
 function closeProfileEditor(e){if(e&&e.target!==$('profileGlassOverlay'))return;$('profileGlassOverlay').classList.remove('on');document.body.style.overflow='';profileDraft=null;activeProfileEditor=null;profileFocus?.focus()}
 function saveProfileEditor(){
+ if(activeProfileEditor==='privateCalendar')return savePrivateCalendarEntry();
  if(activeProfileEditor==='contract')return saveContractEditor();
  const form=$('memberProfileForm');form.querySelectorAll(':invalid').forEach(el=>{let d=el.closest('details');if(d)d.open=true});if(!form.reportValidity())return;collectProfile();const next=structuredClone(memberStore);next.artists[profileArtist]=profileDraft;
  try{localStorage.setItem(MEMBER_KEY,JSON.stringify(next))}catch(e){$('profileSaveError').textContent='Kunne ikke lagre. Nettleserens lagring er full eller blokkert. Endringene er fortsatt åpne.';return}
@@ -1360,14 +1361,28 @@ function renderArtistCaseFilter(){
 }
 
 document.addEventListener('keydown',e=>{const row=e.target.closest?.('.artistEvent[role="button"]');if(row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();row.click()}});
-function openPrivateCalendarEntry(date){
- activeProfileEditor='privateCalendar';profileFocus=document.activeElement;
- $('profileEditorTitle').textContent='Privat opptatt';
- $('profileEditorEyebrow').textContent=artistBy(currentPortalArtistId)?.name||'Artist';
- $('profileSaveError').textContent='';
- $('memberProfileForm').querySelector('[type=submit]').hidden=true;
- $('profileEditorBody').innerHTML='<p class="glassDesc">'+safe(new Date(date+'T12:00:00').toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'}))+'</p><p>Dagen er markert som privat opptatt. Denne oppføringen er ikke knyttet til en booking.</p>';
- $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';$('profileGlassOverlay').querySelector('button').focus();
+function privateEntries(id){return memberData(id).busyEntries||(artistProfiles[id]?.busy||[]).map(date=>({date,members:[]}))}
+function privateEntryNames(entry,id){return entry.members.map(person=>memberData(id).members.find(m=>m.id===person.id)?.name||person.name).filter(Boolean).join(', ')||'Hvem er opptatt?'}
+function privateCalendarChip(date){const entry=privateEntries(currentPortalArtistId).find(e=>e.date===date);return entry?`<button type="button" class="calItem artistPrivate" onclick="openPrivateCalendarEntry('${date}')">${safe(privateEntryNames(entry,currentPortalArtistId))}<br><span>Privat opptatt</span></button>`:''}
+let privateEditDate=null;
+function openPrivateCalendarEntry(date=''){
+ privateEditDate=date;profileArtist=currentPortalArtistId;activeProfileEditor='privateCalendar';profileFocus=document.activeElement;
+ const entry=privateEntries(profileArtist).find(e=>e.date===date),members=memberData(profileArtist).members;
+ $('profileEditorTitle').textContent='Hvem er opptatt?';$('profileEditorEyebrow').textContent=artistBy(profileArtist)?.name||'Artist';$('profileSaveError').textContent='';
+ $('memberProfileForm').querySelector('[type=submit]').hidden=false;
+ $('profileEditorBody').innerHTML='<p class="glassDesc">Velg hvem som er privat opptatt denne dagen. Navnene vises i bandets kalender. Lagres i denne nettleseren.</p><label class="glassField">Dato<input id="privateBusyDate" type="date" required value="'+safe(date)+'"></label><div class="member-card">'+(members.length?members.map(m=>`<label style="display:flex;gap:10px;align-items:center;padding:10px 0"><input type="checkbox" name="privateBusyMember" value="${safe(m.id)}" ${entry?.members.some(p=>p.id===m.id)?'checked':''}>${safe(m.name||'Medlem uten navn')} · ${safe(m.role||'')}</label>`).join(''):'<p>Legg til medlemsprofiler først, så kan du velge hvem som er opptatt.</p><button type="button" class="btn" onclick="closeProfileEditor();openProfileEditor(\'members\')">Legg til medlemmer</button>')+'</div>'+(entry&&!entry.members.length?'<p class="meta">Denne eldre oppføringen mangler navn. Velg riktig medlem og lagre.</p>':'');
+ $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';$('privateBusyDate').focus();
+}
+function savePrivateCalendarEntry(){
+ const date=$('privateBusyDate').value,ids=[...document.querySelectorAll('[name=privateBusyMember]:checked')].map(el=>el.value);
+ if(!$('memberProfileForm').reportValidity())return;
+ const members=memberData(profileArtist).members.filter(m=>ids.includes(m.id)&&m.name?.trim()).map(m=>({id:m.id,name:m.name}));
+ if(!members.length){$('profileSaveError').textContent='Velg minst ett medlem med navn.';return}
+ const entries=structuredClone(privateEntries(profileArtist));
+ if(date!==privateEditDate&&entries.some(e=>e.date===date)){$('profileSaveError').textContent='Datoen har allerede en oppføring. Åpne den fra kalenderen for å endre medlemmer.';return}
+ const next=structuredClone(memberStore);next.artists[profileArtist].busyEntries=entries.filter(e=>e.date!==privateEditDate).concat({date,members});
+ try{localStorage.setItem(MEMBER_KEY,JSON.stringify(next))}catch(e){$('profileSaveError').textContent='Kunne ikke lagre. Prøv igjen.';return}
+ memberStore=next;closeProfileEditor();renderArtistPortal();toast('Opptattdato lagret med medlemmer');
 }
 
 function profileChecklist(artistId){
