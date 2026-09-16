@@ -653,6 +653,9 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 .artist-role .artistNavBlock.mobileNav button.on{background:linear-gradient(145deg,#e7c86a25,#e7c86a0c);border-color:#e7c86a85;color:var(--gold);box-shadow:inset 0 1px 0 #fff1}
 .artist-role .artistNavBlock.mobileNav button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media(max-width:760px){.artist-role .artistNavBlock.mobileNav{padding:8px 12px 10px;gap:6px}.artist-role .artistNavBlock.mobileNav button{padding:8px 12px;min-height:44px}}
+.artist-role #artistCalendarGrid button.calItem{display:block;width:100%;border:0;text-align:left;font:inherit;font-size:.65rem;overflow-wrap:anywhere;cursor:pointer}
+.artist-role #artistCalendarGrid button.calItem:hover{filter:brightness(1.3)}
+.artist-role #artistCalendarGrid button.calItem:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 </style></head>
 <body>
 <div class="top">
@@ -1176,7 +1179,7 @@ function renderArtistPortal(){
  $('artistRequestList').innerHTML=cases.length?cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{const d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee||0).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen forespørsler eller jobber.</div></div>';
  let cal=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join(''),start=(new Date('2026-09-01T12:00:00').getDay()+6)%7;
  for(let i=0;i<start;i++)cal+='<div class="day"></div>';
- for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}">${esc(r.name)}</div>`).join('');if(p.busy.includes(iso))chips+='<div class="calItem artistPrivate">Privat opptatt</div>';cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
+ for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<button type="button" class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="currentRequestId=null;openRequest(${r.id})">${esc(r.name)}</button>`).join('');if(p.busy.includes(iso))chips+=`<button type="button" class="calItem artistPrivate" onclick="openPrivateCalendarEntry('${iso}')">Privat opptatt</button>`;cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
  $('artistCalendarGrid').innerHTML=cal;renderArtistCaseFilter();renderProfileCompletion();
 }
 function addPrivateBusy(){const raw=prompt('Skriv dato som YYYY-MM-DD (demo)');if(!raw)return;const p=artistProfiles[currentPortalArtistId]||(artistProfiles[currentPortalArtistId]={pct:80,members:1,busy:[]});if(!p.busy.includes(raw))p.busy.push(raw);renderArtistPortal();toast('Dato markert som privat opptatt')}
@@ -1357,6 +1360,15 @@ function renderArtistCaseFilter(){
 }
 
 document.addEventListener('keydown',e=>{const row=e.target.closest?.('.artistEvent[role="button"]');if(row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();row.click()}});
+function openPrivateCalendarEntry(date){
+ activeProfileEditor='privateCalendar';profileFocus=document.activeElement;
+ $('profileEditorTitle').textContent='Privat opptatt';
+ $('profileEditorEyebrow').textContent=artistBy(currentPortalArtistId)?.name||'Artist';
+ $('profileSaveError').textContent='';
+ $('memberProfileForm').querySelector('[type=submit]').hidden=true;
+ $('profileEditorBody').innerHTML='<p class="glassDesc">'+safe(new Date(date+'T12:00:00').toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'}))+'</p><p>Dagen er markert som privat opptatt. Denne oppføringen er ikke knyttet til en booking.</p>';
+ $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';$('profileGlassOverlay').querySelector('button').focus();
+}
 
 function profileChecklist(artistId){
  const d=memberData(artistId),checks=[];const filled=v=>typeof v==='string'?v.trim().length>0:v!==undefined&&v!==null;
