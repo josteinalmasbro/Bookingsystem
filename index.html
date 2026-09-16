@@ -346,30 +346,219 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   .conflictItem{padding:8px 0}
 }
 
+
+/* === Artistrolle === */
+.roleSwitch{display:flex;gap:4px;padding:4px;border:1px solid #2c3941;border-radius:999px;background:#0b1114}
+.roleSwitch button{border:0;background:transparent;color:#8e9aa1;padding:7px 10px;border-radius:999px;font-size:.72rem;font-weight:900;white-space:nowrap}
+.roleSwitch button.on{background:var(--gold);color:#151515}
+.artistNavBlock{display:none}
+.artist-role .agencyNavBlock{display:none!important}
+.artist-role .artistNavBlock{display:block}
+.artistHero{background:radial-gradient(circle at 85% 15%,rgba(231,200,106,.18),transparent 32%),linear-gradient(145deg,#151e23,#0b1114);border:1px solid #34424a;border-radius:20px;padding:20px;overflow:hidden}
+.artistHeroTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.artistIdentity{display:flex;gap:14px;align-items:center}
+.artistLogo{width:62px;height:62px;border-radius:17px;background:#e7c86a;color:#111;display:grid;place-items:center;font-weight:950;font-size:1.1rem;flex:0 0 62px}
+.artistSelect{background:#0b1114;color:#fff;border:1px solid #35434b;border-radius:10px;padding:9px 10px;max-width:220px}
+.artistStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.artistStat{background:#0c1215;border:1px solid #27343b;border-radius:14px;padding:14px}
+.artistStat small{color:var(--muted)}.artistStat strong{display:block;font-size:1.55rem;margin:5px 0}
+.artistQuick{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.artistAction{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-top:1px solid #222d33}
+.artistAction:first-child{border-top:0}
+.artistActionIcon{width:28px;height:28px;border-radius:9px;background:#222e34;display:grid;place-items:center;flex:0 0 28px}
+.artistEvent{display:grid;grid-template-columns:54px 1fr auto;gap:11px;align-items:center;padding:12px;border:1px solid #263139;background:#0b1114;border-radius:13px;margin-top:8px}
+.artistCalLegend{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.legendChip{font-size:.68rem;font-weight:900;border-radius:99px;padding:5px 8px}
+.legendRequest{background:#392f16;color:#f0d57d}.legendContract{background:#432817;color:#f5b37e}.legendConfirmed{background:#123427;color:#7ce0ad}.legendPrivate{background:#2d2539;color:#cbb3ff}
+.artistPrivate{background:#2d2539!important;color:#cbb3ff!important}
+.profileProgress{height:8px;background:#1c262b;border-radius:99px;overflow:hidden;margin:10px 0}.profileProgress i{display:block;height:100%;background:var(--gold);width:86%}
+.profileRows{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.profileBox{background:#0b1114;border:1px solid #28343b;border-radius:13px;padding:13px}.profileBox small{display:block;color:var(--muted);margin-top:4px;line-height:1.4}
+.mediaGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.mediaTile{min-height:110px;border:1px dashed #42515a;border-radius:14px;display:grid;place-items:center;text-align:center;padding:12px;color:#aeb8bd;background:#0b1114}
+@media(max-width:760px){
+ .topin{gap:8px;flex-wrap:wrap}
+ .roleSwitch{order:3;width:100%;display:grid;grid-template-columns:1fr 1fr}
+ .roleSwitch button{padding:8px}
+ .artist-role .agencyNavBlock.mobileNav{display:none!important}
+ .artist-role .artistNavBlock.mobileNav{display:flex}
+ .artistHero{padding:15px}.artistHeroTop{display:block}.artistLogo{width:52px;height:52px;flex-basis:52px}
+ .artistSelect{width:100%;max-width:none;margin-top:12px}
+ .artistStats{grid-template-columns:1fr 1fr;gap:8px}.artistStat{padding:12px}
+ .artistQuick,.profileRows,.mediaGrid{grid-template-columns:1fr}
+ .artistEvent{grid-template-columns:48px 1fr}.artistEvent>.badge{grid-column:2}
+}
+
+
+/* === Personer, roller og arrangørportal === */
+.organizerNavBlock{display:none}
+.organizer-role .agencyNavBlock,
+.organizer-role .artistNavBlock{display:none!important}
+.organizer-role .organizerNavBlock{display:block}
+.contactCard{position:relative}
+.contactActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.callBtn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  text-decoration:none;border:1px solid #2f614c;background:#123427;color:#7ce0ad;
+  border-radius:10px;padding:8px 10px;font-size:.75rem;font-weight:900
+}
+.callBtn:hover{filter:brightness(1.08)}
+.callBtn.disabled{opacity:.35;pointer-events:none}
+.personStatus{display:inline-block;margin-top:5px;font-size:.7rem;color:var(--muted)}
+.organizerHero{
+  background:linear-gradient(145deg,#151e23,#0b1114);
+  border:1px solid #34424a;border-radius:20px;padding:18px;margin-bottom:14px
+}
+.organizerPeople{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.personMini{background:#0b1114;border:1px solid #29363d;border-radius:14px;padding:14px}
+.personMini .phone{font-size:.78rem;color:#aeb8bd;margin-top:4px}
+.personMini .name{font-size:1rem;font-weight:900;margin-top:5px}
+.personMini .role{font-size:.72rem;color:var(--gold);font-weight:900;text-transform:uppercase;letter-spacing:.07em}
+.addPersonCard{border-style:dashed;display:flex;align-items:center;justify-content:center;min-height:130px;text-align:center}
+.artistDriverBlock{margin-top:12px}
+@media(max-width:760px){
+ .roleSwitch{grid-template-columns:repeat(3,1fr)!important}
+ .organizer-role .organizerNavBlock.mobileNav{display:flex}
+ .organizerPeople{grid-template-columns:1fr}
+ .callBtn{min-height:40px}
+}
+
+
+/* === Bookingmodell: byrå / direktebooking === */
+.bookingSettings{display:grid;gap:10px;margin-top:12px}
+.bookingChoice{
+  display:flex;gap:10px;align-items:flex-start;padding:12px;
+  border:1px solid #2b373e;border-radius:13px;background:#0b1114;cursor:pointer
+}
+.bookingChoice.on{border-color:#8a7437;background:rgba(231,200,106,.07)}
+.bookingChoice input{margin-top:3px;accent-color:#e7c86a}
+.bookingChoice b{display:block}
+.bookingChoice small{display:block;color:var(--muted);margin-top:3px;line-height:1.35}
+.bookingToggles{display:grid;gap:8px;margin-top:10px}
+.bookingToggle{
+  display:flex;align-items:flex-start;gap:9px;padding:9px 0;
+  border-top:1px solid #202a30;color:#dce3e6
+}
+.bookingToggle input{margin-top:3px;accent-color:#e7c86a}
+.ownerBadge{display:inline-flex;margin-top:5px}
+.directAction{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.lockedArtist{
+  border:1px solid #35434b;border-radius:14px;padding:14px;background:#0b1114
+}
+.lockedArtist .artistTitle{font-size:1.05rem}
+.inviteStatus{margin-top:8px;padding:10px 12px;border-radius:11px;background:#0b1114;border:1px solid #28353c}
+.inviteStatus.sent{border-color:#2d604c;background:rgba(18,52,39,.35)}
+.creatorNote{font-size:.72rem;color:var(--muted);margin-top:5px}
+@media(max-width:760px){
+ .directAction .btn{width:100%}
+ .bookingChoice{padding:11px}
+}
+
+
+/* === Tydeligere dashboard-navigasjon === */
+.dashboardFlowTitle{
+  display:flex;justify-content:space-between;align-items:end;gap:12px;
+  margin:22px 0 10px
+}
+.dashboardFlowTitle h2{margin:0;font-size:1.05rem}
+.dashboardFlowTitle small{color:var(--muted)}
+.pipeline{margin:0 0 14px}
+.pipe{
+  position:relative;cursor:pointer;transition:.16s ease;
+  min-height:126px;padding:16px 44px 16px 16px!important;
+}
+.pipe:hover{transform:translateY(-2px);border-color:#6d5c31;background:#11191d}
+.pipe:active{transform:translateY(0)}
+.pipe .pipeArrow{
+  position:absolute;right:15px;top:50%;transform:translateY(-50%);
+  font-size:1.3rem;color:#6f7c82
+}
+.pipe .pipeHint{display:block;margin-top:9px;font-size:.68rem;color:#7f8b91}
+.pipe.newStage{border-top:3px solid #e7c86a}
+.pipe.offerStage{border-top:3px solid #74b8ff}
+.pipe.contractStage{border-top:3px solid #f2a35f}
+.pipe.signedStage{border-top:3px solid #62d6a0}
+.quickStats{
+  display:flex;gap:10px;flex-wrap:wrap;margin:0 0 20px;
+  padding:11px 13px;border:1px solid var(--line);
+  background:#0b1114;border-radius:14px
+}
+.quickStat{
+  display:flex;align-items:center;gap:7px;
+  padding-right:12px;border-right:1px solid #273239;
+  color:var(--muted);font-size:.75rem
+}
+.quickStat:last-child{border-right:0}
+.quickStat b{color:#fff;font-size:.92rem}
+.quickStat.link{cursor:pointer}
+.quickStat.link:hover b{color:var(--gold)}
+#requestFilterBar{
+  display:none;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 12px;margin:12px 0;border:1px solid #334047;
+  border-radius:12px;background:#0b1114
+}
+#requestFilterBar.on{display:flex}
+@media(max-width:760px){
+ .pipeline{grid-template-columns:1fr 1fr!important}
+ .pipe{min-height:112px;padding:13px 34px 13px 13px!important}
+ .pipe strong{font-size:1.65rem!important}
+ .pipe .pipeHint{font-size:.62rem}
+ .quickStats{display:grid;grid-template-columns:1fr 1fr}
+ .quickStat{border-right:0;padding-right:0}
+ .dashboardFlowTitle{align-items:start}
+}
+
 </style>
 </head>
 <body>
 <div class="top">
  <div class="topin">
   <div class="brand"><div class="logo">BK</div><div>BOOKINGSYSTEM <span style="color:#66747b;font-weight:600">/ OPERATIV</span></div></div>
-  <div class="user"><div class="words"><strong style="color:#fff">Demo Agency</strong><br><small>Bookingadministrator</small></div><div class="avatar">DA</div></div>
+  <div class="roleSwitch"><button id="roleAgencyBtn" class="on" onclick="switchRole('agency')">Bookingbyrå</button><button id="roleArtistBtn" onclick="switchRole('artist')">Artist</button><button id="roleOrganizerBtn" onclick="switchRole('organizer')">Arrangør</button></div>
+  <div class="user"><div class="words"><strong id="userRoleName" style="color:#fff">Demo Agency</strong><br><small id="userRoleSub">Bookingadministrator</small></div><div class="avatar" id="userAvatar">DA</div></div>
  </div>
- <div class="mobileNav">
+ <div class="mobileNav agencyNavBlock">
   <button class="on" data-view="dashboard">Oversikt</button>
   <button data-view="requests">Forespørsler</button>
   <button data-view="calendar">Kalender</button>
   <button data-view="events">Arrangement</button>
  </div>
+ <div class="mobileNav artistNavBlock">
+  <button class="on" data-view="artistDashboard">Min side</button>
+  <button data-view="artistCalendar">Kalender</button>
+  <button data-view="artistRequests">Forespørsler</button>
+  <button data-view="artistProfile">Profil</button>
+  <button data-view="artistMedia">Media/EPK</button>
+ </div>
+ <div class="mobileNav organizerNavBlock">
+  <button class="on" data-view="organizerDashboard">Arrangement</button>
+  <button data-view="organizerPeople">Personer</button>
+ </div>
 </div>
 
 <div class="layout">
 <aside>
- <div class="group">Booking</div>
- <a href="#" class="nav on" data-view="dashboard">▦ Oversikt</a>
- <a href="#" class="nav" data-view="requests">◉ Forespørsler <span class="count" id="requestCount">0</span></a>
- <a href="#" class="nav" data-view="calendar">□ Kalender</a>
- <div class="group" style="margin-top:20px">Produksjon</div>
- <a href="#" class="nav" data-view="events">★ Bekreftede arrangement <span class="count" id="eventCount">0</span></a>
+ <div class="agencyNavBlock">
+  <div class="group">Booking</div>
+  <a href="#" class="nav on" data-view="dashboard">▦ Oversikt</a>
+  <a href="#" class="nav" data-view="requests">◉ Forespørsler <span class="count" id="requestCount">0</span></a>
+  <a href="#" class="nav" data-view="calendar">□ Kalender</a>
+  <div class="group" style="margin-top:20px">Produksjon</div>
+  <a href="#" class="nav" data-view="events">★ Bekreftede arrangement <span class="count" id="eventCount">0</span></a>
+ </div>
+ <div class="artistNavBlock">
+  <div class="group">Artist</div>
+  <a href="#" class="nav on" data-view="artistDashboard">★ Min side</a>
+  <a href="#" class="nav" data-view="artistCalendar">□ Kalender</a>
+  <a href="#" class="nav" data-view="artistRequests">◉ Forespørsler <span class="count" id="artistRequestCount">0</span></a>
+  <a href="#" class="nav" data-view="artistProfile">● Min profil</a>
+  <a href="#" class="nav" data-view="artistMedia">▧ Media & EPK</a>
+ </div>
+ <div class="organizerNavBlock">
+  <div class="group">Arrangør</div>
+  <a href="#" class="nav on" data-view="organizerDashboard">★ Mitt arrangement</a>
+  <a href="#" class="nav" data-view="organizerPeople">● Personer & kontakt</a>
+ </div>
 </aside>
 
 <main>
@@ -385,18 +574,33 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   <div class="actions"><button class="btn primary" onclick="openNewRequest()">+ Ny forespørsel</button></div>
  </div>
 
+ <div class="dashboardFlowTitle">
+  <div><h2>Bookingløpet</h2><small>Trykk på en fase for å åpne sakene som ligger der.</small></div>
+ </div>
  <div class="pipeline">
-  <div class="pipe"><small>NYE / AVKLARING</small><strong id="pipeNew">0</strong><span class="yellow">Forespørsler</span></div>
-  <div class="pipe"><small>TILBUD / FORHANDLING</small><strong id="pipeOffer">0</strong><span class="blue">Bookingcases</span></div>
-  <div class="pipe"><small>KONTRAKT / SIGNERING</small><strong id="pipeContract">0</strong><span class="orange">Venter signatur</span></div>
-  <div class="pipe"><small>BEKREFTET</small><strong id="pipeSigned">0</strong><span class="green">Arrangement</span></div>
+  <div class="pipe newStage" onclick="showBookingStage('new')" role="button" tabindex="0">
+   <small>1 · NYE / AVKLARING</small><strong id="pipeNew">0</strong><span class="yellow">Forespørsler</span>
+   <span class="pipeHint">Åpne nye saker</span><span class="pipeArrow">→</span>
+  </div>
+  <div class="pipe offerStage" onclick="showBookingStage('offer')" role="button" tabindex="0">
+   <small>2 · TILBUD / FORHANDLING</small><strong id="pipeOffer">0</strong><span class="blue">Tilbud ute</span>
+   <span class="pipeHint">Se tilbud og forhandling</span><span class="pipeArrow">→</span>
+  </div>
+  <div class="pipe contractStage" onclick="showBookingStage('contract')" role="button" tabindex="0">
+   <small>3 · KONTRAKT / SIGNERING</small><strong id="pipeContract">0</strong><span class="orange">Venter signatur</span>
+   <span class="pipeHint">Åpne kontrakter</span><span class="pipeArrow">→</span>
+  </div>
+  <div class="pipe signedStage" onclick="showView('events')" role="button" tabindex="0">
+   <small>4 · BEKREFTET</small><strong id="pipeSigned">0</strong><span class="green">Arrangement</span>
+   <span class="pipeHint">Gå til produksjon</span><span class="pipeArrow">→</span>
+  </div>
  </div>
 
- <div class="stats">
-  <div class="card stat"><span>Aktive bookingcases</span><strong id="statRequests">0</strong><span class="yellow">Før signering</span></div>
-  <div class="card stat"><span>Kontrakter ute</span><strong id="statContracts">0</strong><span class="orange">Sendt til signering</span></div>
-  <div class="card stat"><span>Bekreftede arrangement</span><strong id="statEvents">0</strong><span class="green">Begge signert</span></div>
-  <div class="card stat"><span>Bookingverdi</span><strong>1,42m</strong><span class="gold">NOK denne måneden</span></div>
+ <div class="quickStats">
+  <div class="quickStat link" onclick="showBookingStage('active')"><span>Aktive saker</span><b id="statRequests">0</b></div>
+  <div class="quickStat link" onclick="showBookingStage('contract')"><span>Kontrakter ute</span><b id="statContracts">0</b></div>
+  <div class="quickStat link" onclick="showView('events')"><span>Bekreftede</span><b id="statEvents">0</b></div>
+  <div class="quickStat"><span>Bookingverdi</span><b>1,42m NOK</b></div>
  </div>
 
  <div class="grid2">
@@ -405,13 +609,14 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
    <div class="rolecard"><b>1. Opprett forespørsel</b><small><br>Artist, dato, arrangør, sted og rammer.</small></div>
    <div class="rolecard" style="margin-top:8px"><b>2. Avklar og send tilbud</b><small><br>Honoraret og betingelsene forhandles.</small></div>
    <div class="rolecard" style="margin-top:8px"><b>3. Generer kontrakt</b><small><br>Data gjenbrukes fra bookingcaset.</small></div>
-   <div class="rolecard" style="margin-top:8px"><b>4. Begge signerer</b><small><br>Byrå + arrangør. Først da opprettes arrangementet.</small></div>
+   <div class="rolecard" style="margin-top:8px"><b>4. Begge signerer</b><small><br>Bookingansvarlig + arrangør. Først da opprettes arrangementet.</small></div>
   </div>
  </div>
 </section>
 
 <section id="requests" class="view">
  <div class="headrow"><div><div class="eyebrow">Fase 1 · Booking</div><h1>Forespørsler.</h1><div class="lead">Alt fra første henvendelse til signert kontrakt ligger her.</div></div><div class="actions"><button class="btn primary" onclick="openNewRequest()">+ Ny forespørsel</button></div></div>
+ <div id="requestFilterBar"><div><b id="requestFilterTitle">Filter</b><div class="meta" id="requestFilterMeta"></div></div><button class="btn" onclick="clearBookingStageFilter()">Vis alle</button></div>
  <div id="allRequests" class="caseList" style="margin-top:18px"></div>
 </section>
 
@@ -421,8 +626,108 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 </section>
 
 <section id="events" class="view">
- <div><div class="eyebrow">Fase 2 · Produksjon</div><h1>Bekreftede arrangement.</h1><div class="lead">Kun jobber hvor bookingbyrå og arrangør har signert kontrakten vises her.</div></div>
+ <div><div class="eyebrow">Fase 2 · Produksjon</div><h1>Bekreftede arrangement.</h1><div class="lead">Kun jobber hvor begge kontraktsparter har signert vises her.</div></div>
  <div id="allEvents" class="eventList" style="margin-top:18px"></div>
+</section>
+
+
+<section id="artistDashboard" class="view">
+ <div class="artistHero"><div class="artistHeroTop">
+  <div class="artistIdentity"><div class="artistLogo" id="artistLogo">HS</div><div><div class="eyebrow">Artistens arbeidsflate</div><h1 id="artistDashName" style="font-size:2.25rem;margin-bottom:6px">Hollywood Scandal</h1><div class="lead" style="font-size:.92rem">Forespørsler, kalender, medlemmer, profil og alt som må være på plass før jobb.</div></div></div>
+  <div>
+   <select id="artistPortalSelect" class="artistSelect" onchange="changePortalArtist(this.value)"></select>
+   <div class="directAction"><button id="artistNewDirectBtn" class="btn primary" onclick="openNewRequest('artist')">+ Ny booking</button></div>
+  </div>
+ </div></div>
+ <div class="artistStats">
+  <div class="artistStat"><small>Profilstatus</small><strong id="artistProfilePct">86%</strong><span class="gold">Bookingklar</span></div>
+  <div class="artistStat"><small>Åpne forespørsler</small><strong id="artistOpenCount">0</strong><span class="yellow">Ikke bekreftet</span></div>
+  <div class="artistStat"><small>Bekreftede jobber</small><strong id="artistConfirmedCount">0</strong><span class="green">I kalender</span></div>
+  <div class="artistStat"><small>Medlemmer</small><strong id="artistMemberCount">5</strong><span class="blue">Profiler koblet</span></div>
+ </div>
+ <div class="artistQuick">
+  <div class="card"><div class="sectionTitle" style="margin:0 0 8px"><h2 style="margin:0">Neste jobber</h2><button class="btn" onclick="showView('artistCalendar')">Kalender</button></div><div id="artistUpcoming"></div></div>
+  <div class="card"><h2 style="margin-top:0">Krever oppmerksomhet</h2>
+   <div class="artistAction"><div class="artistActionIcon">◉</div><div><b id="artistAttentionRequests">Forespørsler</b><div class="meta">Se nye og parallelle forespørsler før datoen blir bekreftet.</div></div></div>
+   <div class="artistAction"><div class="artistActionIcon">□</div><div><b>Kalenderen din</b><div class="meta">Marker private opptatte datoer, så bookingbyrået ser det før de sender tilbud.</div></div></div>
+   <div class="artistAction"><div class="artistActionIcon">⚡</div><div><b>Teknisk profil</b><div class="meta">Monitor, backline og medlemsprofiler brukes på nye jobber.</div></div></div>
+   <div class="artistAction"><div class="artistActionIcon">🚐</div><div style="width:100%"><b>Sjåfør fra bandet</b><div class="meta">Legg inn sjåfør dersom bandet har med egen sjåfør på en bekreftet jobb.</div><div id="artistDriverBlock" class="artistDriverBlock"></div></div></div>
+  </div>
+ </div>
+</section>
+
+<section id="artistCalendar" class="view">
+ <div class="headrow"><div><div class="eyebrow">Artist · kalender</div><h1>Min kalender.</h1><div class="lead">Samme bookingdata som byrået ser. Flere forespørsler kan ligge parallelt frem til én jobb er bekreftet.</div></div><div class="actions"><button class="btn primary" onclick="addPrivateBusy()">+ Sett meg opptatt</button></div></div>
+ <div class="artistCalLegend"><span class="legendChip legendRequest">Forespørsel / tilbud</span><span class="legendChip legendContract">Kontrakt ute</span><span class="legendChip legendConfirmed">Bekreftet</span><span class="legendChip legendPrivate">Privat opptatt</span></div>
+ <div class="card"><h2 style="margin-top:0">September 2026</h2><div id="artistCalendarGrid" class="cal"></div></div>
+</section>
+
+<section id="artistRequests" class="view">
+ <div class="headrow">
+  <div><div class="eyebrow">Artist · booking</div><h1>Forespørsler.</h1><div class="lead">Her ser artisten både saker bookingbyrået håndterer og eventuelle direktebookinger.</div></div>
+  <div class="actions"><button id="artistRequestNewBtn" class="btn primary" onclick="openNewRequest('artist')">+ Ny booking</button></div>
+ </div>
+ <div id="artistRequestList" class="caseList" style="margin-top:18px"></div>
+</section>
+
+<section id="artistProfile" class="view">
+ <div class="headrow"><div><div class="eyebrow">Artist · profil</div><h1 id="artistProfileName">Hollywood Scandal.</h1><div class="lead">Én masterprofil som følger alle bookinger og kan overstyres på enkeltjobber.</div></div><div class="actions"><button class="btn primary" onclick="toast('Profil lagret – demo')">Lagre profil</button></div></div>
+ <div class="card" style="margin-top:18px"><b>Profilstatus · <span id="profilePctText">86 %</span> komplett</b><div class="profileProgress"><i></i></div><div class="meta">Medlemsprofiler, rider, media og tekniske preferanser samles her.</div></div>
+
+ <div class="card" style="margin-top:12px">
+  <div class="eyebrow">Bookinginnstillinger</div>
+  <h2 style="margin:6px 0">Hvem kan booke artisten?</h2>
+  <div class="meta">Dette styrer hvem som kan opprette bookingcase og hvem som blir kontraktspart mot arrangøren.</div>
+  <div class="bookingSettings">
+   <label class="bookingChoice" id="bookingChoiceAgency"><input type="radio" name="bookingMode" value="agency_only" onchange="saveBookingSettings()"><span><b>All booking via bookingbyrå</b><small>Artisten ser forespørsler og kalender, men nye bookinger opprettes av bookingbyrået.</small></span></label>
+   <label class="bookingChoice" id="bookingChoiceHybrid"><input type="radio" name="bookingMode" value="hybrid" onchange="saveBookingSettings()"><span><b>Bookingbyrå + direktebooking</b><small>Både bookingbyrået og artisten kan opprette saker og invitere arrangør.</small></span></label>
+   <label class="bookingChoice" id="bookingChoiceDirect"><input type="radio" name="bookingMode" value="direct_only" onchange="saveBookingSettings()"><span><b>Kun egen booking</b><small>Artisten håndterer booking selv og står som kontraktspart mot arrangøren.</small></span></label>
+  </div>
+  <div id="bookingExtraSettings" class="bookingToggles">
+   <label class="bookingToggle"><input id="prefNotifyAgency" type="checkbox" onchange="saveBookingSettings()"><span><b>Varsle bookingbyrået om direktebookinger</b><br><small class="meta">Byrået får saken synlig som informasjon.</small></span></label>
+   <label class="bookingToggle"><input id="prefAgencyCalendar" type="checkbox" onchange="saveBookingSettings()"><span><b>Vis direktebookinger i bookingbyråets kalender</b><br><small class="meta">Anbefalt, slik at byrået alltid ser når datoen er opptatt.</small></span></label>
+   <label class="bookingToggle"><input id="prefAgencyManage" type="checkbox" onchange="saveBookingSettings()"><span><b>Bookingbyrået kan administrere direktebookingen</b><br><small class="meta">Gir byrået mulighet til å hjelpe videre med saken.</small></span></label>
+  </div>
+  <div id="bookingModeSummary" class="inviteStatus"></div>
+ </div>
+
+ <div class="profileRows" style="margin-top:12px">
+  <div class="profileBox"><b>Medlemmer</b><small id="profileMembers">5 medlemmer · personlige profiler koblet.</small><button class="btn" style="margin-top:10px" onclick="toast('Medlemsprofiler åpnes her')">Administrer medlemmer</button></div>
+  <div class="profileBox"><b>Monitor</b><small>In-ear / wedge og personlige monitorpreferanser.</small><button class="btn" style="margin-top:10px" onclick="toast('Monitorprofil åpnes her')">Åpne monitorprofil</button></div>
+  <div class="profileBox"><b>Backline</b><small>Hva bandet tar med selv, og hva som må finnes på stedet.</small><button class="btn" style="margin-top:10px" onclick="toast('Backlineprofil åpnes her')">Rediger backline</button></div>
+  <div class="profileBox"><b>Vikarer</b><small>Aktuelle vikarer per rolle når fast medlem ikke er tilgjengelig.</small><button class="btn" style="margin-top:10px" onclick="toast('Vikarbank åpnes her')">Vikarbank</button></div>
+  <div class="profileBox"><b>Hospitality</b><small>Matpreferanser og personlige behov ligger på medlemsnivå.</small><button class="btn" style="margin-top:10px" onclick="toast('Medlemsbehov åpnes her')">Se status</button></div>
+  <div class="profileBox"><b>Teknisk rider</b><small>Stageplot, inputliste og tekniske dokumenter.</small><button class="btn" style="margin-top:10px" onclick="showView('artistMedia')">Dokumenter</button></div>
+ </div>
+</section>
+
+<section id="artistMedia" class="view">
+ <div><div class="eyebrow">Artist · Media & EPK</div><h1>Media og rider.</h1><div class="lead">Bookingbyrået bruker dette direkte i tilbud, arrangørportal og produksjonsflyt.</div></div>
+ <div class="mediaGrid" style="margin-top:18px">
+  <div class="mediaTile">＋<br><b>Konsertbilder</b><br><small>Høy oppløsning</small></div>
+  <div class="mediaTile">＋<br><b>Video / reels</b><br><small>Promo og live</small></div>
+  <div class="mediaTile">＋<br><b>Presseskriv</b><br><small>Bio / presentasjon</small></div>
+  <div class="mediaTile">📄<br><b>Teknisk rider</b><br><small>Stageplot / input</small></div>
+  <div class="mediaTile">▤<br><b>Backstage rider</b><br><small>Hospitality</small></div>
+  <div class="mediaTile">◇<br><b>Logo / pressepakke</b><br><small>SVG / PNG / PDF</small></div>
+ </div>
+</section>
+
+
+<section id="organizerDashboard" class="view">
+ <div class="organizerHero">
+  <div class="eyebrow">Arrangørportal</div>
+  <h1 style="margin-bottom:6px">Mitt arrangement.</h1>
+  <div class="lead">Her legger arrangøren inn egne nøkkelpersoner rundt arrangementet. Bookingbyrået ser informasjonen med én gang.</div>
+ </div>
+ <div id="organizerEventSummary"></div>
+</section>
+
+<section id="organizerPeople" class="view">
+ <div class="headrow">
+  <div><div class="eyebrow">Arrangør · personer</div><h1>Kontaktpersoner rundt jobben.</h1><div class="lead">Artistvert, lokal sjåfør og andre aktuelle kontakter kan legges til med telefonnummer. Ring direkte fra systemet.</div></div>
+ </div>
+ <div id="organizerPeopleGrid" class="organizerPeople" style="margin-top:18px"></div>
 </section>
 
 <section id="bookingWorkspace" class="workspace card">
@@ -471,8 +776,11 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   <div class="progressDots"><i class="on"></i><i></i><i></i><i></i></div>
 
   <div class="wstep on" data-step="1">
-   <div class="artistSearch"><span>⌕</span><input id="artistSearchInput" placeholder="Søk etter artist …" oninput="filterArtists()"></div>
-   <div id="artistPicker" class="artistPicker"></div>
+   <div id="agencyArtistPicker">
+    <div class="artistSearch"><span>⌕</span><input id="artistSearchInput" placeholder="Søk etter artist …" oninput="filterArtists()"></div>
+    <div id="artistPicker" class="artistPicker"></div>
+   </div>
+   <div id="directArtistLocked" class="lockedArtist" style="display:none"></div>
   </div>
 
   <div class="wstep" data-step="2">
@@ -491,8 +799,9 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
    <div class="formgrid">
     <div class="field full"><label>Arrangør / firma</label><input id="rqOrganizer" placeholder="Firma / organisasjon"></div>
     <div class="field full"><label>Kontaktperson</label><input id="rqContact" placeholder="Navn"></div>
+    <div class="field full"><label>E-post til arrangør</label><input id="rqOrganizerEmail" type="email" inputmode="email" placeholder="navn@firma.no"></div>
    </div>
-   <div class="rolecard"><b>Senere</b><small><br>Arrangøren kan inviteres inn og komplettere informasjonen selv etter at bookingcaset er opprettet.</small></div>
+   <label class="bookingToggle" style="border:0;padding:10px 0"><input id="rqInviteOrganizer" type="checkbox" checked><span><b>Send invitasjon til arrangør når saken opprettes</b><br><small class="meta">Arrangøren får tilgang til sin portal og kan komplettere informasjonen.</small></span></label>
   </div>
 
   <div class="wstep" data-step="4">
@@ -515,7 +824,20 @@ const artists=[
  {id:'na',name:'Neon Avenue',meta:'Pop / rock · 6 medlemmer'},
  {id:'ad',name:'Acoustic Duo',meta:'Akustisk · 2 medlemmer'}
 ];
-let wizardStep=1, selectedArtistId='hs';
+let wizardStep=1, selectedArtistId='hs', requestCreator='agency';
+let currentPortalArtistId=localStorage.getItem('portal-artist-id')||'hs';
+let currentRole=localStorage.getItem('booking-role')||'agency';
+const artistProfiles={hs:{pct:86,members:5,busy:['2026-09-21']},na:{pct:92,members:6,busy:['2026-09-22']},ad:{pct:100,members:2,busy:['2026-09-17']}};
+const BOOKING_PREFS_KEY='booking-artist-prefs-v1';
+let bookingPrefs;try{bookingPrefs=JSON.parse(localStorage.getItem(BOOKING_PREFS_KEY))}catch(e){}
+if(!bookingPrefs)bookingPrefs={
+ hs:{mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false},
+ na:{mode:'agency_only',notifyAgency:true,agencyCalendar:true,agencyManage:true},
+ ad:{mode:'direct_only',notifyAgency:false,agencyCalendar:false,agencyManage:false}
+};
+function getBookingPref(id){return bookingPrefs[id]||{mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false}}
+function storeBookingPrefs(){localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs))}
+
 const defaults=[
  {id:101,name:'Nordic Tech Festival',artistId:'hs',date:'2026-09-18',organizer:'Nordic Events AS',contact:'Anne Larsen',city:'København',venue:'Bella Center',fee:48000,type:'Utland',stage:'contract',agencySigned:true,organizerSigned:false,offerAccepted:true,contractVersion:2},
  {id:102,name:'Jubileumsfest',artistId:'na',date:'2026-09-19',organizer:'Trøndelag Event AS',contact:'Lars Moen',city:'Trondheim',venue:'Scandic Nidelven',fee:45000,type:'Firmafest',stage:'offer',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0},
@@ -523,6 +845,42 @@ const defaults=[
  {id:104,name:'Høstkonferansen',artistId:'na',date:'2026-09-12',organizer:'Vest Event AS',contact:'Oda Vik',city:'Stavanger',venue:'Clarion Energy',fee:52000,type:'Konferanse',stage:'signed',agencySigned:true,organizerSigned:true,offerAccepted:true,contractVersion:1}
 ];
 let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state)state={requests:defaults};
+state.requests.forEach(r=>{
+ if(!r.bookingOwner)r.bookingOwner='agency';
+ if(typeof r.ownerSigned==='undefined')r.ownerSigned=!!r.agencySigned;
+ if(typeof r.organizerInvited==='undefined')r.organizerInvited=false;
+ if(typeof r.organizerEmail==='undefined')r.organizerEmail='';
+});
+
+const PEOPLE_KEY='booking-event-people-v1';
+let eventPeople;try{eventPeople=JSON.parse(localStorage.getItem(PEOPLE_KEY))}catch(e){}
+if(!eventPeople)eventPeople={
+  "104":{
+    agency:[
+      {role:"Teknisk produksjon",name:"Ikke invitert",phone:""},
+      {role:"Tourmanager",name:"Ikke satt",phone:""}
+    ],
+    organizer:[
+      {role:"Hovedkontakt",name:"Oda Vik",phone:"+47 900 11 223"},
+      {role:"Artistvert",name:"Ikke satt",phone:""},
+      {role:"Lokal sjåfør",name:"Ikke satt",phone:""}
+    ],
+    artist:[
+      {role:"Bandets sjåfør",name:"Ikke satt",phone:""}
+    ]
+  }
+};
+function savePeople(){localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople))}
+function ensurePeople(id){
+  const key=String(id);
+  if(!eventPeople[key])eventPeople[key]={
+    agency:[{role:"Teknisk produksjon",name:"Ikke invitert",phone:""},{role:"Tourmanager",name:"Ikke satt",phone:""}],
+    organizer:[{role:"Hovedkontakt",name:"Ikke satt",phone:""},{role:"Artistvert",name:"Ikke satt",phone:""},{role:"Lokal sjåfør",name:"Ikke satt",phone:""}],
+    artist:[{role:"Bandets sjåfør",name:"Ikke satt",phone:""}]
+  };
+  return eventPeople[key];
+}
+
 let currentRequestId=null,currentEventId=null;
 const $=id=>document.getElementById(id), artistBy=id=>artists.find(a=>a.id===id), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
@@ -530,12 +888,122 @@ function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('on');c
 function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','APR','MAI','JUN','JUL','AUG','SEP','OKT','NOV','DES'];return{day:d.getDate(),mon:m[d.getMonth()]}}
 function stageLabel(s){return s==='new'?'FORespørsel':s==='offer'?'TILBUD':s==='contract'?'KONTRAKT SENDT':'SIGNERT'}
 function stageBadge(s){return s==='new'?'<span class="badge bg-yellow">FORESPØRSEL</span>':s==='offer'?'<span class="badge bg-blue">TILBUD</span>':s==='contract'?'<span class="badge bg-orange">KONTRAKT UTE</span>':'<span class="badge bg-green">BEKREFTET</span>'}
-function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));$('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');window.scrollTo({top:0,behavior:'smooth'})}
-document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();showView(n.dataset.view)}));
+function showView(id){
+ const av=['artistDashboard','artistCalendar','artistRequests','artistProfile','artistMedia'],ov=['organizerDashboard','organizerPeople'],bv=['dashboard','requests','calendar','events'];
+ if(currentRole==='artist'&&!av.includes(id))id='artistDashboard';if(currentRole==='organizer'&&!ov.includes(id))id='organizerDashboard';if(currentRole==='agency'&&!bv.includes(id))id='dashboard';
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));
+ $('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');if(av.includes(id))renderArtistPortal();if(ov.includes(id))renderOrganizerPortal();window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();if(n.dataset.view==='requests')bookingStageFilter=null;showView(n.dataset.view);if(n.dataset.view==='requests'){$('requestFilterBar')?.classList.remove('on');renderCaseList('allRequests')}}));
+function switchRole(role){
+ currentRole=role;localStorage.setItem('booking-role',role);
+ document.body.classList.toggle('artist-role',role==='artist');
+ document.body.classList.toggle('organizer-role',role==='organizer');
+ $('roleAgencyBtn').classList.toggle('on',role==='agency');
+ $('roleArtistBtn').classList.toggle('on',role==='artist');
+ $('roleOrganizerBtn').classList.toggle('on',role==='organizer');
+ const a=artistBy(currentPortalArtistId);
+ if(role==='artist'){
+   $('userRoleName').textContent=a?.name||'Artist';$('userRoleSub').textContent='Artistportal';$('userAvatar').textContent=(a?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2);
+   showView('artistDashboard');
+ }else if(role==='organizer'){
+   const r=state.requests.find(x=>x.stage==='signed');
+   $('userRoleName').textContent=r?.organizer||'Arrangør';$('userRoleSub').textContent='Arrangørportal';$('userAvatar').textContent='AR';
+   showView('organizerDashboard');
+ }else{
+   $('userRoleName').textContent='Demo Agency';$('userRoleSub').textContent='Bookingadministrator';$('userAvatar').textContent='DA';
+   showView('dashboard');
+ }
+}
+
+
+function ownerLabel(r){
+ const a=artistBy(r.artistId);
+ return r.bookingOwner==='artist'?(a?.name||'Artist'):'Demo Agency';
+}
+function ownerTypeText(r){return r.bookingOwner==='artist'?'Direktebooking':'Bookingbyrå'}
+function ownerBadge(r){return `<span class="badge ${r.bookingOwner==='artist'?'bg-blue':'bg-yellow'} ownerBadge">${ownerTypeText(r).toUpperCase()}</span>`}
+function canArtistDirectBook(id){
+ const mode=getBookingPref(id).mode;
+ return mode==='hybrid'||mode==='direct_only';
+}
+function renderBookingSettings(){
+ const p=getBookingPref(currentPortalArtistId);
+ document.querySelectorAll('input[name="bookingMode"]').forEach(x=>x.checked=x.value===p.mode);
+ ['agency_only','hybrid','direct_only'].forEach(mode=>{
+   const id=mode==='agency_only'?'bookingChoiceAgency':mode==='hybrid'?'bookingChoiceHybrid':'bookingChoiceDirect';
+   $(id)?.classList.toggle('on',p.mode===mode);
+ });
+ if($('prefNotifyAgency'))$('prefNotifyAgency').checked=!!p.notifyAgency;
+ if($('prefAgencyCalendar'))$('prefAgencyCalendar').checked=!!p.agencyCalendar;
+ if($('prefAgencyManage'))$('prefAgencyManage').checked=!!p.agencyManage;
+ if($('bookingExtraSettings'))$('bookingExtraSettings').style.display=p.mode==='agency_only'?'none':'grid';
+ const text=p.mode==='agency_only'?'All booking går via bookingbyrået.':
+            p.mode==='direct_only'?'Artisten håndterer booking selv og er kontraktspart mot arrangøren.':
+            'Både bookingbyrået og artisten kan opprette booking.';
+ if($('bookingModeSummary'))$('bookingModeSummary').innerHTML=`<b>${text}</b><div class="creatorNote">Kalender og tilgjengelighet er felles uansett hvem som oppretter saken.</div>`;
+}
+function saveBookingSettings(){
+ const selected=document.querySelector('input[name="bookingMode"]:checked');
+ if(!selected)return;
+ bookingPrefs[currentPortalArtistId]={
+   mode:selected.value,
+   notifyAgency:$('prefNotifyAgency')?.checked??true,
+   agencyCalendar:$('prefAgencyCalendar')?.checked??true,
+   agencyManage:$('prefAgencyManage')?.checked??false
+ };
+ storeBookingPrefs();renderBookingSettings();renderArtistPortal();renderCalendar();
+ toast('Bookinginnstillinger lagret');
+}
+function sendOrganizerInvite(id){
+ const r=state.requests.find(x=>x.id===id);if(!r)return;
+ if(!r.organizerEmail){
+   const email=prompt('E-post til arrangør',r.organizerEmail||'');if(!email)return;
+   r.organizerEmail=email.trim();
+ }
+ r.organizerInvited=true;r.organizerInviteSentAt=new Date().toISOString();
+ save();renderAll();openRequest(id);toast('✓ Invitasjon sendt til arrangør');
+}
+
+
+let bookingStageFilter=null;
+function showBookingStage(stage){
+ bookingStageFilter=stage;
+ showView('requests');
+ renderFilteredRequests();
+}
+function clearBookingStageFilter(){
+ bookingStageFilter=null;
+ $('requestFilterBar').classList.remove('on');
+ renderCaseList('allRequests');
+}
+function renderFilteredRequests(){
+ const stage=bookingStageFilter;
+ if(!stage){clearBookingStageFilter();return}
+ const labels={
+   new:['Nye / avklaring','Forespørsler som ikke er sendt til tilbud ennå.'],
+   offer:['Tilbud / forhandling','Saker hvor tilbud og vilkår jobbes med.'],
+   contract:['Kontrakt / signering','Kontrakter som er sendt eller venter signatur.'],
+   active:['Aktive bookingcases','Alle saker før de er bekreftet.']
+ };
+ const info=labels[stage]||labels.active;
+ $('requestFilterTitle').textContent=info[0];
+ $('requestFilterMeta').textContent=info[1];
+ $('requestFilterBar').classList.add('on');
+ let arr=state.requests.filter(r=>r.stage!=='signed');
+ if(stage!=='active')arr=arr.filter(r=>r.stage===stage);
+ if(currentRole==='agency')arr=arr.filter(r=>r.bookingOwner!=='artist'||getBookingPref(r.artistId).notifyAgency||getBookingPref(r.artistId).agencyManage);
+ $('allRequests').innerHTML=arr.length?arr.map(r=>{
+   const a=artistBy(r.artistId),d=fmtDate(r.date);
+   return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}</div>${stageBadge(r.stage)}</div>`;
+ }).join(''):'<div class="card"><div class="meta">Ingen saker i denne fasen.</div></div>';
+}
 
 function renderCaseList(id,limit){
- let arr=state.requests.filter(r=>r.stage!=='signed');if(limit)arr=arr.slice(0,limit);
- $(id).innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee).toLocaleString('nb-NO')} kr</div></div>${stageBadge(r.stage)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen aktive forespørsler.</div></div>';
+ let arr=state.requests.filter(r=>r.stage!=='signed');
+ if(currentRole==='agency')arr=arr.filter(r=>r.bookingOwner!=='artist'||getBookingPref(r.artistId).notifyAgency||getBookingPref(r.artistId).agencyManage);
+ if(limit)arr=arr.slice(0,limit);
+ $(id).innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}</div>${stageBadge(r.stage)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen aktive forespørsler.</div></div>';
 }
 function renderEvents(){
  const arr=state.requests.filter(r=>r.stage==='signed');
@@ -543,33 +1011,194 @@ function renderEvents(){
 }
 function renderCalendar(){
  let html=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join('');const first=new Date('2026-09-01T12:00:00'),start=(first.getDay()+6)%7;for(let i=0;i<start;i++)html+='<div class="day"></div>';
- for(let d=1;d<=30;d++){let iso=`2026-09-${String(d).padStart(2,'0')}`,rs=state.requests.filter(r=>r.date===iso);html+=`<div class="day"><div class="num">${d}</div>${rs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="${r.stage==='signed'?'openEvent':'openRequest'}(${r.id});event.stopPropagation()">${esc(r.name)}<br>${esc(artistBy(r.artistId).name)}</div>`).join('')}</div>`} $('calendarGrid').innerHTML=html;
+ for(let d=1;d<=30;d++){let iso=`2026-09-${String(d).padStart(2,'0')}`,rs=state.requests.filter(r=>r.date===iso).filter(r=>r.bookingOwner!=='artist'||currentRole!=='agency'||getBookingPref(r.artistId).agencyCalendar);html+=`<div class="day"><div class="num">${d}</div>${rs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}" onclick="${r.stage==='signed'?'openEvent':'openRequest'}(${r.id});event.stopPropagation()">${esc(r.name)}<br>${esc(artistBy(r.artistId).name)}</div>`).join('')}</div>`} $('calendarGrid').innerHTML=html;
 }
+
+function changePortalArtist(id){currentPortalArtistId=id;localStorage.setItem('portal-artist-id',id);renderArtistPortal();if(currentRole==='artist'){$('userRoleName').textContent=artistBy(id)?.name||'Artist';$('userAvatar').textContent=(artistBy(id)?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2)}}
+function artistCases(){return state.requests.filter(r=>r.artistId===currentPortalArtistId)}
+function artistStageBadge(r){return r.stage==='signed'?'<span class="badge bg-green">BEKREFTET</span>':r.stage==='contract'?'<span class="badge bg-orange">KONTRAKT UTE</span>':r.stage==='offer'?'<span class="badge bg-blue">TILBUD</span>':'<span class="badge bg-yellow">FORESPØRSEL</span>'}
+function renderArtistPortal(){
+ const a=artistBy(currentPortalArtistId)||artists[0],p=artistProfiles[currentPortalArtistId]||{pct:80,members:1,busy:[]},cases=artistCases(),open=cases.filter(r=>r.stage!=='signed'),confirmed=cases.filter(r=>r.stage==='signed');
+ $('artistPortalSelect').innerHTML=artists.map(x=>`<option value="${x.id}" ${x.id===currentPortalArtistId?'selected':''}>${esc(x.name)}</option>`).join('');
+ $('artistDashName').textContent=a.name;$('artistProfileName').textContent=a.name+'.';$('artistLogo').textContent=a.name.split(' ').map(x=>x[0]).join('').slice(0,2);
+ $('artistProfilePct').textContent=p.pct+'%';$('profilePctText').textContent=p.pct+' %';$('artistMemberCount').textContent=p.members;$('profileMembers').textContent=`${p.members} medlemmer · personlige profiler koblet.`;
+ const pref=getBookingPref(currentPortalArtistId),canDirect=canArtistDirectBook(currentPortalArtistId);
+ if($('artistNewDirectBtn')){$('artistNewDirectBtn').disabled=!canDirect;$('artistNewDirectBtn').textContent=canDirect?'+ Ny booking':'Booking via byrå'}
+ if($('artistRequestNewBtn')){$('artistRequestNewBtn').disabled=!canDirect;$('artistRequestNewBtn').textContent=canDirect?'+ Ny booking':'Booking via byrå'}
+ renderBookingSettings();
+ $('artistOpenCount').textContent=open.length;$('artistConfirmedCount').textContent=confirmed.length;$('artistRequestCount').textContent=open.length;$('artistAttentionRequests').textContent=open.length?`${open.length} åpne forespørsler`:'Ingen åpne forespørsler';
+ const upcoming=cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).filter(r=>r.date>='2026-09-16').slice(0,4);
+ $('artistUpcoming').innerHTML=upcoming.length?upcoming.map(r=>{const d=fmtDate(r.date);return `<div class="artistEvent"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><b>${esc(r.name)}</b><div class="meta">${esc(r.city)} · ${esc(r.organizer)}</div></div>${artistStageBadge(r)}</div>`}).join(''):'<div class="meta">Ingen kommende saker registrert.</div>';
+ $('artistRequestList').innerHTML=cases.length?cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{const d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(r.fee||0).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen forespørsler eller jobber.</div></div>';
+ let cal=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join(''),start=(new Date('2026-09-01T12:00:00').getDay()+6)%7;
+ for(let i=0;i<start;i++)cal+='<div class="day"></div>';
+ for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}">${esc(r.name)}</div>`).join('');if(p.busy.includes(iso))chips+='<div class="calItem artistPrivate">Privat opptatt</div>';cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
+ $('artistCalendarGrid').innerHTML=cal;
+}
+function addPrivateBusy(){const raw=prompt('Skriv dato som YYYY-MM-DD (demo)');if(!raw)return;const p=artistProfiles[currentPortalArtistId]||(artistProfiles[currentPortalArtistId]={pct:80,members:1,busy:[]});if(!p.busy.includes(raw))p.busy.push(raw);renderArtistPortal();toast('Dato markert som privat opptatt')}
+
+
+function phoneHref(phone){return 'tel:'+String(phone||'').replace(/[^\d+]/g,'')}
+function callButton(phone){
+  return phone?`<a class="callBtn" href="${phoneHref(phone)}">☎ Ring ${esc(phone)}</a>`:`<span class="callBtn disabled">☎ Ingen telefon</span>`;
+}
+function personCard(person, editable=false, party='organizer', index=0, eventId=null){
+  const name=person?.name||'Ikke satt', phone=person?.phone||'';
+  return `<div class="personMini contactCard">
+    <div class="role">${esc(person?.role||'Kontakt')}</div>
+    <div class="name">${esc(name)}</div>
+    <div class="phone">${phone?esc(phone):'Telefon ikke registrert'}</div>
+    <div class="contactActions">
+      ${callButton(phone)}
+      ${editable?`<button class="btn" onclick="editPerson('${party}',${index},${eventId||'null'})">Rediger</button>`:''}
+    </div>
+  </div>`;
+}
+function editPerson(party,index,eventId){
+  const id=eventId||currentEventId||Number(Object.keys(eventPeople)[0]);
+  if(!id)return toast('Ingen arrangement valgt');
+  const p=ensurePeople(id);
+  const list=p[party]||[];
+  const person=list[index]||{role:'Kontakt',name:'',phone:''};
+  const role=prompt('Rolle',person.role||'Kontakt');if(role===null)return;
+  const name=prompt('Navn',person.name==='Ikke satt'||person.name==='Ikke invitert'?'':person.name||'');if(name===null)return;
+  const phone=prompt('Telefonnummer',person.phone||'');if(phone===null)return;
+  list[index]={role:role.trim()||'Kontakt',name:name.trim()||'Ikke satt',phone:phone.trim()};
+  p[party]=list;savePeople();refreshPeopleViews(id);toast('Kontakt oppdatert');
+}
+function inviteAgencyRole(role,eventId){
+  const id=eventId||currentEventId;if(!id)return;
+  const p=ensurePeople(id),list=p.agency;
+  let idx=list.findIndex(x=>x.role===role);
+  if(idx<0){list.push({role,name:'Ikke satt',phone:''});idx=list.length-1}
+  editPerson('agency',idx,id);
+}
+function addOrganizerPerson(eventId){
+  const id=eventId||currentEventId;if(!id)return;
+  const p=ensurePeople(id);p.organizer.push({role:'Ekstra kontakt',name:'Ikke satt',phone:''});savePeople();
+  editPerson('organizer',p.organizer.length-1,id);
+}
+function setArtistDriver(eventId){
+  const id=eventId||currentEventId;if(!id)return toast('Ingen bekreftet jobb valgt');
+  const p=ensurePeople(id);
+  if(!p.artist.length)p.artist=[{role:"Bandets sjåfør",name:"Ikke satt",phone:""}];
+  editPerson('artist',0,id);
+}
+function bookingAgencyPeopleHtml(r){
+  const p=ensurePeople(r.id);
+  const tech=p.agency.find(x=>x.role==='Teknisk produksjon')||{role:'Teknisk produksjon',name:'Ikke invitert',phone:''};
+  const tm=p.agency.find(x=>x.role==='Tourmanager')||{role:'Tourmanager',name:'Ikke satt',phone:''};
+  const organizerMain=(p.organizer||[])[0]||{role:'Hovedkontakt',name:r.contact||'Ikke satt',phone:''};
+  return `<div class="rolegrid">
+    <div class="rolecard contactCard"><b>Arrangør</b><small><br>${esc(r.organizer)}</small></div>
+    <div class="rolecard contactCard"><b>Kontaktperson</b><small><br>${esc(organizerMain.name||r.contact||'Ikke satt')} ${organizerMain.phone?`· ${esc(organizerMain.phone)}`:''}</small><div class="contactActions">${callButton(organizerMain.phone)}</div></div>
+    <div class="rolecard contactCard"><b>Teknisk produksjon</b><small><br>${esc(tech.name)}</small><div class="contactActions">${callButton(tech.phone)}<button class="btn primary" onclick="inviteAgencyRole('Teknisk produksjon',${r.id})">${tech.name==='Ikke invitert'?'Inviter':'Rediger'}</button></div></div>
+    <div class="rolecard contactCard"><b>Tourmanager</b><small><br>${esc(tm.name)}</small><div class="contactActions">${callButton(tm.phone)}<button class="btn primary" onclick="inviteAgencyRole('Tourmanager',${r.id})">${tm.name==='Ikke satt'?'Legg til / inviter':'Rediger'}</button></div></div>
+  </div>
+  <div class="rolecard" style="margin-top:10px"><b>Transport</b><small><br>Bookingbyrået trenger ikke å registrere sjåfør her. Bandet kan legge inn egen sjåfør, mens arrangør legger inn lokal sjåfør ved behov.</small></div>`;
+}
+function organizerPeopleHtml(r,editable=true){
+  const p=ensurePeople(r.id),rows=p.organizer||[];
+  return rows.map((person,i)=>personCard(person,editable,'organizer',i,r.id)).join('')+
+    (editable?`<div class="personMini addPersonCard"><button class="btn primary" onclick="addOrganizerPerson(${r.id})">+ Legg til kontaktperson</button></div>`:'');
+}
+function renderOrganizerPortal(){
+  const signed=state.requests.filter(r=>r.stage==='signed');
+  const r=signed[0];
+  if(!r){
+    $('organizerEventSummary').innerHTML='<div class="card">Ingen bekreftede arrangement tilgjengelig.</div>';
+    $('organizerPeopleGrid').innerHTML='';
+    return;
+  }
+  const a=artistBy(r.artistId),p=ensurePeople(r.id);
+  $('organizerEventSummary').innerHTML=`<div class="card">
+    <div class="eyebrow">Bekreftet arrangement</div>
+    <h2 style="font-size:1.6rem;margin:8px 0">${esc(r.name)}</h2>
+    <div class="gold" style="font-weight:900">${esc(a?.name||'Artist')}</div>
+    <div class="meta" style="margin-top:5px">${esc(r.date)} · ${esc(r.city)} · ${esc(r.venue)}</div>
+    <div class="rolecard" style="margin-top:14px"><b>Personer arrangøren bør avklare</b><small><br>Artistvert, lokal sjåfør ved behov og øvrige kontakter som artist/bookingbyrå kan ha behov for å ringe.</small></div>
+    <div class="organizerPeople" style="margin-top:12px">${organizerPeopleHtml(r,true)}</div>
+  </div>`;
+  $('organizerPeopleGrid').innerHTML=organizerPeopleHtml(r,true);
+}
+function renderArtistDriver(){
+  const box=$('artistDriverBlock');if(!box)return;
+  const signed=artistCases().filter(r=>r.stage==='signed').sort((a,b)=>a.date.localeCompare(b.date));
+  if(!signed.length){box.innerHTML='<div class="meta">Ingen bekreftede jobber å knytte sjåfør til.</div>';return}
+  box.innerHTML=signed.map(r=>{
+    const p=ensurePeople(r.id),d=(p.artist||[])[0]||{name:'Ikke satt',phone:''};
+    return `<div class="rolecard" style="margin-top:8px"><b>${esc(r.name)} · ${esc(r.date)}</b><small><br>${d.name==='Ikke satt'?'Ingen sjåfør registrert':esc(d.name)+(d.phone?' · '+esc(d.phone):'')}</small><div class="contactActions">${callButton(d.phone)}<button class="btn" onclick="setArtistDriver(${r.id})">${d.name==='Ikke satt'?'Legg til sjåfør':'Rediger sjåfør'}</button></div></div>`;
+  }).join('');
+}
+function refreshPeopleViews(id){
+  const r=state.requests.find(x=>x.id===id);
+  if(r&&currentEventId===id&&$('people'))$('people').innerHTML=bookingAgencyPeopleHtml(r);
+  renderOrganizerPortal();
+  renderArtistDriver();
+}
+
 function renderAll(){
  const active=state.requests.filter(r=>r.stage!=='signed'),signed=state.requests.filter(r=>r.stage==='signed');
  $('requestCount').textContent=active.length;$('eventCount').textContent=signed.length;$('statRequests').textContent=active.length;$('statContracts').textContent=state.requests.filter(r=>r.stage==='contract').length;$('statEvents').textContent=signed.length;
  $('pipeNew').textContent=state.requests.filter(r=>r.stage==='new').length;$('pipeOffer').textContent=state.requests.filter(r=>r.stage==='offer').length;$('pipeContract').textContent=state.requests.filter(r=>r.stage==='contract').length;$('pipeSigned').textContent=signed.length;
- renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();
+ renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();renderArtistPortal();renderOrganizerPortal();renderArtistDriver();
 }
 function stages(r){const order=['new','offer','contract','signed'],labels=['Forespørsel','Tilbud / forhandling','Kontrakt / signering','Bekreftet arrangement'];return labels.map((l,i)=>`<div class="stage ${order.indexOf(r.stage)>i?'done':order.indexOf(r.stage)===i?'current':''}">${order.indexOf(r.stage)>i?'✓ ':''}${l}</div>`).join('')}
 function openRequest(id){
- currentRequestId=id;const r=state.requests.find(x=>x.id===id),a=artistBy(r.artistId);if(!r)return;if(r.stage==='signed'){openEvent(id);return}
+ currentRequestId=id;const r=state.requests.find(x=>x.id===id);if(!r)return;const a=artistBy(r.artistId);if(r.stage==='signed'){openEvent(id);return}
+ if(!r.bookingOwner)r.bookingOwner='agency';
+ if(typeof r.ownerSigned==='undefined')r.ownerSigned=!!r.agencySigned;
+ const owner=ownerLabel(r),isDirect=r.bookingOwner==='artist';
  $('bwTitle').textContent=r.name;$('bwArtist').textContent=a.name;$('bwMeta').textContent=`${r.date} · ${r.organizer} · ${r.city} · ${r.venue}`;$('bwStatus').outerHTML=stageBadge(r.stage).replace('<span','<span id="bwStatus"');$('stageBar').innerHTML=stages(r);
- $('caseOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div><div class="rolecard"><b>Ønsket dato</b><small><br>${esc(r.date)} · HOLD</small></div><div class="rolecard"><b>Type jobb</b><small><br>${esc(r.type)}</small></div><div class="rolecard"><b>Venue</b><small><br>${esc(r.venue)} · ${esc(r.city)}</small></div><div class="rolecard"><b>Honorarramme</b><small><br>${Number(r.fee).toLocaleString('nb-NO')} kr</small></div></div>${r.stage==='new'?'<div style="margin-top:14px"><button class="btn primary" onclick="moveToOffer()">Start tilbud / forhandling</button></div>':''}`;
- $('offer').innerHTML=`<div class="contract"><h3>Tilbud</h3><div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div><div class="contractRow"><span>Honorartilbud</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div><div class="contractRow"><span>Dato / sted</span><b>${esc(r.date)} · ${esc(r.city)}</b></div><div class="contractRow"><span>Arrangør</span><b>${esc(r.organizer)}</b></div></div><div style="margin-top:14px">${r.stage==='offer'?'<button class="btn primary" onclick="acceptOffer()">Godkjenn vilkår og lag kontrakt</button>':r.offerAccepted?'<span class="badge bg-green">VILKÅR GODKJENT</span>':'<span class="meta">Tilbudet er ikke åpnet ennå.</span>'}</div>`;
- $('contract').innerHTML=r.contractVersion?`<div class="contract"><h3>Kontrakt v${r.contractVersion}</h3><div class="contractRow"><span>Kontraktspart 1</span><b>Bookingbyrået</b></div><div class="contractRow"><span>Kontraktspart 2</span><b>${esc(r.organizer)}</b></div><div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div><div class="contractRow"><span>Arrangement</span><b>${esc(r.name)}</b></div><div class="contractRow"><span>Dato / venue</span><b>${esc(r.date)} · ${esc(r.venue)}, ${esc(r.city)}</b></div><div class="contractRow"><span>Honorar</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div></div>${r.stage==='contract'?'<div style="margin-top:14px"><span class="badge bg-orange">SENDT TIL SIGNERING</span></div>':''}`:`<div class="rolecard"><b>Ingen kontrakt ennå</b><small><br>Kontrakten genereres når vilkårene er godkjent.</small></div>`;
- $('signing').innerHTML=r.contractVersion?`<div class="signgrid"><div class="signcard"><b>Bookingbyrå</b>${r.agencySigned?'<span class="badge bg-green">✓ SIGNERT</span>':'<button class="btn primary" onclick="signAgency()">Signer som bookingbyrå</button>'}</div><div class="signcard"><b>Arrangør · ${esc(r.organizer)}</b>${r.organizerSigned?'<span class="badge bg-green">✓ SIGNERT</span>':'<button class="btn primary" onclick="signOrganizer()">Simuler arrangørs signatur</button>'}</div></div><div class="rolecard" style="margin-top:12px"><b>Regel</b><small><br>Arrangementet opprettes automatisk først når begge parter har signert.</small></div>`:`<div class="rolecard"><b>Signering ikke tilgjengelig</b><small><br>Kontrakt må genereres først.</small></div>`;
- document.querySelectorAll('[data-btab]').forEach(x=>x.classList.remove('on'));document.querySelector('[data-btab="caseOverview"]').classList.add('on');['caseOverview','offer','contract','signing'].forEach(id=>$ (id).classList.toggle('on',id==='caseOverview'));$('bookingWorkspace').classList.add('on');$('eventWorkspace').classList.remove('on');setTimeout(()=>$('bookingWorkspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
+
+ const inviteHtml=r.organizerInvited
+   ?`<div class="inviteStatus sent"><b>✓ Arrangør invitert</b><div class="creatorNote">${esc(r.organizerEmail||'E-post registrert')}</div></div>`
+   :`<div class="inviteStatus"><b>Arrangør er ikke invitert ennå</b><div class="creatorNote">${r.organizerEmail?esc(r.organizerEmail):'Legg inn e-post og send tilgang til arrangørportalen.'}</div><div style="margin-top:8px"><button class="btn primary" onclick="sendOrganizerInvite(${r.id})">Send invitasjon</button></div></div>`;
+
+ $('caseOverview').innerHTML=`<div class="rolegrid">
+  <div class="rolecard"><b>Booking håndteres av</b><small><br>${esc(owner)} · ${isDirect?'Direktebooking':'Bookingbyrå'}</small>${ownerBadge(r)}</div>
+  <div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div>
+  <div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div>
+  <div class="rolecard"><b>Ønsket dato</b><small><br>${esc(r.date)} · HOLD</small></div>
+  <div class="rolecard"><b>Type jobb</b><small><br>${esc(r.type)}</small></div>
+  <div class="rolecard"><b>Venue</b><small><br>${esc(r.venue)} · ${esc(r.city)}</small></div>
+  <div class="rolecard"><b>Honorarramme</b><small><br>${Number(r.fee).toLocaleString('nb-NO')} kr</small></div>
+ </div>${inviteHtml}${r.stage==='new'?'<div style="margin-top:14px"><button class="btn primary" onclick="moveToOffer()">Start tilbud / forhandling</button></div>':''}`;
+
+ $('offer').innerHTML=`<div class="contract"><h3>Tilbud</h3>
+  <div class="contractRow"><span>Bookingansvarlig</span><b>${esc(owner)}</b></div>
+  <div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div>
+  <div class="contractRow"><span>Honorartilbud</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div>
+  <div class="contractRow"><span>Dato / sted</span><b>${esc(r.date)} · ${esc(r.city)}</b></div>
+  <div class="contractRow"><span>Arrangør</span><b>${esc(r.organizer)}</b></div>
+ </div><div style="margin-top:14px">${r.stage==='offer'?'<button class="btn primary" onclick="acceptOffer()">Godkjenn vilkår og lag kontrakt</button>':r.offerAccepted?'<span class="badge bg-green">VILKÅR GODKJENT</span>':'<span class="meta">Tilbudet er ikke åpnet ennå.</span>'}</div>`;
+
+ $('contract').innerHTML=r.contractVersion?`<div class="contract"><h3>Kontrakt v${r.contractVersion}</h3>
+  <div class="contractRow"><span>Kontraktspart 1</span><b>${esc(owner)}</b></div>
+  <div class="contractRow"><span>Kontraktspart 2</span><b>${esc(r.organizer)}</b></div>
+  <div class="contractRow"><span>Artist</span><b>${esc(a.name)}</b></div>
+  <div class="contractRow"><span>Arrangement</span><b>${esc(r.name)}</b></div>
+  <div class="contractRow"><span>Dato / venue</span><b>${esc(r.date)} · ${esc(r.venue)}, ${esc(r.city)}</b></div>
+  <div class="contractRow"><span>Honorar</span><b>${Number(r.fee).toLocaleString('nb-NO')} kr</b></div>
+ </div>${r.stage==='contract'?'<div style="margin-top:14px"><span class="badge bg-orange">SENDT TIL SIGNERING</span></div>':''}`:`<div class="rolecard"><b>Ingen kontrakt ennå</b><small><br>Kontrakten genereres når vilkårene er godkjent.</small></div>`;
+
+ $('signing').innerHTML=r.contractVersion?`<div class="signgrid">
+  <div class="signcard"><b>${esc(owner)}</b>${r.ownerSigned?'<span class="badge bg-green">✓ SIGNERT</span>':`<button class="btn primary" onclick="signOwner()">Signer som ${isDirect?'artist':'bookingbyrå'}</button>`}</div>
+  <div class="signcard"><b>Arrangør · ${esc(r.organizer)}</b>${r.organizerSigned?'<span class="badge bg-green">✓ SIGNERT</span>':'<button class="btn primary" onclick="signOrganizer()">Simuler arrangørs signatur</button>'}</div>
+ </div><div class="rolecard" style="margin-top:12px"><b>Regel</b><small><br>Arrangementet opprettes automatisk først når begge kontraktspartene har signert.</small></div>`:`<div class="rolecard"><b>Signering ikke tilgjengelig</b><small><br>Kontrakt må genereres først.</small></div>`;
+
+ document.querySelectorAll('[data-btab]').forEach(x=>x.classList.remove('on'));document.querySelector('[data-btab="caseOverview"]').classList.add('on');['caseOverview','offer','contract','signing'].forEach(pid=>$(pid).classList.toggle('on',pid==='caseOverview'));$('bookingWorkspace').classList.add('on');$('eventWorkspace').classList.remove('on');setTimeout(()=>$('bookingWorkspace').scrollIntoView({behavior:'smooth',block:'start'}),50);
 }
 document.querySelectorAll('[data-btab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-btab]').forEach(x=>x.classList.remove('on'));['caseOverview','offer','contract','signing'].forEach(id=>$(id).classList.remove('on'));b.classList.add('on');$(b.dataset.btab).classList.add('on')}));
 function moveToOffer(){let r=state.requests.find(x=>x.id===currentRequestId);r.stage='offer';save();renderAll();openRequest(r.id);toast('Forespørselen er flyttet til tilbud / forhandling')}
 function acceptOffer(){let r=state.requests.find(x=>x.id===currentRequestId);r.offerAccepted=true;r.contractVersion=(r.contractVersion||0)+1;r.stage='contract';save();renderAll();openRequest(r.id);toast('✓ Kontrakt generert og sendt til signering')}
-function maybeComplete(r){if(r.agencySigned&&r.organizerSigned){r.stage='signed';save();renderAll();toast('✓ Begge har signert – arrangementet er opprettet');setTimeout(()=>openEvent(r.id),400);return true}save();renderAll();openRequest(r.id);return false}
-function signAgency(){let r=state.requests.find(x=>x.id===currentRequestId);r.agencySigned=true;maybeComplete(r)}
+function maybeComplete(r){if((r.ownerSigned??r.agencySigned)&&r.organizerSigned){r.stage='signed';save();renderAll();toast('✓ Begge har signert – arrangementet er opprettet');setTimeout(()=>openEvent(r.id),400);return true}save();renderAll();openRequest(r.id);return false}
+function signOwner(){let r=state.requests.find(x=>x.id===currentRequestId);r.ownerSigned=true;if(r.bookingOwner!=='artist')r.agencySigned=true;maybeComplete(r)}
+function signAgency(){signOwner()}
 function signOrganizer(){let r=state.requests.find(x=>x.id===currentRequestId);r.organizerSigned=true;maybeComplete(r)}
 function openEvent(id){currentEventId=id;const r=state.requests.find(x=>x.id===id),a=artistBy(r.artistId);if(!r||r.stage!=='signed')return;$('ewTitle').textContent=r.name;$('ewArtist').textContent=a.name;$('ewMeta').textContent=`${r.date} · ${r.city} · ${r.venue}`;
- $('eventOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Kontrakt</b><small><br>Signert av bookingbyrå og arrangør</small><div class="roleline"><span class="badge bg-green">✓ SIGNERT</span></div></div><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div></div>`;
- $('people').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)}</small></div><div class="rolecard"><b>Kontaktperson</b><small><br>${esc(r.contact)}</small></div><div class="rolecard"><b>Teknisk produksjon</b><small><br>Ikke invitert</small><div class="roleline"><button class="btn primary" onclick="toast('Invitasjonsflyt åpnes her')">Inviter</button></div></div><div class="rolecard"><b>Tourmanager</b><small><br>Ikke satt</small></div><div class="rolecard"><b>Sjåfør</b><small><br>Ikke satt</small></div></div>`;
+ $('eventOverview').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Kontrakt</b><small><br>Signert av ${esc(ownerLabel(r))} og ${esc(r.organizer)}</small><div class="roleline"><span class="badge bg-green">✓ SIGNERT</span></div></div><div class="rolecard"><b>Booking håndteres av</b><small><br>${esc(ownerLabel(r))}</small>${ownerBadge(r)}</div><div class="rolecard"><b>Arrangør</b><small><br>${esc(r.organizer)} · ${esc(r.contact)}</small></div><div class="rolecard"><b>Artist</b><small><br>${esc(a.name)}</small></div></div>`;
+ $('people').innerHTML=bookingAgencyPeopleHtml(r);
  $('schedule').innerHTML=`<div class="timeline"><div class="timeitem"><b>12:00 · Ankomst</b><small>Band + tourmanager</small></div><div class="timeitem"><b>15:00 · Soundcheck</b><small>Teknisk avklaring før dette</small></div><div class="timeitem"><b>21:30 · Show</b><small>${esc(a.name)}</small></div></div>`;
  $('tech').innerHTML=`<div class="rolecard"><b>Teknisk produksjon</b><small><br>Stageplot, inputliste, monitor, PA, lys og backline knyttes til arrangementet her.</small></div>`;
  $('travel').innerHTML=`<div class="rolegrid"><div class="rolecard"><b>Reise</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Hotell</b><small><br>Ikke registrert</small></div><div class="rolecard"><b>Lokal transport</b><small><br>Ikke registrert</small></div></div>`;
@@ -578,14 +1207,26 @@ function openEvent(id){currentEventId=id;const r=state.requests.find(x=>x.id===i
 document.querySelectorAll('[data-etab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-etab]').forEach(x=>x.classList.remove('on'));['eventOverview','people','schedule','tech','travel'].forEach(id=>$(id).classList.remove('on'));b.classList.add('on');$(b.dataset.etab).classList.add('on')}));
 
 
-function openNewRequest(){
+function openNewRequest(source='agency'){
+ requestCreator=source;
+ if(source==='artist'){
+   if(!canArtistDirectBook(currentPortalArtistId)){toast('Denne artisten har valgt at all booking går via bookingbyrået');return}
+   selectedArtistId=currentPortalArtistId;
+ }else{
+   selectedArtistId=selectedArtistId||artists[0].id;
+ }
  wizardStep=1;
- selectedArtistId=selectedArtistId||artists[0].id;
  $('artistSearchInput').value='';
- if($('rqDate')) $('rqDate').value='';
- renderArtistPicker();
- updateWizard();
- $('requestModal').classList.add('on');
+ if($('rqDate'))$('rqDate').value='';
+ if($('rqOrganizerEmail'))$('rqOrganizerEmail').value='';
+ if($('rqInviteOrganizer'))$('rqInviteOrganizer').checked=true;
+ $('agencyArtistPicker').style.display=source==='agency'?'block':'none';
+ $('directArtistLocked').style.display=source==='artist'?'block':'none';
+ if(source==='artist'){
+   const a=artistBy(selectedArtistId),pref=getBookingPref(selectedArtistId);
+   $('directArtistLocked').innerHTML=`<div class="eyebrow">Direktebooking</div><div class="artistTitle">${esc(a?.name||'Artist')}</div><div class="meta">${esc(a?.meta||'')}</div><div class="creatorNote">Denne saken opprettes av artisten og ${pref.mode==='hybrid'?'går parallelt med bookingbyråets saker.':'håndteres uten bookingbyrå som kontraktspart.'}</div>`;
+ }
+ renderArtistPicker();updateWizard();$('requestModal').classList.add('on');
 }
 function closeNewRequest(){$('requestModal').classList.remove('on')}
 function renderArtistPicker(){
@@ -654,14 +1295,14 @@ function checkArtistAvailability(){
   box.innerHTML=`<div class="availabilityHead">
     <div class="availabilityIcon">${open.length}</div>
     <div><div class="availabilityTitle">${open.length===1?'Det finnes allerede en bookingcase':'Det finnes allerede flere bookingcases'} denne datoen</div>
-    <div class="availabilityText">Ingen er signert ennå. Det er derfor mulig å sende flere tilbud dersom bookingbyrået ønsker det.</div></div>
+    <div class="availabilityText">Ingen er signert ennå. Det er derfor mulig å opprette flere parallelle tilbud frem til én jobb blir bekreftet.</div></div>
   </div><div class="conflictList">${list}</div>`;
   return {blocked:false,cases};
 }
 
 function updateWizard(){
  const titles=[
-  ['Velg artist','Velg en artist fra stallen. Du kan også søke.'],
+  [requestCreator==='artist'?'Direktebooking':'Velg artist',requestCreator==='artist'?'Artisten oppretter denne bookingen selv.':'Velg en artist fra stallen. Du kan også søke.'],
   ['Jobben','Legg inn det viktigste om selve jobben.'],
   ['Arrangør','Hvem bestiller artisten?'],
   ['Oppsummering','Sjekk alt én gang før forespørselen opprettes.']
@@ -683,7 +1324,10 @@ function wizardNext(){
   const availability=checkArtistAvailability();
   if(availability.blocked){toast('Artisten har allerede en bekreftet jobb denne datoen');return}
  }
- if(wizardStep===3 && !$('rqOrganizer').value.trim()){toast('Fyll inn arrangør');return}
+ if(wizardStep===3){
+  if(!$('rqOrganizer').value.trim()){toast('Fyll inn arrangør');return}
+  if($('rqInviteOrganizer').checked&&!$('rqOrganizerEmail').value.trim()){toast('Legg inn e-post til arrangør eller fjern avhuking for invitasjon');return}
+ }
  if(wizardStep===4){createRequest();return}
  wizardStep++;updateWizard();
 }
@@ -691,23 +1335,32 @@ function wizardBack(){if(wizardStep>1){wizardStep--;updateWizard()}}
 function renderRequestSummary(){
  const a=artistBy(selectedArtistId);
  $('requestSummary').innerHTML=`
+  <div class="summaryRow"><span>Booking håndteres av</span><b>${requestCreator==='artist'?esc(a?.name||'Artist'):'Demo Agency'}</b></div>
   <div class="summaryRow"><span>Artist</span><b>${esc(a?.name||'')}</b></div>
   <div class="summaryRow"><span>Arrangement</span><b>${esc($('rqName').value||'–')}</b></div>
   <div class="summaryRow"><span>Dato</span><b>${esc($('rqDate').value||'–')}</b></div>
   <div class="summaryRow"><span>Sted</span><b>${esc([$('rqVenue').value,$('rqCity').value].filter(Boolean).join(', ')||'–')}</b></div>
   <div class="summaryRow"><span>Arrangør</span><b>${esc($('rqOrganizer').value||'–')}</b></div>
+  <div class="summaryRow"><span>Invitasjon</span><b>${$('rqInviteOrganizer').checked?('Sendes til '+esc($('rqOrganizerEmail').value||'e-post mangler')):'Sendes senere'}</b></div>
   <div class="summaryRow"><span>Honorar</span><b>${Number($('rqFee').value||0).toLocaleString('nb-NO')} kr</b></div>`;
 }
 function createRequest(){
- const name=$('rqName').value.trim(),artistId=selectedArtistId,date=$('rqDate').value,organizer=$('rqOrganizer').value.trim(),contact=$('rqContact').value.trim(),city=$('rqCity').value.trim(),venue=$('rqVenue').value.trim(),fee=Number($('rqFee').value||0),type=$('rqType').value;
+ const name=$('rqName').value.trim(),artistId=selectedArtistId,date=$('rqDate').value,organizer=$('rqOrganizer').value.trim(),contact=$('rqContact').value.trim(),organizerEmail=$('rqOrganizerEmail').value.trim(),city=$('rqCity').value.trim(),venue=$('rqVenue').value.trim(),fee=Number($('rqFee').value||0),type=$('rqType').value;
  if(!name||!date||!organizer){toast('Mangler nødvendig informasjon');return}
- const availability=checkArtistAvailability();
- if(availability.blocked){toast('Kan ikke opprette: artisten har en bekreftet jobb denne datoen');return}
- state.requests.unshift({id:Date.now(),name,artistId,date,organizer,contact:contact||'Ikke satt',city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',fee,type,stage:'new',agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0});
- save();renderAll();closeNewRequest();
- ['rqName','rqDate','rqOrganizer','rqContact','rqCity','rqVenue','rqFee'].forEach(id=>$(id).value='');
+ const availability=checkArtistAvailability();if(availability.blocked){toast('Kan ikke opprette: artisten har en bekreftet jobb denne datoen');return}
+ const bookingOwner=requestCreator==='artist'?'artist':'agency',pref=getBookingPref(artistId),inviteNow=$('rqInviteOrganizer').checked;
+ const item={
+   id:Date.now(),name,artistId,date,organizer,contact:contact||'Ikke satt',organizerEmail,
+   organizerInvited:inviteNow&&!!organizerEmail,organizerInviteSentAt:inviteNow&&organizerEmail?new Date().toISOString():null,
+   city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',fee,type,stage:'new',
+   bookingOwner,ownerSigned:false,agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0,
+   agencyNotified:bookingOwner==='agency'||!!pref.notifyAgency
+ };
+ state.requests.unshift(item);save();renderAll();closeNewRequest();
+ ['rqName','rqDate','rqOrganizer','rqContact','rqOrganizerEmail','rqCity','rqVenue','rqFee'].forEach(id=>$(id).value='');
  if($('artistAvailability')){$('artistAvailability').className='availabilityBox hidden full';$('artistAvailability').innerHTML=''}
- toast('✓ Forespørsel opprettet');showView('requests');
+ toast(inviteNow&&organizerEmail?'✓ Booking opprettet og arrangør invitert':'✓ Booking opprettet');
+ showView(requestCreator==='artist'?'artistRequests':'requests');
 }
 document.querySelectorAll('.modalback').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('on')}));
 
@@ -715,6 +1368,14 @@ function searchData(){return state.requests.map(r=>({type:r.stage==='signed'?'Ar
 const search=$('globalSearch'),res=$('searchResults');function renderSearch(q){q=q.trim().toLowerCase();if(!q){res.classList.remove('on');return}const hits=searchData().filter(x=>(x.type+' '+x.name+' '+x.meta).toLowerCase().includes(q)).slice(0,10);res.innerHTML=hits.length?hits.map((x,i)=>`<div class="result" data-i="${i}"><div class="ricon">${x.type==='Artist'?'AR':x.signed?'EV':'BK'}</div><div><div class="rtype">${esc(x.type)}</div><b>${esc(x.name)}</b><div class="rmeta">${esc(x.meta)}</div></div><span>→</span></div>`).join(''):'<div style="padding:16px;color:var(--muted)">Ingen treff</div>';res.classList.add('on');res.querySelectorAll('.result').forEach((el,i)=>el.onclick=()=>{const x=hits[i];res.classList.remove('on');search.blur();if(x.id)(x.signed?openEvent:openRequest)(x.id);else toast('Artist: '+x.name)})}
 search.addEventListener('input',e=>renderSearch(e.target.value));document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))res.classList.remove('on')});
 renderAll();
+document.body.classList.toggle('artist-role',currentRole==='artist');document.body.classList.toggle('organizer-role',currentRole==='organizer');$('roleAgencyBtn').classList.toggle('on',currentRole==='agency');$('roleArtistBtn').classList.toggle('on',currentRole==='artist');$('roleOrganizerBtn').classList.toggle('on',currentRole==='organizer');
+if(currentRole==='artist'){const a=artistBy(currentPortalArtistId);$('userRoleName').textContent=a?.name||'Artist';$('userRoleSub').textContent='Artistportal';$('userAvatar').textContent=(a?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2);showView('artistDashboard')}
+else if(currentRole==='organizer'){const r=state.requests.find(x=>x.stage==='signed');$('userRoleName').textContent=r?.organizer||'Arrangør';$('userRoleSub').textContent='Arrangørportal';$('userAvatar').textContent='AR';showView('organizerDashboard')}
+
+document.addEventListener('keydown',e=>{
+ const el=e.target.closest?.('.pipe[role="button"]');
+ if(el&&(e.key==='Enter'||e.key===' ')){e.preventDefault();el.click()}
+});
 </script>
 </body>
 </html>
