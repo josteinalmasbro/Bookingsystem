@@ -624,6 +624,26 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
   .memberRow .btn{width:100%}
 }
 
+
+/* === Bookingcase expand/collapse === */
+.case.expandedSource{border-color:#7a6936;background:#10171b}
+.workspaceCollapseBar{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  margin:-4px 0 14px;padding:9px 11px;border:1px solid #334047;
+  border-radius:11px;background:#0b1114
+}
+.workspaceCollapseBar .meta{margin:0}
+.collapseBtn{white-space:nowrap}
+.workspace.collapsing{overflow:hidden}
+@media(max-width:760px){
+  .workspaceCollapseBar{align-items:flex-start}
+  .collapseBtn{min-width:110px}
+}
+
+
+@keyframes growWorkspace{from{opacity:.25;transform:translateY(-8px) scaleY(.97)}to{opacity:1;transform:none}}
+#bookingWorkspace.on{animation:growWorkspace .18s ease-out}
+
 </style>
 </head>
 <body>
@@ -808,12 +828,12 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
  </div>
 
  <div class="profileRows" style="margin-top:12px">
-  <div class="profileBox"><b>Medlemmer</b><small id="profileMembers">5 medlemmer · personlige profiler koblet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('members')">Administrer medlemmer</button></div>
-  <div class="profileBox"><b>Monitor</b><small>In-ear / wedge og personlige monitorpreferanser.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('monitor')">Åpne monitorprofil</button></div>
-  <div class="profileBox"><b>Backline</b><small>Hva bandet tar med selv, og hva som må finnes på stedet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('backline')">Rediger backline</button></div>
-  <div class="profileBox"><b>Vikarer</b><small>Aktuelle vikarer per rolle når fast medlem ikke er tilgjengelig.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('substitutes')">Vikarbank</button></div>
-  <div class="profileBox"><b>Hospitality</b><small>Matpreferanser og personlige behov ligger på medlemsnivå.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('hospitality')">Se status</button></div>
-  <div class="profileBox"><b>Teknisk rider</b><small>Stageplot, inputliste og tekniske dokumenter.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('rider')">Dokumenter</button></div>
+  <div class="profileBox"><b>Medlemmer</b><small id="profileMembers">5 medlemmer · personlige profiler koblet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('members')" onclick="openProfileEditor(\'members\')">Administrer medlemmer</button></div>
+  <div class="profileBox"><b>Monitor</b><small>In-ear / wedge og personlige monitorpreferanser.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('monitor')" onclick="openProfileEditor(\'monitor\')">Åpne monitorprofil</button></div>
+  <div class="profileBox"><b>Backline</b><small>Hva bandet tar med selv, og hva som må finnes på stedet.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('backline')" onclick="openProfileEditor(\'backline\')">Rediger backline</button></div>
+  <div class="profileBox"><b>Vikarer</b><small>Aktuelle vikarer per rolle når fast medlem ikke er tilgjengelig.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('substitutes')" onclick="openProfileEditor(\'substitutes\')">Vikarbank</button></div>
+  <div class="profileBox"><b>Hospitality</b><small>Matpreferanser og personlige behov ligger på medlemsnivå.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('hospitality')" onclick="openProfileEditor(\'hospitality\')">Se status</button></div>
+  <div class="profileBox"><b>Teknisk rider</b><small>Stageplot, inputliste og tekniske dokumenter.</small><button class="btn" style="margin-top:10px" onclick="openProfileEditor('rider')" onclick="openProfileEditor(\'rider\')">Dokumenter</button></div>
  </div>
 </section>
 
@@ -1398,8 +1418,32 @@ function renderAll(){
  renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();renderArtistPortal();renderOrganizerPortal();renderArtistDriver();
 }
 function stages(r){const order=['new','offer','contract','signed'],labels=['Forespørsel','Tilbud / forhandling','Kontrakt / signering','Bekreftet arrangement'];return labels.map((l,i)=>`<div class="stage ${order.indexOf(r.stage)>i?'done':order.indexOf(r.stage)===i?'current':''}">${order.indexOf(r.stage)>i?'✓ ':''}${l}</div>`).join('')}
+
+let expandedCaseElement=null;
+function collapseBookingWorkspace(){
+  const w=$('bookingWorkspace');
+  if(!w)return;
+  w.classList.add('collapsing');
+  w.classList.remove('on');
+  setTimeout(()=>w.classList.remove('collapsing'),180);
+  if(expandedCaseElement){
+    expandedCaseElement.classList.remove('expandedSource');
+    expandedCaseElement.scrollIntoView({behavior:'smooth',block:'center'});
+  }
+  currentRequestId=null;
+}
+function rememberExpandedCase(id){
+  document.querySelectorAll('.case.expandedSource').forEach(x=>x.classList.remove('expandedSource'));
+  expandedCaseElement=[...document.querySelectorAll('.case')].find(el=>{
+    const oc=el.getAttribute('onclick')||'';
+    return oc.includes(`openRequest(${id})`);
+  })||null;
+  if(expandedCaseElement)expandedCaseElement.classList.add('expandedSource');
+}
+
 function openRequest(id){
- currentRequestId=id;const r=state.requests.find(x=>x.id===id);if(!r)return;const a=artistBy(r.artistId);if(r.stage==='signed'){openEvent(id);return}
+ if(currentRequestId===id && $('bookingWorkspace')?.classList.contains('on')){collapseBookingWorkspace();return}
+ currentRequestId=id;const r=state.requests.find(x=>x.id===id);if(!r)return;rememberExpandedCase(id);const a=artistBy(r.artistId);if(r.stage==='signed'){openEvent(id);return}
  if(!r.bookingOwner)r.bookingOwner='agency';
  if(typeof r.ownerSigned==='undefined')r.ownerSigned=!!r.agencySigned;
  const owner=ownerLabel(r),isDirect=r.bookingOwner==='artist';
