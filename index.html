@@ -953,7 +953,7 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 
 <div class="toast" id="toast"></div>
 
-<div id="profileGlassOverlay" class="profileGlassOverlay" onclick="closeProfileEditor(event)"><section class="profileGlassModal" role="dialog" aria-modal="true" aria-labelledby="profileEditorTitle"><div class="profileGlassHead"><div><div id="profileEditorEyebrow" class="eyebrow"></div><h2 id="profileEditorTitle"></h2></div><button class="profileGlassClose" aria-label="Lukk" onclick="closeProfileEditor()">×</button></div><form novalidate id="memberProfileForm" onsubmit="event.preventDefault();saveProfileEditor()"><div id="profileEditorBody" class="profileGlassBody"></div><div class="profileGlassFoot"><span id="profileSaveError" role="alert"></span><button type="button" class="btn" onclick="closeProfileEditor()">Avbryt</button><button class="btn primary" type="submit">Lagre</button></div></form></section></div><style>#memberProfileForm{display:flex;flex-direction:column;min-height:0;overflow:hidden}.profileGlassBody{overflow:auto}.profileGlassModal{max-height:92dvh}.member-card{padding:16px;margin:12px 0;border:1px solid #635638;border-radius:14px;background:#ffffff06}.member-card p{white-space:pre-wrap;overflow-wrap:anywhere}.glassField input,.glassField textarea,.glassField select{width:100%;box-sizing:border-box}.instrument-row{display:grid;gap:8px;margin:12px 0}.instrument-row select{width:100%;min-height:44px;background:#10191e;color:#fff;border:1px solid #425059;border-radius:10px;padding:10px}.member-instruments{margin:16px 0}.member-card summary{cursor:pointer;color:var(--gold);padding:12px 0}.profileGlassFoot{flex-wrap:wrap}#profileSaveError{color:#ffb5a5}</style><script>
+<div id="profileGlassOverlay" class="profileGlassOverlay" onclick="closeProfileEditor(event)"><section class="profileGlassModal" role="dialog" aria-modal="true" aria-labelledby="profileEditorTitle"><div class="profileGlassHead"><div><div id="profileEditorEyebrow" class="eyebrow"></div><h2 id="profileEditorTitle"></h2></div><button class="profileGlassClose" aria-label="Lukk" onclick="closeProfileEditor()">×</button></div><form novalidate id="memberProfileForm" onsubmit="event.preventDefault();saveProfileEditor()"><div id="profileEditorBody" class="profileGlassBody"></div><div class="profileGlassFoot"><span id="profileSaveError" role="alert"></span><button type="button" class="btn" onclick="closeProfileEditor()">Avbryt</button><button class="btn primary" type="submit">Lagre</button></div></form></section></div><style>#memberProfileForm{display:flex;flex-direction:column;min-height:0;overflow:hidden}.profileGlassBody{overflow:auto}.profileGlassModal{max-height:92dvh}.member-card{padding:16px;margin:12px 0;border:1px solid #635638;border-radius:14px;background:#ffffff06}.member-card p{white-space:pre-wrap;overflow-wrap:anywhere}.glassField input,.glassField textarea,.glassField select{width:100%;box-sizing:border-box}.instrument-row{display:grid;gap:8px;margin:12px 0}.instrument-row select{width:100%;min-height:44px;background:#10191e;color:#fff;border:1px solid #425059;border-radius:10px;padding:10px}.member-instruments{margin:16px 0}.profile-missing-list{display:grid;gap:8px}.profile-missing-list .btn{text-align:left;white-space:normal;overflow-wrap:anywhere}.member-card summary{cursor:pointer;color:var(--gold);padding:12px 0}.profileGlassFoot{flex-wrap:wrap}#profileSaveError{color:#ffb5a5}</style><script>
 const KEY='booking-system-phase-v1';
 const artists=[
  {id:'hs',name:'Hollywood Scandal',meta:'Rock / party · 5 medlemmer'},
@@ -1169,7 +1169,7 @@ function renderArtistPortal(){
  let cal=['M','T','O','T','F','L','S'].map(x=>`<div class="dow">${x}</div>`).join(''),start=(new Date('2026-09-01T12:00:00').getDay()+6)%7;
  for(let i=0;i<start;i++)cal+='<div class="day"></div>';
  for(let d=1;d<=30;d++){const iso=`2026-09-${String(d).padStart(2,'0')}`,cs=cases.filter(r=>r.date===iso);let chips=cs.map(r=>`<div class="calItem ${r.stage==='signed'?'signed':r.stage==='contract'?'contractSent':'hold'}">${esc(r.name)}</div>`).join('');if(p.busy.includes(iso))chips+='<div class="calItem artistPrivate">Privat opptatt</div>';cal+=`<div class="day"><div class="num">${d}</div>${chips}</div>`}
- $('artistCalendarGrid').innerHTML=cal;renderArtistCaseFilter();
+ $('artistCalendarGrid').innerHTML=cal;renderArtistCaseFilter();renderProfileCompletion();
 }
 function addPrivateBusy(){const raw=prompt('Skriv dato som YYYY-MM-DD (demo)');if(!raw)return;const p=artistProfiles[currentPortalArtistId]||(artistProfiles[currentPortalArtistId]={pct:80,members:1,busy:[]});if(!p.busy.includes(raw))p.busy.push(raw);renderArtistPortal();toast('Dato markert som privat opptatt')}
 
@@ -1348,6 +1348,38 @@ function renderArtistCaseFilter(){
 }
 
 document.addEventListener('keydown',e=>{const row=e.target.closest?.('.artistEvent[role="button"]');if(row&&(e.key==='Enter'||e.key===' ')){e.preventDefault();row.click()}});
+
+function profileChecklist(artistId){
+ const d=memberData(artistId),checks=[];const filled=v=>typeof v==='string'?v.trim().length>0:v!==undefined&&v!==null;
+ const add=(label,done,type,memberIndex,field)=>checks.push({label,done:!!done,type,memberIndex,field});
+ add('Legg til bandmedlemmer',d.members.length>0,'members',null,null);
+ d.members.forEach((m,i)=>{const who=m.name||'Medlem '+(i+1);
+  add(who+': navn og rolle',filled(m.name)&&filled(m.role),'members',i,!filled(m.name)?'name':'role');
+  add(who+': telefon eller e-post',filled(m.phone)||filled(m.email),'members',i,'phone');
+  add(who+': ønsket monitorløsning',filled(m.monitor)&&m.monitor!=='Ikke avklart','monitor',i,'monitor');
+  add(who+': backline som tas med selv',filled(m.ownBackline),'members',i,'ownBackline');
+  add(who+': backlinekrav til spillestedet',filled(m.venueBackline),'members',i,'venueBackline');
+  add(who+': allergier / intoleranser',filled(m.allergies),'hospitality',i,'allergies');
+  add(who+': matpreferanser',filled(m.food),'hospitality',i,'food');
+ });
+ add('Teknisk rider: stageplot',filled(d.rider.stageplot),'rider',null,'stageplot');
+ add('Teknisk rider: inputliste / rider',filled(d.rider.inputlist),'rider',null,'inputlist');
+ add('Teknisk rider: minimum scene',filled(d.rider.riderStage),'rider',null,'riderStage');
+ return checks;
+}
+function renderProfileCompletion(){
+ const checks=profileChecklist(currentPortalArtistId),done=checks.filter(c=>c.done).length,pct=Math.round(done/checks.length*100),missing=checks.filter(c=>!c.done);
+ $('artistProfilePct').textContent=pct+'%';$('profilePctText').textContent=pct+' %';
+ const summary=$('artistProfilePct').nextElementSibling;summary.textContent=missing.length?'Se hva som mangler':'Profil utfylt';
+ document.querySelector('.profileProgress i').style.width=pct+'%';
+ let box=$('profileMissing');if(!box){box=document.createElement('div');box.id='profileMissing';document.querySelector('.profileProgress').parentElement.append(box)}
+ box.innerHTML=`<p class="meta">${done} av ${checks.length} punkter utfylt. Beregnes fra lagrede medlemsprofiler og teknisk rider. Media, instrumentliste, vikarer og valgfrie notater inngår ikke.</p><h3>${missing.length?'Dette mangler':'✓ Alle profilpunktene er utfylt'}</h3>${missing.length?'<p class="meta">Trykk på et punkt for å fylle det ut. Skriv «Ingen» der et behov er avklart og ikke gjelder.</p>':''}<div class="profile-missing-list">${checks.map((c,i)=>c.done?'':`<button class="btn" type="button" onclick="openMissingProfileField(${i})">${safe(c.label)} <span aria-hidden="true">→</span></button>`).join('')}</div>`;
+}
+function openMissingProfileField(index){
+ const c=profileChecklist(currentPortalArtistId)[index];if(!c)return;openProfileEditor(c.type);
+ let target=c.memberIndex===null?(c.field?document.getElementById('rider-'+c.field):$('profileEditorBody').querySelector('button')):document.getElementById('m'+c.memberIndex+'-'+c.field);
+ if(target){let node=target.parentElement;while(node&&node!==$('profileEditorBody')){if(node.tagName==='DETAILS')node.open=true;node=node.parentElement}target.scrollIntoView({block:'center'});target.focus()}
+}
 
 function renderAll(){
  const active=state.requests.filter(r=>r.stage!=='signed'),signed=state.requests.filter(r=>r.stage==='signed');
