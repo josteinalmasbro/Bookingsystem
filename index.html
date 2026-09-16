@@ -1371,7 +1371,14 @@ function openPrivateCalendarEntry(date=''){
  $('profileEditorTitle').textContent='Hvem er opptatt?';$('profileEditorEyebrow').textContent=artistBy(profileArtist)?.name||'Artist';$('profileSaveError').textContent='';
  $('memberProfileForm').querySelector('[type=submit]').hidden=false;
  $('profileEditorBody').innerHTML='<p class="glassDesc">Velg hvem som er privat opptatt denne dagen. Navnene vises i bandets kalender. Lagres i denne nettleseren.</p><label class="glassField">Dato<input id="privateBusyDate" type="date" required value="'+safe(date)+'"></label><div class="member-card">'+(members.length?members.map(m=>`<label style="display:flex;gap:10px;align-items:center;padding:10px 0"><input type="checkbox" name="privateBusyMember" value="${safe(m.id)}" ${entry?.members.some(p=>p.id===m.id)?'checked':''}>${safe(m.name||'Medlem uten navn')} · ${safe(m.role||'')}</label>`).join(''):'<p>Legg til medlemsprofiler først, så kan du velge hvem som er opptatt.</p><button type="button" class="btn" onclick="closeProfileEditor();openProfileEditor(\'members\')">Legg til medlemmer</button>')+'</div>'+(entry&&!entry.members.length?'<p class="meta">Denne eldre oppføringen mangler navn. Velg riktig medlem og lagre.</p>':'');
+ $('profileEditorBody').insertAdjacentHTML('beforeend','<div id="privateSubstitutes"></div>');
+ document.querySelectorAll('[name=privateBusyMember]').forEach(el=>el.addEventListener('change',renderPrivateSubstitutes));renderPrivateSubstitutes();
  $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';$('privateBusyDate').focus();
+}
+function renderPrivateSubstitutes(){
+ const ids=[...document.querySelectorAll('[name=privateBusyMember]:checked')].map(el=>el.value);
+ const members=memberData(profileArtist).members.filter(m=>ids.includes(m.id));
+ $('privateSubstitutes').innerHTML='<h3>Aktuelle vikarer</h3>'+(!members.length?'<p class="meta">Velg medlemmet som er opptatt for å se registrerte vikarer.</p>':members.map(m=>'<div class="member-card"><h3>Vikar for '+safe(m.name)+' · '+safe(m.role||'')+'</h3>'+((m.substitutes||[]).length?m.substitutes.map(s=>'<div class="member-card"><b>'+safe(s.name||'Vikar uten navn')+'</b><p>'+safe(s.role||m.role||'')+'</p><p class="meta">'+safe(s.availability||'Tilgjengelighet må avklares for denne datoen')+'</p>'+(s.note?'<p>'+safe(s.note)+'</p>':'')+'<div class="actions">'+callLink(s.phone)+(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.email||'')?'<a class="btn" href="mailto:'+safe(s.email)+'">Send e-post</a>':'')+'</div>'+(!s.phone&&!s.email?'<p class="meta">Kontaktinformasjon mangler.</p>':'')+'</div>').join(''):'<p class="meta">Ingen vikarer registrert for dette medlemmet. Legg dem til under Min profil → Vikarbank.</p>')+'</div>').join(''));
 }
 function savePrivateCalendarEntry(){
  const date=$('privateBusyDate').value,ids=[...document.querySelectorAll('[name=privateBusyMember]:checked')].map(el=>el.value);
