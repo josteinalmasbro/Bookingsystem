@@ -383,6 +383,16 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 /* === Artistrolle === */
 .roleSwitch{display:flex;gap:4px;padding:4px;border:1px solid #2c3941;border-radius:999px;background:#0b1114}
 .roleSwitch button{border:0;background:transparent;color:#8e9aa1;padding:7px 10px;border-radius:999px;font-size:.72rem;font-weight:900;white-space:nowrap}
+.portalChange{border-left:1px solid #2c3941!important;border-radius:0 999px 999px 0!important;color:var(--gold)!important}
+.portalChooser{display:none;position:fixed;inset:0;z-index:300;background:radial-gradient(circle at 50% 18%,#283138 0,#11181c 42%,#070b0d 100%);padding:22px;align-items:center;justify-content:center;overflow:auto}
+.portalChooser.on{display:flex}
+.portalChooserCard{width:min(780px,100%);background:linear-gradient(145deg,#172126f5,#0b1114f8);border:1px solid #49565d;border-radius:26px;padding:28px;box-shadow:0 35px 120px #000b}
+.portalChooserCard h1{font-size:clamp(2rem,7vw,3.4rem);margin:8px 0 12px}.portalChooserCard>.lead{max-width:620px}
+.portalChoices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px}
+.portalChoice{min-height:160px;border:1px solid #3b4850;border-radius:18px;background:#0b1114;color:var(--text);padding:20px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:18px}
+.portalChoice:hover{border-color:var(--gold);background:#e7c86a10}.portalChoice b{display:block;font-size:1.25rem;color:#fff}.portalChoice small{display:block;color:var(--muted);line-height:1.45;margin-top:6px}.portalChoice span{color:var(--gold);font-weight:900}
+.portalChooserNote{margin-top:18px;padding-top:16px;border-top:1px solid #28343a;color:var(--muted);font-size:.78rem;line-height:1.5}
+@media(max-width:700px){.portalChooser{padding:12px}.portalChooserCard{padding:20px;border-radius:22px}.portalChoices{grid-template-columns:1fr;gap:9px;margin-top:18px}.portalChoice{min-height:112px;padding:16px;gap:10px}.roleSwitch{font-size:.72rem}.portalChange{padding:7px!important}}
 .roleSwitch button.on{background:var(--gold);color:#151515}
 .artistNavBlock{display:none}
 .artist-role .agencyNavBlock{display:none!important}
@@ -761,10 +771,23 @@ body:not(.artist-role):not(.organizer-role) .agencyNavBlock.mobileNav button:foc
 #brandWebsite{background:#0a1115;color:var(--text,#fff);border:1px solid #3b4b54;border-radius:9px;padding:10px;min-height:40px;box-sizing:border-box}
 </style><style>.demoNotice{font-size:11px;line-height:1.4;padding:8px 12px;margin-bottom:12px;border:1px solid var(--line);border-radius:8px;color:var(--muted)}.demoNote{border:1px solid #b99a45;border-left:4px solid #b99a45;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:12px;line-height:1.5}.demoNote p{margin:5px 0}.demoNote a{color:inherit;text-decoration:underline}</style><style>.offerChoices{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0;margin:0}.offerChoices legend{font-size:13px;padding:0 4px}.offerChoices>div{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:8px}.offerChoices label{display:flex;align-items:center;gap:6px}.offerChoices input[type=radio]{width:auto;min-height:0;accent-color:var(--gold)}.offerChoices input[hidden]{display:none}</style></head>
 <body>
+<div id="portalChooser" class="portalChooser" role="dialog" aria-modal="true" aria-labelledby="portalChooserTitle">
+ <div class="portalChooserCard">
+  <div class="eyebrow">Bookingsystem · demo</div>
+  <h1 id="portalChooserTitle">Velg portal.</h1>
+  <div class="lead">Velg hvilken side av bookingsystemet du vil se.</div>
+  <div class="portalChoices">
+   <button class="portalChoice" onclick="enterPortal('agency')"><div><b>Bookingbyrå</b><small>Forespørsler, tilbud, kontrakter, kalender og arrangement.</small></div><span>Åpne byråportal →</span></button>
+   <button class="portalChoice" onclick="enterPortal('artist')"><div><b>Artist</b><small>Artistens egne bookinger, kalender, medlemmer og profilinnstillinger.</small></div><span>Åpne artistportal →</span></button>
+   <button class="portalChoice" onclick="enterPortal('organizer')"><div><b>Arrangør</b><small>Arrangement, kontaktpersoner, tilbud og praktisk informasjon.</small></div><span>Åpne arrangørportal →</span></button>
+  </div>
+  <div class="portalChooserNote">Dette er portalvalget for demoen. I den ferdige løsningen åpnes riktig portal gjennom brukerens egen innlogging eller invitasjonslenke.</div>
+ </div>
+</div>
 <div class="top">
  <div class="topin">
   <div class="brand"><div class="logo">BK</div><div>BOOKINGSYSTEM <span style="color:#66747b;font-weight:600">/ OPERATIV</span></div></div>
-  <div class="roleSwitch" aria-label="Aktiv portal"><span id="portalRolePill">Bookingbyrå</span></div>
+  <div class="roleSwitch" aria-label="Aktiv portal"><span id="portalRolePill">Bookingbyrå</span><button class="portalChange" onclick="openPortalChooser()">Bytt demoportal</button></div>
   <div class="user"><div class="words"><strong id="userRoleName" style="color:#fff">Demo Agency</strong><br><small id="userRoleSub">Bookingadministrator</small></div><div class="avatar" id="userAvatar">DA</div></div>
  </div>
  <div class="mobileNav agencyNavBlock">
@@ -1149,6 +1172,19 @@ const portalParams=new URLSearchParams(location.search);
 const requestedRole=portalParams.get('portal');
 let currentPortalArtistId=portalParams.get('artist')||localStorage.getItem('portal-artist-id')||'hs';
 let currentRole=['agency','artist','organizer'].includes(requestedRole)?requestedRole:'agency';
+function enterPortal(role){
+ if(!['agency','artist','organizer'].includes(role))return;
+ const url=new URL(location.href);url.searchParams.set('portal',role);
+ if(role==='artist'&&!url.searchParams.get('artist'))url.searchParams.set('artist',currentPortalArtistId||'hs');
+ if(role!=='artist')url.searchParams.delete('artist');
+ location.href=url.toString();
+}
+function openPortalChooser(){$('portalChooser')?.classList.add('on');document.body.style.overflow='hidden'}
+function initializePortalChooser(){
+ const chooser=$('portalChooser');if(!chooser)return;
+ chooser.classList.toggle('on',!['agency','artist','organizer'].includes(requestedRole));
+ if(chooser.classList.contains('on'))document.body.style.overflow='hidden';
+}
 const artistProfiles=structuredClone(DEMO_PROFILES);
 const BOOKING_PREFS_KEY='booking-artist-prefs-v1';
 let bookingPrefs;try{bookingPrefs=JSON.parse(localStorage.getItem(BOOKING_PREFS_KEY))}catch(e){}
@@ -2092,6 +2128,7 @@ initializeDemoPrices();
 initializeRequestValidation();
 initializeDemoDocuments();
 renderAll();
+initializePortalChooser();
 document.body.classList.toggle('artist-role',currentRole==='artist');document.body.classList.toggle('organizer-role',currentRole==='organizer');
 $('portalRolePill').textContent=currentRole==='artist'?'Artistportal':currentRole==='organizer'?'Arrangørportal':'Bookingbyrå';
 if(currentRole==='artist'){const a=artistBy(currentPortalArtistId);$('userRoleName').textContent=a?.name||'Artist';$('userRoleSub').textContent='Artistportal';$('userAvatar').textContent=(a?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2);showView('artistDashboard')}
