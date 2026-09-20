@@ -3,7 +3,7 @@
   "short_name": "Artistapp",
   "description": "Oppdater artistprofilen og ha all informasjon om neste bekreftede gig lett tilgjengelig.",
   "id": "/?portal=member",
-  "start_url": "/?portal=member&artist=hs&member=hs-member-1&tab=gig",
+  "start_url": "/?portal=member&tab=gig",
   "scope": "/",
   "display": "standalone",
   "display_override": ["standalone", "minimal-ui"],
@@ -15,7 +15,7 @@
     {"src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
   ],
   "shortcuts": [
-    {"name": "Neste gig", "short_name": "Neste gig", "url": "/?portal=member&artist=hs&member=hs-member-1&tab=gig"},
-    {"name": "Min profil", "short_name": "Profil", "url": "/?portal=member&artist=hs&member=hs-member-1&tab=profile"}
+    {"name": "Neste gig", "short_name": "Neste gig", "url": "/?portal=member&tab=gig"},
+    {"name": "Min profil", "short_name": "Profil", "url": "/?portal=member&tab=profile"}
   ]
 }
