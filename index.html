@@ -2390,7 +2390,7 @@ function dayPlanContacts(r){
  (p.organizer||[]).forEach(person=>rows.push({...person,group:'Arrangør'}));
  (p.agency||[]).forEach(person=>rows.push({...person,group:'Booking / produksjon'}));
  // Migrate any legacy driver that was stored under artist into Arrangør.
- (p.artist||[]).forEach(person=>{if(/sjåfør|driver|transport/i.test(String(person.role||'')+' '+String(person.name||'')))rows.push({...person,group:'Arrangør'})});
+ (p.artist||[]).forEach(person=>{if(/sjåfør|driver|transport/i.test(String(person.role||'')+' '+String(person.name||'')))rows.push({...person,group:/bandets|crew/i.test(String(person.role||''))?'Band / crew':'Arrangør'})});
  if(r.contact)rows.push({role:'Hovedkontakt',name:r.contact,phone:'',email:r.organizerEmail||'',group:'Arrangør'});
  const merged=new Map();rows.forEach(person=>{const name=String(person.name||'').trim();if(!name||/^Ikke (satt|invitert)$/i.test(name))return;const key=(name+'|'+(person.role||'Kontakt')).toLowerCase(),old=merged.get(key)||{};merged.set(key,{...old,...person,phone:person.phone||old.phone||'',email:person.email||old.email||''})});return [...merged.values()]
 }
@@ -2498,12 +2498,12 @@ function renderMemberContacts(){
  const target=$('memberContactsContent');if(!target)return;const gig=nextMemberGig();
  if(!gig){target.innerHTML='<div class="memberAppCard memberAppEmpty"><strong>Ingen kommende gig</strong><span>Kontaktpersonene vises her når neste jobb er bekreftet.</span></div>';return}
  const contacts=dayPlanContacts(gig);
- memberData(gig.artistId).members.forEach(member=>contacts.push({role:roleLabel(member.role)||'Bandmedlem',name:member.name,phone:member.phone,email:member.email,group:'Band'}));
- const order=['Arrangør','Booking / produksjon','Band'],groups=order.filter(group=>contacts.some(p=>p.group===group));
+ memberData(gig.artistId).members.forEach(member=>contacts.push({role:roleLabel(member.role)||'Bandmedlem',name:member.name,phone:member.phone,email:member.email,group:'Band / crew'}));
+ const order=['Arrangør','Booking / produksjon','Band / crew'],groups=order.filter(group=>contacts.some(p=>p.group===group));
  const icons={
   'Arrangør':'<svg viewBox="0 0 24 24"><path d="M4 5h16v15H4zM8 3v4M16 3v4M7 11h10M8 15h2M14 15h2"/></svg>',
   'Booking / produksjon':'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21H9.6v-.1A1.7 1.7 0 0 0 8.5 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3V9.6h.1A1.7 1.7 0 0 0 4.6 8.5a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.1A1.7 1.7 0 0 0 15.5 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.16.36.37.7.6 1 .28.32.67.5 1.1.5h.1v4h-.1c-.43 0-.82.18-1.1.5-.23.3-.44.64-.6 1z"/></svg>',
-  'Band':'<svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><circle cx="12" cy="7" r="3"/><path d="M2.5 20c.4-3.2 2.2-5 5.5-5s5.1 1.8 5.5 5M10.5 20c.4-3.2 2.2-5 5.5-5s5.1 1.8 5.5 5"/></svg>'
+  'Band / crew':'<svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><circle cx="12" cy="7" r="3"/><path d="M2.5 20c.4-3.2 2.2-5 5.5-5s5.1 1.8 5.5 5M10.5 20c.4-3.2 2.2-5 5.5-5s5.1 1.8 5.5 5"/></svg>'
  };
  target.innerHTML=groups.map((group,index)=>{const people=contacts.filter(p=>p.group===group);return `<div class="memberAppCard contactCategory ${index===0?'open':''}"><button class="contactCategoryHead" type="button" onclick="toggleContactCategory(this)"><span class="contactCategoryIcon">${icons[group]}</span><span class="contactCategoryTitle"><b>${safe(group)}</b><small>${people.length} ${people.length===1?'person':'personer'}</small></span><span class="contactCategoryChevron">⌄</span></button><div class="contactCategoryBody"><div class="dayContacts">${people.map(person=>{const initials=String(person.name||'').replace(/^Demo\\s*·\\s*/,'').split(/\\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase();return `<div class="dayContact contactPersonRow"><span class="contactAvatar">${safe(initials)}</span><span class="contactPersonText"><b>${safe(person.name)}</b><span>${safe(person.role||'Kontakt')}</span></span><div class="actions">${person.phone&&/[\\d]/.test(person.phone)?`<a class="contactAction call" href="tel:${safe(String(person.phone).replace(/[^+\\d]/g,''))}"><i>↗</i><small>Ring</small></a><a class="contactAction sms" href="sms:${safe(String(person.phone).replace(/[^+\\d]/g,''))}"><i>•••</i><small>SMS</small></a>`:''}${person.email&&/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(person.email)?`<a class="contactAction mail" href="mailto:${safe(person.email)}"><i>✉</i><small>E-post</small></a>`:''}</div></div>`}).join('')}</div></div></div>`}).join('')||'<div class="memberAppCard memberAppEmpty"><strong>Ingen kontaktpersoner registrert</strong></div>';
 }
