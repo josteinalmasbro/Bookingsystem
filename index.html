@@ -2430,7 +2430,7 @@ function websiteThemeCSS(brand,s='body:not(.artist-role):not(.organizer-role)',h
  const t=normalizeWebsiteTheme(brand.theme);if(!t)return '';
  const light=brandLuminance(t.background)>.4,text=brandReadable(t.text,t.background),muted=brandReadable(t.muted,t.background),accentText=brandReadable(brand.accent,t.background),soft=brandMix(t.background,brand.accent,light?.065:.11),font=t.font==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif",heading=t.headingFont==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif";
  const rules=(selectors,body)=>selectors.split(',').map(v=>s+' '+v.trim()).join(',')+'{'+body+'}';
- return `${s}{--bg:${t.background};--panel:${t.surface};--panel2:${soft};--text:${text};--muted:${muted};--line:${t.border};--gold:${accentText};--green:${light?'#176546':'#69d7a7'};--blue:${light?'#16578c':'#8ec5ff'};--orange:${light?'#965019':'#ef9b5f'};--yellow:${light?'#705000':'#efc86b'};color:${text};background:${t.background};font-family:${font}}
+ return `${s}{--bg:${t.background};--panel:${t.surface};--panel2:${soft};--text:${text};--muted:${muted};--line:${t.border};--gold:${accentText};--green:${light?'#176546':'#69d7a7'};--blue:${accentText};--orange:${accentText};--yellow:${accentText};color:${text};background:${t.background};font-family:${font}}
  ${rules('.top,.layout,.topin,.agencyNavBlock.mobileNav,.artistNavBlock.mobileNav','background:'+t.background+';color:'+text+';border-color:'+t.border)}
  ${rules('.top .brand,#userRoleName','color:'+text+'!important')}
  ${rules('#userRoleSub,.group,.lead,.meta,.rmeta,.rtype,.glassDesc,.field label,.glassField label','color:'+muted)}
@@ -2452,11 +2452,13 @@ function websiteThemeCSS(brand,s='body:not(.artist-role):not(.organizer-role)',h
  ${rules('.jobGlassHead,.profileGlassHead,.profileGlassFoot','background:'+t.background+';border-color:'+t.border)}
  ${rules('.profileGlassBody,.modal,.wstep,.calendarListCard,.calendarMonthPicker','color-scheme:'+(light?'light':'dark')+';scrollbar-color:'+t.border+' '+t.background)}
  ${rules('.glassField input[type=color]','min-height:38px;padding:4px;background:'+t.surface+';border-color:'+t.border)}
- ${rules('.bg-yellow','background:'+(light?'#fff1ce':'#3a3016')+';color:'+(light?'#705000':'#f0d57d'))}
- ${rules('.bg-orange','background:'+(light?'#ffeadb':'#432817')+';color:'+(light?'#884100':'#f5b37e'))}
+ ${rules('.bg-yellow,.bg-orange,.bg-blue','background:'+brandMix(t.background,brand.accent,light?.10:.16)+';color:'+brandReadable(brand.accent,brandMix(t.background,brand.accent,light?.10:.16))+';border-color:'+brand.accent+'55')}
  ${rules('.bg-green,.stage.done','background:'+(light?'#def4e8':'#123427')+';color:'+(light?'#135a38':'#7ce0ad'))}
- ${rules('.bg-blue','background:'+(light?'#e0effc':'#172b40')+';color:'+(light?'#184f7e':'#9bcaff'))}
- ${rules('.bg-red','background:'+(light?'#ffe6e9':'#3b1c20')+';color:'+(light?'#94273a':'#ff9da3'))}
+ ${rules('.bg-red','background:'+brandMix(t.background,brand.accent,light?.12:.20)+';color:'+brandReadable(brand.accent,brandMix(t.background,brand.accent,light?.12:.20))+';border-color:'+brand.accent+'66')}
+ ${rules('.artistTitle,.case .artistTitle,.eventrow .artistTitle','color:'+accentText)}
+ ${rules('.datebox','background:'+brandMix(t.background,brand.accent,light?.07:.13)+';border-color:'+brand.accent+'55')}
+ ${rules('.datebox b,.datebox small','color:'+text)}
+ ${rules('.badge:not(.bg-green),.stage:not(.done)','border-color:'+brand.accent+'55')}
  ${rules('.case:hover,.eventrow:hover,.result:hover,.pipe:hover,.btn:hover,.agencyNavBlock.mobileNav button:hover,.artistNavBlock.mobileNav button:hover','background:'+soft+';color:'+text+';border-color:'+brand.accent)}
  ${rules('button:focus-visible,a:focus-visible,input:focus-visible','outline:2px solid '+accentText+';outline-offset:3px')}
  ${t.hero?rules(heroTarget,'background:linear-gradient(120deg,'+brandMix('#111111',brand.accent,.12)+',#111111);padding:28px 30px;border-radius:'+Math.max(t.cardRadius,8)+'px;color:#ffffff;margin:8px 0 28px')+rules(heroTarget+' .lead','color:#e9e4df')+rules(heroTarget+' .eyebrow','color:'+brandReadable(brand.accent,'#111111')):''}
