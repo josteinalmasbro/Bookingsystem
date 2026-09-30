@@ -920,6 +920,7 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
    <button class="portalChoice" onclick="enterPortal('artist')"><div><b>Artist</b><small>Artistens egne bookinger, kalender, medlemmer og profilinnstillinger.</small></div><span>Åpne artistportal →</span></button>
    <button class="portalChoice" onclick="enterPortal('member')"><div><b>Medlemsapp</b><small>En enkel mobilflate med egen profil og informasjon om neste gig.</small></div><span>Åpne medlemsapp →</span></button>
    <button class="portalChoice" onclick="enterPortal('organizer')"><div><b>Arrangør</b><small>Arrangement, kontaktpersoner, tilbud og praktisk informasjon.</small></div><span>Åpne arrangørportal →</span></button>
+   <button class="portalChoice" onclick="openTechnicalDeliveryPortal()"><div><b>Teknisk leveranse</b><small>Lyd, lys og backline. Motta forespørsler og anbud, og gi tilbud til arrangører, artister og bookingbyrå.</small></div><span>Åpne teknisk portal →</span></button>
   </div>
   <div class="portalChooserNote">Velg hvilken portal du vil åpne. I drift åpnes riktig portal gjennom brukerens innlogging eller invitasjonslenke.</div>
  </div>
@@ -1431,6 +1432,7 @@ function enterPortal(role){
  }
  syncAgencyHeader();
 }
+function openTechnicalDeliveryPortal(){toast('Teknisk leveranse · portal bygges nå')}
 function openPortalChooser(){$('portalChooser')?.classList.add('on');document.body.style.overflow='hidden'}
 function initializePortalChooser(){
  const chooser=$('portalChooser');if(!chooser)return;
