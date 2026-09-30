@@ -541,6 +541,14 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 .organizer-role .agencyNavBlock,
 .organizer-role .artistNavBlock{display:none!important}
 .organizer-role .organizerNavBlock{display:block}
+.technicalNavBlock{display:none}
+body.technical-role .agencyNavBlock,body.technical-role .artistNavBlock,body.technical-role .organizerNavBlock{display:none!important}
+body.technical-role .technicalNavBlock{display:block}
+body.technical-role .layout{grid-template-columns:238px minmax(0,1fr)}
+.techHero{background:radial-gradient(circle at 88% 8%,#8ec5ff22,transparent 30%),linear-gradient(145deg,#151e23,#0b1114);border:1px solid #34424a;border-radius:20px;padding:20px}
+.techStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.techStat{background:#0c1215;border:1px solid #2a3740;border-radius:14px;padding:14px}.techStat small{color:var(--muted)}.techStat strong{display:block;font-size:1.55rem;margin-top:5px}
+.techGrid{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}.techTender{border:1px solid #2c3941;border-radius:15px;background:#0b1216;padding:15px;margin-top:10px}.techTenderTop{display:flex;justify-content:space-between;gap:12px}.techFacts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.techFact{padding:10px;border:1px solid #27343b;border-radius:11px;background:#0e171b}.techFact small{display:block;color:var(--muted);font-size:.7rem}.techFact b{display:block;margin-top:3px;font-size:.86rem}.techReq{margin-top:12px;padding:12px;border-left:3px solid var(--gold);background:#e7c86a0b;border-radius:0 10px 10px 0}.techReq small{color:var(--gold);font-weight:900}.techReq p{margin:5px 0 0;color:#dce3e6;font-size:.82rem;line-height:1.45}.techActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:900px){.techGrid{grid-template-columns:1fr}.techStats{grid-template-columns:1fr 1fr}}@media(max-width:560px){.techFacts{grid-template-columns:1fr}.techStats{grid-template-columns:1fr 1fr}}
 .contactCard{position:relative}
 .contactActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .callBtn{
@@ -1025,6 +1033,13 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
   <a href="#" class="nav on" data-view="organizerDashboard">★ Mitt arrangement</a>
   <a href="#" class="nav" data-view="organizerPeople">● Personer & kontakt</a>
  </div>
+ <div class="technicalNavBlock">
+  <div class="group">Teknisk leveranse</div>
+  <a href="#" class="nav on" data-view="technicalDashboard">▦ Oversikt</a>
+  <a href="#" class="nav" data-view="technicalRequests">◉ Forespørsler & anbud <span class="count">3</span></a>
+  <a href="#" class="nav" data-view="technicalCalendar">□ Kapasitet</a>
+  <a href="#" class="nav" data-view="technicalProfile">● Firma & utstyr</a>
+ </div>
 </aside>
 
 <main>
@@ -1209,6 +1224,18 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
  </div>
 </section>
 
+
+<section id="technicalDashboard" class="view">
+ <div class="techHero"><div class="eyebrow">Teknisk leverandørportal</div><h1>Lyd, lys & backline.</h1><div class="lead">Ett arbeidsrom for forespørsler fra arrangører, artister og bookingbyrå. Venue, scene, publikum og artistens tekniske rider følger forespørselen automatisk.</div></div>
+ <div class="techStats"><div class="techStat"><small>Nye forespørsler</small><strong>3</strong></div><div class="techStat"><small>Tilbud ute</small><strong>2</strong></div><div class="techStat"><small>Bekreftede jobber</small><strong>6</strong></div><div class="techStat"><small>Ledig kapasitet neste 30 dager</small><strong>72%</strong></div></div>
+ <div class="techGrid"><div class="card"><div class="sectionTitle"><div><div class="eyebrow">Nye anbud</div><h2 style="margin:4px 0">Forespørsler som trenger svar</h2></div></div>
+  <div class="techTender"><div class="techTenderTop"><div><b>Sommerfest · Postgirobygget</b><div class="meta">Fra bookingbyrå · Trondheim · 14. august</div></div><span class="badge bg-yellow">NY</span></div><div class="techFacts"><div class="techFact"><small>Venue</small><b>Sverresborg Arena · ute</b></div><div class="techFact"><small>Publikum</small><b>1 800 forventet</b></div><div class="techFact"><small>Scene</small><b>10 × 8 m · tak 6 m</b></div><div class="techFact"><small>Leveranse ønskes</small><b>PA · lys · monitor · backline</b></div><div class="techFact"><small>Get-in / lydprøve</small><b>13:00 / 16:30</b></div><div class="techFact"><small>Show</small><b>20:30–22:00</b></div></div><div class="techReq"><small>TEKNISK RIDER · ARTIST</small><p>32 input · 6 monitor-mikser / IEM · 4 wedge · stereo keys · 2 gitar · bass DI · komplett trommemikking. FOH-plass midt i salen. Artist har egen backline, men trenger trommeriser 3 × 2 m.</p></div><div class="techActions"><button class="btn primary" onclick="openTechnicalTender('summer')">Åpne forespørsel</button><button class="btn" onclick="toast('Rider åpnet i demo')">Se teknisk rider</button></div></div>
+  <div class="techTender"><div class="techTenderTop"><div><b>Bedriftsfest · Hollywood Scandal</b><div class="meta">Fra arrangør · Stjørdal · 22. august</div></div><span class="badge bg-yellow">NY</span></div><div class="techFacts"><div class="techFact"><small>Venue</small><b>Scandic Hell · inne</b></div><div class="techFact"><small>Publikum</small><b>650</b></div><div class="techFact"><small>Scene</small><b>8 × 6 m</b></div><div class="techFact"><small>Leveranse</small><b>Lyd · lys · trommer</b></div></div><div class="techActions"><button class="btn primary" onclick="openTechnicalTender('hell')">Åpne forespørsel</button></div></div>
+ </div><div><div class="card"><div class="eyebrow">Forespørselen bør inneholde</div><h3>Alt leverandøren trenger for å prise riktig.</h3><p class="meta">Informasjon hentes fra arrangementet, venue og artistprofil/rider.</p><div class="rolecard"><b>Venue & scene</b><small>Adresse, inne/ute, scenemål, takhøyde, strøm, riggetilgang, FOH-plass og bæreevne.</small></div><div class="rolecard"><b>Publikum & produksjonsnivå</b><small>Forventet kapasitet, sitte/stå, ønsket lydnivå, showtype og eventuelle støygrenser.</small></div><div class="rolecard"><b>Artistens krav</b><small>Inputliste, stageplot, monitor/IEM, mikrofoner, DI, backline, risere og egne teknikere.</small></div><div class="rolecard"><b>Tider & logistikk</b><small>Get-in, rigg, lydprøve, dører, show, curfew, load-out, parkering og bærehjelp.</small></div></div><div class="card" style="margin-top:14px"><div class="eyebrow">Tilbudsgrunnlag</div><h3>Leverandøren priser per fag.</h3><p class="meta">Lyd · lys · scene · backline · personell · transport. Tilbudet kan ha alternativer og forbehold før det sendes tilbake til bestiller.</p><button class="btn" onclick="toast('Tilbudsbygger kommer i neste steg')">+ Lag tilbud fra forespørsel</button></div></div></div>
+</section>
+<section id="technicalRequests" class="view"><div class="headrow"><div><div class="eyebrow">Teknisk leveranse</div><h1>Forespørsler & anbud.</h1><div class="lead">Her samles nye anbud, tilbud under arbeid, tilbud sendt og bekreftede tekniske leveranser.</div></div></div><div class="pipeline"><div class="pipe"><small>Nye</small><strong>3</strong></div><div class="pipe"><small>Tilbud under arbeid</small><strong>1</strong></div><div class="pipe"><small>Tilbud sendt</small><strong>2</strong></div><div class="pipe"><small>Bekreftet</small><strong>6</strong></div></div><div class="card"><h3>Åpne forespørsler</h3><div class="techTender"><b>Sommerfest · Postgirobygget</b><div class="meta">14. august · Trondheim · komplett teknisk leveranse</div></div><div class="techTender"><b>Bedriftsfest · Hollywood Scandal</b><div class="meta">22. august · Stjørdal · lyd, lys og trommer</div></div><div class="techTender"><b>Festivaljobb · artist TBA</b><div class="meta">29. august · Bergen · PA og lys</div></div></div></section>
+<section id="technicalCalendar" class="view"><div class="headrow"><div><div class="eyebrow">Teknisk leveranse</div><h1>Kapasitet.</h1><div class="lead">Planlegg tilgjengelige teknikere, biler, PA-systemer, lysrigg, scene og backline mot bekreftede og reserverte datoer.</div></div></div><div class="card"><h3>August</h3><p class="meta">Demo: 14. aug · reservert anbud &nbsp; · &nbsp; 22. aug · ledig &nbsp; · &nbsp; 29. aug · tilbud ute</p></div></section>
+<section id="technicalProfile" class="view"><div class="headrow"><div><div class="eyebrow">Teknisk leverandør</div><h1>Firma & utstyr.</h1><div class="lead">Leverandøren beskriver dekningsområde, kompetanse, personell og utstyrspark slik at relevante forespørsler kan matches automatisk.</div></div></div><div class="grid2"><div class="card"><h3>Leveranser</h3><p>Lyd · lys · scene · backline · teknikere · transport</p><h3>Dekningsområde</h3><p>Trøndelag · Midt-Norge</p></div><div class="card"><h3>Utstyrskategorier</h3><p class="meta">PA / line array · monitor/IEM · digitalmikser · trådløst · lys · moving heads · haze · trommer · gitar/bass-backline · risere.</p></div></div></section>
 
 <section id="organizerDashboard" class="view">
  <div class="organizerHero">
@@ -1432,7 +1459,13 @@ function enterPortal(role){
  }
  syncAgencyHeader();
 }
-function openTechnicalDeliveryPortal(){toast('Teknisk leveranse · portal bygges nå')}
+function openTechnicalDeliveryPortal(){
+ const chooser=$('portalChooser');if(chooser)chooser.classList.remove('on');document.body.style.overflow='';
+ currentRole='technical';document.body.classList.remove('artist-role','member-role','organizer-role');document.body.classList.add('technical-role');
+ $('portalRolePill').textContent='Teknisk leveranse';$('userRoleName').textContent='Teknisk leverandør';$('userRoleSub').textContent='Lyd · lys · backline';$('userAvatar').textContent='TL';
+ showView('technicalDashboard');
+}
+function openTechnicalTender(id){showView('technicalRequests');toast(id==='summer'?'Sommerfest · forespørsel åpnet':'Bedriftsfest · forespørsel åpnet')}
 function openPortalChooser(){$('portalChooser')?.classList.add('on');document.body.style.overflow='hidden'}
 function initializePortalChooser(){
  const chooser=$('portalChooser');if(!chooser)return;
@@ -1661,8 +1694,8 @@ function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','AP
 function stageLabel(s){return s==='new'?'FORespørsel':s==='offer'?'TILBUD':s==='contract'?'KONTRAKT SENDT':'SIGNERT'}
 function stageBadge(s,r){if(r&&s==='offer')return '<span class="badge bg-blue">'+esc(offerStateText(r))+'</span>';if(r&&(s==='contract'||s==='signed'))return `<span class="badge ${r.ownerSigned&&r.organizerSigned?'bg-green':'bg-orange'}">${esc(contractStatusText(r))}</span>`;return s==='new'?'<span class="badge bg-yellow">FORESPØRSEL</span>':s==='offer'?'<span class="badge bg-blue">TILBUD</span>':s==='contract'?'<span class="badge bg-orange">KONTRAKT UTE</span>':'<span class="badge bg-green">BEKREFTET</span>'}
 function showView(id){
- const av=['artistDashboard','artistCalendar','artistRequests','artistProfile','artistTour','artistMedia'],ov=['organizerDashboard','organizerPeople'],bv=['dashboard','requests','calendar','events','services','agencyTeam'];
- if(currentRole==='artist'&&!av.includes(id))id='artistDashboard';if(currentRole==='organizer'&&!ov.includes(id))id='organizerDashboard';if(currentRole==='agency'&&!bv.includes(id))id='dashboard';
+ const av=['artistDashboard','artistCalendar','artistRequests','artistProfile','artistTour','artistMedia'],ov=['organizerDashboard','organizerPeople'],bv=['dashboard','requests','calendar','events','services','agencyTeam'],tv=['technicalDashboard','technicalRequests','technicalCalendar','technicalProfile'];
+ if(currentRole==='artist'&&!av.includes(id))id='artistDashboard';if(currentRole==='organizer'&&!ov.includes(id))id='organizerDashboard';if(currentRole==='agency'&&!bv.includes(id))id='dashboard';if(currentRole==='technical'&&!tv.includes(id))id='technicalDashboard';
  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));
  $('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');if(av.includes(id))renderArtistPortal();if(id==='artistTour')renderTourBuilder();if(id==='services')renderSmsDemo();if(id==='agencyTeam')renderAgencyTeam();if(ov.includes(id))renderOrganizerPortal();requestAnimationFrame(()=>{if(id==='calendar')syncCalendarPanelHeight('agency');if(id==='artistCalendar')syncCalendarPanelHeight('artist')});window.scrollTo({top:0,behavior:'smooth'});
 }
