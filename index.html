@@ -908,30 +908,8 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
 .memberAvailabilityCard{border-color:#e7c86a55;background:radial-gradient(circle at 100% 0,#e7c86a16,transparent 44%),linear-gradient(145deg,#151f24,#0d1418)}.memberAvailabilityHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.memberAvailabilityHead p{margin:5px 0 0;color:var(--muted);font-size:.8rem;line-height:1.4}.memberBusyList{display:grid;gap:8px;margin-top:14px}.memberBusyPeriod{display:grid;grid-template-columns:12px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid #ffffff12;border-radius:13px;background:#070c0f99}.memberBusyDot{width:10px;height:10px;border-radius:50%}.memberBusyDot.busy{background:#e45f69;box-shadow:0 0 14px #e45f6977}.memberBusyDot.flexible{background:#e4bd4e;box-shadow:0 0 14px #e4bd4e66}.memberBusyPeriod b,.memberBusyPeriod small{display:block}.memberBusyPeriod small{margin-top:3px;color:var(--muted)}.memberBusyPeriod .btn{padding:7px 9px}.memberAvailabilityActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.calendarConnectGrid{display:grid;gap:10px}.calendarProvider{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:11px;align-items:center;padding:13px;border:1px solid #ffffff16;border-radius:15px;background:#080e12}.calendarProviderIcon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#172127;font-size:1.2rem;font-weight:950}.calendarProvider b,.calendarProvider small{display:block}.calendarProvider small{margin-top:3px;color:var(--muted);line-height:1.35}.calendarProvider.connected{border-color:#4b9b7477;background:#10241c}.calendarSyncNote{padding:12px;border:1px solid #e7c86a44;border-radius:13px;background:#e7c86a0b;color:#d9d1b4;font-size:.78rem;line-height:1.5}.busyChoiceGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:14px 0}.busyChoice{display:block;padding:13px;border:1px solid #3c4950;border-radius:14px;background:#0b1216}.busyChoice:has(input:checked){border-color:var(--gold);background:#e7c86a12}.busyChoice input{margin-right:6px}.busyChoice small{display:block;margin:6px 0 0 22px;color:var(--muted);line-height:1.35}
 @media(max-width:600px){.memberAppMain{padding-left:13px;padding-right:13px}.memberAppTitleRow{display:block}.memberAppTitleRow .btn{width:100%;margin-top:3px}.memberProfileGrid{grid-template-columns:1fr}.memberProfileItem.wide{grid-column:auto}.memberApp #memberNextGigContent .dayPlanGrid{grid-template-columns:1fr}.memberApp #memberNextGigContent .dayPlanHero{padding:18px}.memberApp #memberNextGigContent .dayPlan{font-size:.92rem}.memberApp #memberNextGigContent .dayPlanHero .actions .btn{width:100%;text-align:center}}
 @media(max-width:520px){.memberInstallCard{grid-template-columns:42px 1fr}.memberInstallCard .btn{grid-column:1/-1;width:100%}.installGuideOverlay{padding:10px}.installGuide{padding:18px}.memberAvailabilityHead{display:block}.memberAvailabilityHead .btn{width:100%;margin-top:11px}.memberBusyPeriod{grid-template-columns:12px 1fr}.memberBusyPeriod .btn{grid-column:2}.memberAvailabilityActions .btn{width:100%}.calendarProvider{grid-template-columns:42px 1fr}.calendarProvider .btn{grid-column:1/-1;width:100%}.busyChoiceGrid{grid-template-columns:1fr}}
-<style>
-.publicMarket{display:none;min-height:100dvh;background:#070b0d;color:#eef2f3}.publicMarket.on{display:block}.publicMarket.on~.top,.publicMarket.on~.layout{display:none!important}.marketHero{padding:26px 16px 34px;background:radial-gradient(circle at 78% 8%,#e7c86a18,transparent 28%),linear-gradient(180deg,#10181c,#070b0d)}.marketTop{max-width:1180px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.marketBrand{font-weight:950;letter-spacing:.12em}.marketTopActions{display:flex;gap:8px}.marketHeroInner{max-width:980px;margin:68px auto 0;text-align:center}.marketHero h1{font-size:clamp(2.6rem,8vw,5.8rem);letter-spacing:-.065em;line-height:.92;margin:0}.marketHero p{max-width:680px;margin:18px auto;color:#aeb9be;font-size:1.05rem;line-height:1.55}.marketSearch{max-width:1080px;margin:30px auto 0;padding:13px;display:grid;grid-template-columns:1.2fr 1fr .8fr .8fr auto;gap:8px;border:1px solid #3a474e;border-radius:18px;background:#0b1216dd;box-shadow:0 24px 70px #0007}.marketField{min-width:0;text-align:left;padding:7px 10px;border-right:1px solid #273238}.marketField:last-of-type{border:0}.marketField label{display:block;color:#849198;font-size:.61rem;font-weight:900;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}.marketField input,.marketField select{width:100%;border:0;background:transparent;color:#fff;font:inherit;font-weight:750;outline:0}.marketSearchBtn{border:0;border-radius:12px;background:#e7c86a;color:#111;padding:0 20px;font-weight:950}.marketMain{max-width:1180px;margin:auto;padding:28px 16px 80px}.marketFilterBar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:22px}.marketFilterBar select{padding:10px 12px;border:1px solid #34434c;border-radius:999px;background:#0d1519;color:#dce3e6}.marketCount{margin-left:auto;color:#849198;font-size:.78rem}.artistMarketGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.artistMarketCard{overflow:hidden;border:1px solid #29363d;border-radius:18px;background:#0d1418;cursor:pointer;transition:.18s}.artistMarketCard:hover{transform:translateY(-2px);border-color:#786b42}.artistMarketVisual{height:190px;position:relative;display:flex;align-items:flex-end;padding:16px;background:radial-gradient(circle at 78% 18%,#e7c86a28,transparent 26%),linear-gradient(145deg,#26343a,#090e11)}.artistMarketVisual:after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,#0009)}.artistMarketInitials{position:relative;z-index:1;font-size:3rem;font-weight:950;color:#ffffff22}.artistMarketBody{padding:15px}.artistMarketBody h3{margin:0 0 5px;font-size:1.25rem}.artistMarketMeta{color:#8f9ca3;font-size:.77rem;line-height:1.45}.artistMarketPrice{margin-top:12px;display:flex;justify-content:space-between;gap:8px;align-items:end}.artistMarketPrice b{font-size:1rem}.marketTag{display:inline-flex;margin:8px 5px 0 0;padding:4px 7px;border-radius:999px;background:#ffffff08;color:#c4cdd1;font-size:.62rem;font-weight:800}.marketRegister{margin-top:38px;padding:28px;border:1px solid #e7c86a35;border-radius:20px;background:radial-gradient(circle at 90% 10%,#e7c86a18,transparent 32%),#0d1418;display:flex;justify-content:space-between;gap:20px;align-items:center}.marketRegister h2{margin:0 0 6px}.marketRegister p{margin:0;color:#9da9ae}.marketEmpty{grid-column:1/-1;padding:40px;text-align:center;color:#89969c;border:1px dashed #34434c;border-radius:16px}
-@media(max-width:850px){.marketSearch{grid-template-columns:1fr 1fr}.marketSearchBtn{min-height:48px;grid-column:1/-1}.artistMarketGrid{grid-template-columns:repeat(2,1fr)}.marketHeroInner{margin-top:46px}}
-@media(max-width:560px){.marketHero{padding:18px 12px 26px}.marketTop{align-items:flex-start}.marketTopActions{flex-direction:column}.marketTopActions .btn{padding:7px 9px;font-size:.68rem}.marketHeroInner{margin-top:42px}.marketSearch{grid-template-columns:1fr;border-radius:15px}.marketField{border-right:0;border-bottom:1px solid #273238}.artistMarketGrid{grid-template-columns:1fr}.marketFilterBar select{flex:1;min-width:120px}.marketCount{width:100%;margin:3px 0 0}.marketRegister{display:block}.marketRegister .btn{width:100%;margin-top:16px}}
-</style></style></head>
+</style></head>
 <body>
-<section id="publicMarket" class="publicMarket">
- <div class="marketHero">
-  <div class="marketTop"><div class="marketBrand">BOOKINGSYSTEM</div><div class="marketTopActions"><button class="btn" type="button" onclick="openArtistRegistration()">Registrer deg som artist</button><button class="btn" type="button" onclick="openPortalChooser()">Logg inn / portaler</button></div></div>
-  <div class="marketHeroInner"><div class="eyebrow">Artister i hele Norge</div><h1>Finn musikken til anledningen.</h1><p>Band, DJ-er, trubadurer, solister og annen liveunderholdning. Søk etter det som passer arrangementet og budsjettet ditt.</p></div>
-  <div class="marketSearch">
-   <div class="marketField"><label>Hvor?</label><input id="marketPlace" placeholder="By eller område" oninput="renderPublicArtists()"></div>
-   <div class="marketField"><label>Når?</label><input id="marketDate" type="date" onchange="renderPublicArtists()"></div>
-   <div class="marketField"><label>Budsjett fra · filter</label><input id="marketMin" type="number" inputmode="numeric" placeholder="5 000" oninput="renderPublicArtists()"></div>
-   <div class="marketField"><label>Budsjett til · filter</label><input id="marketMax" type="number" inputmode="numeric" placeholder="30 000" oninput="renderPublicArtists()"></div>
-   <button class="marketSearchBtn" type="button" onclick="renderPublicArtists()">Finn artister →</button>
-  </div>
- </div>
- <main class="marketMain">
-  <div class="marketFilterBar"><input id="marketArtistSearch" type="search" placeholder="Søk etter artistnavn …" oninput="renderPublicArtists()" style="flex:2;min-width:220px;padding:10px 13px;border:1px solid #34434c;border-radius:999px;background:#0d1519;color:#fff"><select id="marketType" onchange="renderPublicArtists()"><option value="">Alle artisttyper</option><option>Band</option><option>Trubadur</option><option>DJ</option><option>Soloartist</option><option>Klassisk</option></select><select id="marketGenre" onchange="renderPublicArtists()"><option value="">Alle sjangre</option><option>Pop</option><option>Rock</option><option>Party</option><option>Akustisk</option><option>Folk</option><option>Klassisk</option><option>Elektronisk</option></select><span id="marketCount" class="marketCount"></span></div>
-  <div id="artistMarketGrid" class="artistMarketGrid"></div>
-  <section class="marketRegister"><div><div class="eyebrow">Spiller du selv?</div><h2>Bli synlig for nye kunder.</h2><p>Opprett artistprofil, legg inn honorar fra–til og motta forespørsler direkte i systemet.</p></div><button class="btn primary" type="button" onclick="openArtistRegistration()">Registrer artist →</button></section>
- </main>
-</section>
 <div id="portalChooser" class="portalChooser" role="dialog" aria-modal="true" aria-labelledby="portalChooserTitle">
  <div class="portalChooserCard">
   <div class="eyebrow">Bookingsystem</div>
@@ -1189,14 +1167,6 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
    <label class="bookingToggle"><input id="prefAgencyManage" type="checkbox" onchange="saveBookingSettings()"><span><b>Bookingbyrået kan administrere direktebookingen</b><br><small class="meta">Gir byrået mulighet til å hjelpe videre med saken.</small></span></label>
   </div>
   <div id="bookingModeSummary" class="inviteStatus"></div>
-  <div class="bookingToggles" style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px">
-   <label class="bookingToggle"><input id="prefPublicListing" type="checkbox" onchange="saveBookingSettings()"><span><b>Vis artisten i åpent artistsøk</b><br><small class="meta">Standard er av. Slå på bare dersom artisten/byrået ønsker offentlige forespørsler.</small></span></label>
-   <div id="publicPriceFields" class="glassFormGrid" style="display:none">
-    <label class="glassField"><span>Offentlig honorar fra</span><input id="prefPublicMin" type="number" min="0" step="1000" placeholder="15 000" onchange="saveBookingSettings()"></label>
-    <label class="glassField"><span>Offentlig honorar til</span><input id="prefPublicMax" type="number" min="0" step="1000" placeholder="25 000" onchange="saveBookingSettings()"></label>
-    <div class="glassField full"><small class="meta">Brukes kun i den åpne søkeportalen og budsjettfilteret. Interne bookingpriser påvirkes ikke.</small></div>
-   </div>
-  </div>
  </div>
 
  <div class="profileRows" style="margin-top:12px">
@@ -1427,34 +1397,6 @@ const KEY='booking-system-phase-v1';
 const artists=DEMO_CATALOG;
 let wizardStep=1, selectedArtistId='hs', requestCreator='agency';
 const portalParams=new URLSearchParams(location.search);
-const PUBLIC_ARTISTS=[
- {id:'hs',type:'Band',genre:'Party / rock',place:'Trondheim',min:35000,max:55000,tags:['Firmafest','Festival','Privat']}
-];
-function publicArtistRows(){return PUBLIC_ARTISTS.map(x=>{const pref=getBookingPref(x.id);return {...x,min:Number(pref.publicMin||x.min),max:Number(pref.publicMax||x.max),artist:artists.find(a=>a.id===x.id),pref}}).filter(x=>x.artist)}
-function publicDirectoryLookupRows(query){
- const q=String(query||'').trim().toLowerCase();if(!q)return [];
- return artists.filter(a=>a.name.toLowerCase().includes(q)).map(a=>{const known=PUBLIC_ARTISTS.find(x=>x.id===a.id)||{},pref=getBookingPref(a.id);return {...known,id:a.id,artist:a,pref,type:known.type||'Artist',genre:known.genre||'',place:known.place||'',tags:known.tags||[],directoryOnly:!pref.publicListing}})
-}
-function renderPublicArtists(){
- const grid=document.getElementById('artistMarketGrid');if(!grid)return;
- const nameQ=($('marketArtistSearch')?.value||'').trim().toLowerCase(),place=($('marketPlace')?.value||'').toLowerCase(),min=Number($('marketMin')?.value||0),max=Number($('marketMax')?.value||Infinity),type=$('marketType')?.value||'',genre=($('marketGenre')?.value||'').toLowerCase();
- let rows;
- if(nameQ){
-   rows=publicDirectoryLookupRows(nameQ).filter(x=>(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre)));
- }else{
-   rows=publicArtistRows().filter(x=>x.pref.publicListing===true&&x.min>0&&x.max>=x.min&&(!place||x.place.toLowerCase().includes(place))&&(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre))&&x.max>=min&&x.min<=max);
- }
- $('marketCount').textContent=rows.length+' '+(rows.length===1?'artist':'artister');
- grid.innerHTML=rows.length?rows.map(x=>{
-   const a=x.artist,initials=a.name.split(/\s+/).map(v=>v[0]).join('').slice(0,2),directoryOnly=x.directoryOnly;
-   return '<article class="artistMarketCard" onclick="'+(directoryOnly?"contactAgencyForArtist('"+x.id+"')":"openPublicArtist('"+x.id+"')")+'"><div class="artistMarketVisual"><div class="artistMarketInitials">'+safe(initials)+'</div></div><div class="artistMarketBody"><h3>'+safe(a.name)+'</h3><div class="artistMarketMeta">'+safe(x.type)+(x.genre?' · '+safe(x.genre):'')+(x.place?'<br>'+safe(x.place):'')+'</div>'+x.tags.map(t=>'<span class="marketTag">'+safe(t)+'</span>').join('')+'<div class="artistMarketPrice"><div>'+(directoryOnly?'<small class="meta">Representert av bookingbyrå</small><br><b>Kontakt bookingbyrået</b>':'<small class="meta">Tilgjengelig for forespørsel</small><br><b>Se artistprofil</b>')+'</div><span>'+(directoryOnly?'Kontakt →':'Se profil →')+'</span></div></div></article>';
- }).join(''):'<div class="marketEmpty">'+(nameQ?'Ingen artist med dette navnet ble funnet.':'Ingen artister traff filtrene. Prøv et større budsjett eller område.')+'</div>';
-}
-function contactAgencyForArtist(id){const a=artistBy(id);toast((a?.name||'Artisten')+' representeres av bookingbyrået · kontaktfunksjon kommer i neste steg')}
-function openPublicArtist(id){currentPortalArtistId=id;localStorage.setItem('portal-artist-id',id);toast((artistBy(id)?.name||'Artisten')+' · offentlig profil kommer i neste steg')}
-function openArtistRegistration(){toast('Artistregistrering kommer i neste steg')}
-function initializePublicMarket(){const publicMode=!portalParams.get('portal');const market=document.getElementById('publicMarket');if(market)market.classList.toggle('on',publicMode);if(publicMode){$('portalChooser')?.classList.remove('on');document.body.style.overflow='';requestAnimationFrame(renderPublicArtists)}}
-
 const requestedRole=portalParams.get('portal');
 let currentPortalArtistId=portalParams.get('artist')||localStorage.getItem('portal-artist-id')||'hs';
 let currentPortalMemberId=portalParams.get('member')||localStorage.getItem('portal-member-id')||'';
@@ -1499,8 +1441,7 @@ const artistProfiles=structuredClone(DEMO_PROFILES);
 const BOOKING_PREFS_KEY='booking-artist-prefs-v1';
 let bookingPrefs;try{bookingPrefs=JSON.parse(localStorage.getItem(BOOKING_PREFS_KEY))}catch(e){}
 if(!bookingPrefs)bookingPrefs=structuredClone(DEMO_PREFS);
-try{if(localStorage.getItem('public-listing-optin-v1')!=='done'){Object.keys(bookingPrefs).forEach(id=>{bookingPrefs[id].publicListing=id==='hs';if(id==='hs'){bookingPrefs[id].publicMin=35000;bookingPrefs[id].publicMax=55000}});localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs));localStorage.setItem('public-listing-optin-v1','done')}}catch{}
-function getBookingPref(id){if(!bookingPrefs[id])bookingPrefs[id]={mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false,publicListing:false,publicMin:0,publicMax:0};const p=bookingPrefs[id];if(typeof p.publicListing==='undefined')p.publicListing=false;if(typeof p.publicMin==='undefined')p.publicMin=0;if(typeof p.publicMax==='undefined')p.publicMax=0;return p}
+function getBookingPref(id){return bookingPrefs[id]||{mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false}}
 function storeBookingPrefs(){localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs))}
 
 const defaults=structuredClone(DEMO_REQUESTS);
@@ -1761,10 +1702,6 @@ function renderBookingSettings(){
  if($('prefNotifyAgency'))$('prefNotifyAgency').checked=!!p.notifyAgency;
  if($('prefAgencyCalendar'))$('prefAgencyCalendar').checked=!!p.agencyCalendar;
  if($('prefAgencyManage'))$('prefAgencyManage').checked=!!p.agencyManage;
- if($('prefPublicListing'))$('prefPublicListing').checked=!!p.publicListing;
- if($('prefPublicMin'))$('prefPublicMin').value=p.publicMin||'';
- if($('prefPublicMax'))$('prefPublicMax').value=p.publicMax||'';
- if($('publicPriceFields'))$('publicPriceFields').style.display=p.publicListing?'grid':'none';
  if($('bookingExtraSettings'))$('bookingExtraSettings').style.display=p.mode==='agency_only'?'none':'grid';
  const text=p.mode==='agency_only'?'All booking går via bookingbyrået.':
             p.mode==='direct_only'?'Artisten håndterer booking selv og er kontraktspart mot arrangøren.':
@@ -1778,12 +1715,9 @@ function saveBookingSettings(){
    mode:selected.value,
    notifyAgency:$('prefNotifyAgency')?.checked??true,
    agencyCalendar:$('prefAgencyCalendar')?.checked??true,
-   agencyManage:$('prefAgencyManage')?.checked??false,
-   publicListing:$('prefPublicListing')?.checked??false,
-   publicMin:Number($('prefPublicMin')?.value||0),
-   publicMax:Number($('prefPublicMax')?.value||0)
+   agencyManage:$('prefAgencyManage')?.checked??false
  };
- storeBookingPrefs();renderBookingSettings();renderArtistPortal();renderCalendar();renderPublicArtists();
+ storeBookingPrefs();renderBookingSettings();renderArtistPortal();renderCalendar();
  toast('Bookinginnstillinger lagret');
 }
 function sendOrganizerInvite(id){
@@ -3168,7 +3102,7 @@ initializeRequestValidation();
 initializeDemoDocuments();
 renderAll();
 initializeContextHelp();
-initializePortalChooser();initializePublicMarket();
+initializePortalChooser();
 document.body.classList.toggle('artist-role',currentRole==='artist');document.body.classList.toggle('member-role',currentRole==='member');document.body.classList.toggle('organizer-role',currentRole==='organizer');
 $('portalRolePill').textContent=currentRole==='artist'?'Artistportal':currentRole==='member'?'Medlemsapp':currentRole==='organizer'?'Arrangørportal':'Bookingbyrå';
 if(currentRole==='artist'){const a=artistBy(currentPortalArtistId);$('userRoleName').textContent=agencyBrand('artist:'+currentPortalArtistId).name;$('userRoleSub').textContent='Artistportal';$('userAvatar').textContent=(a?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2);showView('artistDashboard')}
