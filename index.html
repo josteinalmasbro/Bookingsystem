@@ -473,6 +473,20 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 }
 
 
+/* === Kompakt arrangørportal / accordion === */
+.organizerSections{display:grid;gap:9px;margin-top:14px}
+.organizerFold{border:1px solid #2f3c44;border-radius:14px;background:#0b1216;overflow:hidden}
+.organizerFold summary{list-style:none;display:flex;align-items:center;gap:11px;padding:14px;cursor:pointer;user-select:none}
+.organizerFold summary::-webkit-details-marker{display:none}
+.organizerFoldIcon{width:36px;height:36px;flex:0 0 36px;border-radius:10px;display:grid;place-items:center;background:#e7c86a12;color:var(--gold);font-weight:950}
+.organizerFoldTitle{min-width:0;flex:1}.organizerFoldTitle b{display:block;font-size:.92rem}.organizerFoldTitle small{display:block;color:var(--muted);font-size:.7rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.organizerFoldArrow{color:#78868d;font-size:1.15rem;transition:transform .18s ease}.organizerFold[open] .organizerFoldArrow{transform:rotate(90deg);color:var(--gold)}
+.organizerFoldBody{padding:0 14px 14px;border-top:1px solid #202b31}.organizerFoldBody>.pressKit{margin-top:12px}
+.organizerFoldBody .organizerPeople{margin-top:12px}
+.organizerQuick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.organizerQuickItem{padding:10px;border:1px solid #2b3840;border-radius:11px;background:#0c1418}.organizerQuickItem small{display:block;color:var(--muted);font-size:.66rem}.organizerQuickItem b{display:block;margin-top:3px;font-size:.82rem}
+@media(max-width:760px){.organizerHero{padding:15px;margin-bottom:10px}.organizerHero h1{font-size:2rem!important}.organizerQuick{grid-template-columns:1fr 1fr}.organizerFold summary{padding:12px}.organizerFoldBody{padding:0 12px 12px}}
+
 /* === Presse & materiell i arrangørportal === */
 .pressKit{margin-top:14px;padding:16px;border:1px solid #34424a;border-radius:17px;background:linear-gradient(145deg,#10191d,#0b1114)}
 .pressKitHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
@@ -1749,27 +1763,39 @@ function organizerPressKitHtml(r){
   const assets=artistPressKit(r.artistId);
   return `<div class="pressKit"><div class="pressKitHead"><div><div class="eyebrow">Presse & materiell</div><h3>Artistens pressepakke</h3><p>Alltid siste godkjente versjon fra artistprofilen.</p></div><span class="pressKitBadge">✓ TILGJENGELIG</span></div><div class="pressKitGrid">${assets.map(x=>`<div class="pressAsset"><div class="pressAssetIcon">${x.icon}</div><div><b>${esc(x.title)}</b><small>${esc(x.meta)}</small></div><button class="btn" type="button" onclick="downloadPressAsset('${esc(x.file)}')">Hent</button></div>`).join('')}</div><div class="pressKitActions"><button class="btn primary" type="button" onclick="downloadAllPressAssets(${r.artistId})">↓ Last ned alt</button></div></div>`;
 }
+function organizerFoldHtml(icon,title,meta,body,open=false){
+ return `<details class="organizerFold" ${open?'open':''}><summary><span class="organizerFoldIcon">${icon}</span><span class="organizerFoldTitle"><b>${esc(title)}</b><small>${esc(meta)}</small></span><span class="organizerFoldArrow">›</span></summary><div class="organizerFoldBody">${body}</div></details>`;
+}
 function renderOrganizerPortal(){
-  const signed=state.requests.filter(r=>r.stage==='signed');
-  const r=signed[0];
+  // Arrangørdemoen viser bevisst bare ett aktivt/bekreftet arrangement.
+  const r=state.requests.find(x=>x.stage==='signed');
   if(!r){
     $('organizerEventSummary').innerHTML='<div class="card">Ingen bekreftede arrangement tilgjengelig.</div>';
     $('organizerPeopleGrid').innerHTML='';
     return;
   }
-  const a=artistBy(r.artistId),p=ensurePeople(r.id);
+  const a=artistBy(r.artistId),p=ensurePeople(r.id),details=contractDetails(r);
+  const peopleBody=`<div class="organizerPeople">${organizerPeopleHtml(r,true)}</div>`;
+  const dayBody=`<div class="meta" style="margin:12px 0">Hold tider, restaurant, venue og praktisk dagsplan samlet her.</div><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Åpne og rediger dagsplan</button>`;
+  const techBody=`<div style="margin-top:12px">${backlineRequirements(r)}</div>`;
+  const travelBody=`<div class="organizerQuick"><div class="organizerQuickItem"><small>Hotell</small><b>${esc(details.hotel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Reise</small><b>${esc(details.travel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Venue</small><b>${esc(r.venue||'Ikke satt')}</b></div></div>`;
+  const agreementBody=`<div class="rolecard" style="margin-top:12px"><b>Signert avtale</b><small><br>${esc(contractStatusText(r))}. Avtalen ligger til grunn for dette arrangementet.</small></div>`;
   $('organizerEventSummary').innerHTML=`<div class="card">
     <div class="eyebrow">Bekreftet arrangement</div>
     <h2 style="font-size:1.6rem;margin:8px 0">${esc(r.name)}</h2>
     <div class="gold" style="font-weight:900">${esc(a?.name||'Artist')}</div>
     <div class="meta" style="margin-top:5px">${esc(r.date)} · ${esc(r.city)} · ${esc(r.venue)}</div>
     <div class="stagebar">${journeyHtml(productionJourney(r),r.id,'event')}</div>
-    ${organizerPressKitHtml(r)}
-    <div class="actions" style="margin-top:12px"><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Rediger dagsplan, restaurant og hotell</button></div>
-    <div class="rolecard" style="margin-top:14px"><b>Personer arrangøren bør avklare</b><small><br>Artistvert, lokal sjåfør ved behov og øvrige kontakter som artist/bookingbyrå kan ha behov for å ringe.</small></div>
-    <div class="organizerPeople" style="margin-top:12px">${organizerPeopleHtml(r,true)}</div>
+    <div class="organizerSections">
+      ${organizerFoldHtml('▧','Presse & materiell','Bilder, logo, presseskriv og promo',organizerPressKitHtml(r))}
+      ${organizerFoldHtml('●','Personer & kontakt','Artistvert, hovedkontakt og lokal crew',peopleBody)}
+      ${organizerFoldHtml('◷','Dagsplan','Tider, restaurant og arrangementsdag',dayBody)}
+      ${organizerFoldHtml('⌁','Teknikk & rider','Backline, tekniske behov og rider',techBody)}
+      ${organizerFoldHtml('⌂','Reise & hotell','Transport, hotell og venue',travelBody)}
+      ${organizerFoldHtml('✓','Avtale','Kontrakt og signaturstatus',agreementBody)}
+    </div>
   </div>`;
-  $('organizerPeopleGrid').innerHTML=organizerPeopleHtml(r,true); $('organizerEventSummary').innerHTML+=signed.map(ev=>`<div class="card"><h3>${safe(ev.name)} · ${safe(ev.date)}</h3>${compactJourneyHtml(ev)}${memberOverview(ev.artistId,'hospitality')}${mealPreferenceHtml(ev.artistId,ev.city)}${backlineRequirements(ev)}</div>`).join('');
+  $('organizerPeopleGrid').innerHTML=organizerPeopleHtml(r,true);
 }
 function renderArtistDriver(){
   const box=$('artistDriverBlock');if(!box)return;
