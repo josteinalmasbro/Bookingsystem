@@ -1738,7 +1738,7 @@ function renderFilteredRequests(){
  if(currentRole==='agency')arr=arr.filter(r=>r.bookingOwner!=='artist'||getBookingPref(r.artistId).notifyAgency||getBookingPref(r.artistId).agencyManage);
  $('allRequests').innerHTML=arr.length?arr.map(r=>{
    const a=artistBy(r.artistId),d=fmtDate(r.date);
-   return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}${compactJourneyHtml(r)}</div>${stageBadge(r.stage,r)}</div>`;
+   return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${currentRole==='agency'?'':ownerBadge(r)}${compactJourneyHtml(r)}</div>${stageBadge(r.stage,r)}</div>`;
  }).join(''):'<div class="card"><div class="meta">Ingen saker i denne fasen.</div></div>';
 }
 
@@ -1746,7 +1746,7 @@ function renderCaseList(id,limit){
  let arr=state.requests.filter(r=>r.stage!=='signed');
  if(currentRole==='agency')arr=arr.filter(r=>r.bookingOwner!=='artist'||getBookingPref(r.artistId).notifyAgency||getBookingPref(r.artistId).agencyManage);
  if(limit)arr=arr.slice(0,limit);
- $(id).innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}${compactJourneyHtml(r)}</div>${stageBadge(r.stage,r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen aktive forespørsler.</div></div>';
+ $(id).innerHTML=arr.length?arr.map(r=>{const a=artistBy(r.artistId),d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="artistTitle">${esc(a.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${currentRole==='agency'?'':ownerBadge(r)}${compactJourneyHtml(r)}</div>${stageBadge(r.stage,r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen aktive forespørsler.</div></div>';
 }
 function renderEvents(){
  const arr=state.requests.filter(r=>r.stage==='signed');
@@ -1772,7 +1772,7 @@ function renderArtistPortal(){
  $('artistOpenCount').textContent=open.length;$('artistConfirmedCount').textContent=confirmed.length;$('artistRequestCount').textContent=open.length;$('artistAttentionRequests').textContent=open.length?`${open.length} åpne forespørsler`:'Ingen åpne forespørsler';
  const upcoming=cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).filter(r=>r.date>='2026-09-16').slice(0,4);
  $('artistUpcoming').innerHTML=upcoming.length?upcoming.map(r=>{const d=fmtDate(r.date);return `<div class="artistEvent" role="button" tabindex="0" onclick="openNextJob(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><b>${esc(r.name)}</b><div class="meta">${esc(r.city)} · ${esc(r.organizer)}</div>${compactJourneyHtml(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="meta">Ingen kommende saker registrert.</div>';
- $('artistRequestList').innerHTML=cases.length?cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{const d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${ownerBadge(r)}${compactJourneyHtml(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen forespørsler eller jobber.</div></div>';
+ $('artistRequestList').innerHTML=cases.length?cases.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(r=>{const d=fmtDate(r.date);return `<div class="case" onclick="openRequest(${r.id})"><div class="datebox"><b>${d.day}</b><small>${d.mon}</small></div><div><div class="caseTitle">${esc(r.name)}</div><div class="meta">${esc(r.organizer)} · ${esc(r.city)} · ${Number(displayFee(r)).toLocaleString('nb-NO')} kr</div>${currentRole==='agency'?'':ownerBadge(r)}${compactJourneyHtml(r)}</div>${artistStageBadge(r)}</div>`}).join(''):'<div class="card"><div class="meta">Ingen forespørsler eller jobber.</div></div>';
  renderMonthCalendar('artist');renderArtistCaseFilter();renderProfileCompletion();
 }
 function addPrivateBusy(){openPrivateCalendarEntry()}
