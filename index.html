@@ -1423,7 +1423,8 @@ function getBookingPref(id){return bookingPrefs[id]||{mode:'hybrid',notifyAgency
 function storeBookingPrefs(){localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs))}
 
 const defaults=structuredClone(DEMO_REQUESTS);
-let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state)state={requests:defaults};
+let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state||!Array.isArray(state.requests))state={requests:defaults};
+if(state.requests.length===0){state.requests=structuredClone(defaults);try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
 state.requests.forEach(r=>{
  if(!r.bookingOwner)r.bookingOwner='agency';
  if(typeof r.ownerSigned==='undefined')r.ownerSigned=!!r.agencySigned;
@@ -1453,8 +1454,8 @@ function cleanSalesObject(value){
 }
 try{
  if(localStorage.getItem(SALES_CLEANUP_KEY)!=='done'){
-  cleanSalesObject(state.requests);cleanSalesObject(eventPeople);
-  localStorage.setItem(KEY,JSON.stringify(state));localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople));
+  cleanSalesObject(state.requests);
+  localStorage.setItem(KEY,JSON.stringify(state));
   localStorage.setItem(SALES_CLEANUP_KEY,'done');
  }
 }catch{}
@@ -1463,6 +1464,7 @@ try{
 const PEOPLE_KEY='booking-event-people-v1';
 let eventPeople;try{eventPeople=JSON.parse(localStorage.getItem(PEOPLE_KEY))}catch(e){}
 if(!eventPeople)eventPeople=structuredClone(DEMO_PEOPLE);
+try{cleanSalesObject(eventPeople);localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople))}catch{}
 function savePeople(){localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople))}
 function ensurePeople(id){
   const key=String(id);
@@ -2368,7 +2370,7 @@ function openBrandEditor(key){
  <iframe id="brandWebsitePreview" title="Forhåndsvisning av design" sandbox="" style="width:100%;height:330px;border:1px solid var(--line);border-radius:12px;background:white"></iframe><div id="agencyBrandPreview" style="margin:12px 0;border-radius:12px;overflow:hidden"></div><div class="brandPreviewActions"><button class="btn" type="button" onclick="previewAgencyDocument()">Se dokument / PDF</button></div></section>`;
  $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';updateAgencyBrandPreview();
 }
-function collectAgencyBrand(){if(!agencyBrandDraft)return;agencyBrandDraft.name=$('agencyBrandName').value.trim();agencyBrandDraft.primary=$('agencyBrandPrimary').value;agencyBrandDraft.accent=$('agencyBrandAccent').value;if(agencyBrandDraft.theme)agencyBrandDraft.theme.background=agencyBrandDraft.primary}
+function collectAgencyBrand(){if(!agencyBrandDraft)return;const name=$('agencyBrandName'),primary=$('agencyBrandPrimary'),accent=$('agencyBrandAccent');if(name)agencyBrandDraft.name=name.value.trim();if(primary)agencyBrandDraft.primary=primary.value;if(accent)agencyBrandDraft.accent=accent.value;if(agencyBrandDraft.theme)agencyBrandDraft.theme.background=agencyBrandDraft.primary}
 function updateAgencyBrandPreview(){collectAgencyBrand();const b=agencyBrandDraft;$('agencyBrandPreview').innerHTML=`<div style="background:${b.primary};color:${contrastInk(b.primary)};border-bottom:4px solid ${b.accent};padding:20px;display:flex;align-items:center;gap:14px">${b.logo?`<img src="${b.logo}" alt="Logo" style="max-width:140px;max-height:64px;object-fit:contain;${brandLogoStyle(b)}">`:''}<div><strong>${safe(b.name||'Ditt navn')}</strong><div style="font-size:12px;margin-top:4px">Kontrakter og dokumenter</div></div></div><div style="padding:18px;background:#fff;color:#21343b"><b>Konsert- og bookingavtale</b><p style="font-size:13px;margin:8px 0">Forhåndsvisning av dokumentprofilen.</p><span style="display:inline-block;background:${b.accent};color:${contrastInk(b.accent)};padding:5px 10px;border-radius:5px;font-size:12px">Profilfarge</span></div>`;fullBrandPreview()}
 async function loadAgencyBrandLogo(input){const file=input.files[0];if(!file)return;const draft=agencyBrandDraft;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>2*1024*1024){$('profileSaveError').textContent='Velg PNG, JPG eller WebP under 2 MB.';input.value='';return}try{const url=URL.createObjectURL(file),img=new Image();try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url});if(agencyBrandDraft!==draft||activeProfileEditor!=='agencyBrand')return;const scale=Math.min(1,700/img.width,300/img.height),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);draft.logo=canvas.toDataURL('image/png');draft.logoTone='auto';$('profileSaveError').textContent='';syncBrandColorPicker('agencyBrandPrimary');syncBrandColorPicker('agencyBrandAccent');updateAgencyBrandPreview()}finally{URL.revokeObjectURL(url)}}catch{$('profileSaveError').textContent='Logoen kunne ikke leses. Prøv en annen bildefil.'}}
 function saveAgencyBrand(){if(!['agency','artist'].includes(currentRole)||!$('memberProfileForm').reportValidity())return;collectAgencyBrand();if(!agencyBrandDraft.name){$('profileSaveError').textContent='Skriv inn navn.';return}try{let all;try{all=JSON.parse(localStorage.getItem(AGENCY_BRAND_KEY)||'{}')}catch{all={}}all[brandEditorKey]=agencyBrandDraft;localStorage.setItem(AGENCY_BRAND_KEY,JSON.stringify(all))}catch{$('profileSaveError').textContent='Kunne ikke lagre. Prøv en mindre logo eller frigjør nettleserlagring.';return}closeProfileEditor();applyAgencyBrand();renderAll();toast('Dokumentprofilen er lagret')}
