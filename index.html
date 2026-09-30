@@ -2465,7 +2465,7 @@ function websiteThemeCSS(brand,s='body:not(.artist-role):not(.organizer-role)',h
  ${rules('.badge:not(.bg-green),.stage:not(.done)','border-color:'+brand.accent+'55')}
  ${rules('.case:hover,.eventrow:hover,.result:hover,.pipe:hover,.btn:hover,.agencyNavBlock.mobileNav button:hover,.artistNavBlock.mobileNav button:hover','background:'+soft+';color:'+text+';border-color:'+brand.accent)}
  ${rules('button:focus-visible,a:focus-visible,input:focus-visible','outline:2px solid '+accentText+';outline-offset:3px')}
- ${t.hero?rules(heroTarget,'background:'+p.surface;padding:28px 30px;border-radius:'+Math.max(t.cardRadius,8)+'px;color:#ffffff;margin:8px 0 28px')+rules(heroTarget+' .lead','color:#e9e4df')+rules(heroTarget+' .eyebrow','color:'+brandReadable(brand.accent,'#111111')):''}
+ ${t.hero?rules(heroTarget,'background:'+p.surface+';border:1px solid '+p.border+';border-top:3px solid '+brand.accent+';padding:28px 30px;border-radius:'+Math.max(t.cardRadius,8)+'px;color:#ffffff;margin:8px 0 28px')+rules(heroTarget+' .lead','color:#e9e4df')+rules(heroTarget+' .eyebrow','color:'+brandReadable(brand.accent,'#111111')):''}
  ${rules('main','padding-top:28px')}
  @media(max-width:700px){${rules(heroTarget,'padding:20px')} ${rules('main','padding:20px 14px 60px')}}`;
 }
