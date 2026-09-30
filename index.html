@@ -1407,7 +1407,28 @@ function enterPortal(role){
  if(role==='member'&&currentPortalMemberId)url.searchParams.set('member',currentPortalMemberId);
  if(role!=='artist'&&role!=='member')url.searchParams.delete('artist');
  if(role!=='member')url.searchParams.delete('member');
- location.href=url.toString();
+ // Same-document portal switching is more reliable on iOS/PWA than a full reload.
+ history.replaceState(null,'',url.toString());
+ currentRole=role;
+ const chooser=$('portalChooser');if(chooser)chooser.classList.remove('on');
+ document.body.style.overflow='';
+ document.body.classList.toggle('artist-role',role==='artist');
+ document.body.classList.toggle('member-role',role==='member');
+ document.body.classList.toggle('organizer-role',role==='organizer');
+ $('portalRolePill').textContent=role==='artist'?'Artistportal':role==='member'?'Medlemsapp':role==='organizer'?'Arrangørportal':'Bookingbyrå';
+ if(role==='agency'){
+   $('userRoleName').textContent=agencyBrand().name;$('userRoleSub').textContent='Bookingadministrator';$('userAvatar').textContent='DA';
+   showView('dashboard');renderAll();
+ }else if(role==='artist'){
+   const a=artistBy(currentPortalArtistId);$('userRoleName').textContent=agencyBrand('artist:'+currentPortalArtistId).name;$('userRoleSub').textContent='Artistportal';$('userAvatar').textContent=(a?.name||'AR').split(' ').map(x=>x[0]).join('').slice(0,2);
+   showView('artistDashboard');renderArtistPortal();
+ }else if(role==='member'){
+   renderMemberApp();showMemberTab('profile');
+ }else{
+   const r=state.requests.find(x=>x.stage==='signed');$('userRoleName').textContent=r?.organizer||'Arrangør';$('userRoleSub').textContent='Arrangørportal';$('userAvatar').textContent='AR';
+   showView('organizerDashboard');renderOrganizerPortal();
+ }
+ syncAgencyHeader();
 }
 function openPortalChooser(){$('portalChooser')?.classList.add('on');document.body.style.overflow='hidden'}
 function initializePortalChooser(){
