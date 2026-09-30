@@ -473,6 +473,9 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 }
 
 
+/* === Begrenset dagsplantilgang === */
+.dayAccessBox{display:grid;gap:9px;margin-top:12px}.dayAccessRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid #2b3840;border-radius:12px;background:#0d1519}.dayAccessRow b{display:block;font-size:.82rem}.dayAccessRow small{display:block;color:var(--muted);font-size:.69rem;margin-top:2px}.dayAccessTag{padding:5px 8px;border-radius:999px;background:#173d2e;color:#8ce2b5;font-size:.63rem;font-weight:900}.dayAccessActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.dayGuestPreview{display:grid;gap:8px;margin-top:12px}.dayGuestTime{display:grid;grid-template-columns:58px 1fr;gap:10px;padding:10px;border-bottom:1px solid #263139}.dayGuestTime b{color:var(--gold)}@media(max-width:760px){.dayAccessRow{grid-template-columns:1fr}.dayAccessTag{justify-self:start}.dayAccessActions .btn{width:100%}}
+
 /* === Kompakt arrangørportal / accordion === */
 .organizerSections{display:grid;gap:9px;margin-top:14px}
 .organizerFold{border:1px solid #2f3c44;border-radius:14px;background:#0b1216;overflow:hidden}
@@ -1737,6 +1740,31 @@ function organizerPeopleHtml(r,editable=true){
 }
 let organizerDayPlanId=null;
 const organizerDayPlanFields=[['arrival','Get-in','time'],['soundcheck','Lydprøve','time'],['dinnerTime','Middag','time'],['restaurantName','Restaurant / spisested','text'],['restaurantAddress','Adresse til restaurant','text'],['doorsTime','Dørene åpnes','time'],['showTime','Showstart','time'],['showEnd','Showslutt','time'],['venueAddress','Adresse til venue','text'],['hotelName','Hotell','text'],['hotelAddress','Adresse til hotell','text'],['arrivalNote','Praktisk ankomstinformasjon','textarea']];
+const DAY_ACCESS_KEY='booking-day-access-v1';
+let dayAccessStore={};try{dayAccessStore=JSON.parse(localStorage.getItem(DAY_ACCESS_KEY)||'{}')}catch{}
+function dayAccessGuests(id){const key=String(id);return dayAccessStore[key]||(dayAccessStore[key]=[])}
+function storeDayAccess(){try{localStorage.setItem(DAY_ACCESS_KEY,JSON.stringify(dayAccessStore))}catch{}}
+function publicDayTimes(r){const d=dayPlanDetails(r);return [
+ ['Get-in',d.arrival],['Lydprøve',d.soundcheck],['Middag',d.dinnerTime],['Dørene åpnes',d.doorsTime],['Showstart',d.showTime],['Showslutt',d.showEnd]
+].filter(x=>x[1])}
+function dayAccessHtml(r){
+ const contacts=(ensurePeople(r.id).organizer||[]).filter(p=>p.name&&p.name!=='Ikke satt').map(p=>({name:p.name,role:p.role,automatic:true}));
+ const guests=dayAccessGuests(r.id);
+ const rows=contacts.concat(guests);
+ return `<div class="dayAccessBox">${rows.length?rows.map(x=>`<div class="dayAccessRow"><div><b>${esc(x.name)}</b><small>${esc(x.role||'Dagsplangjest')} · Kun tidspunkter</small></div><span class="dayAccessTag">${x.automatic?'AUTOMATISK':'INVITERT'}</span></div>`).join(''):'<div class="meta">Ingen har dagsplantilgang ennå.</div>'}</div><div class="dayAccessActions"><button class="btn primary" type="button" onclick="inviteDayPlanGuest(${r.id})">+ Inviter til dagsplan</button><button class="btn" type="button" onclick="previewDayPlanGuest(${r.id})">Se gjestevisning</button></div><p class="meta">Kontaktpersoner hos arrangøren får automatisk tilgang. Inviterte gjester ser bare tidspunkt – aldri kontrakt, honorar, hotell, reise, hospitality eller private artistopplysninger.</p>`;
+}
+function inviteDayPlanGuest(id){
+ const r=state.requests.find(x=>x.id===id);if(!r)return;
+ const name=prompt('Navn på personen som skal ha tilgang til dagsplanen');if(!name?.trim())return;
+ const contact=prompt('Mobil eller e-post (valgfritt)')||'';
+ dayAccessGuests(id).push({id:Date.now(),name:name.trim(),role:'Dagsplangjest',contact:contact.trim()});storeDayAccess();renderOrganizerPortal();toast('Invitasjon til dagsplan opprettet');
+}
+function previewDayPlanGuest(id){
+ const r=state.requests.find(x=>x.id===id);if(!r)return;const times=publicDayTimes(r);
+ activeProfileEditor='dayGuestPreview';profileFocus=document.activeElement;$('profileEditorTitle').textContent='Dagsplan';$('profileEditorEyebrow').textContent='Begrenset gjestevisning';$('profileSaveError').textContent='';$('memberProfileForm').querySelector('[type=submit]').hidden=true;
+ $('profileEditorBody').innerHTML='<p class="glassDesc">Dette er alt en invitert dagsplangjest får se. Artistens hotell, reise, hospitality, kontrakt og øvrige private opplysninger er skjult.</p><div class="dayGuestPreview">'+(times.length?times.map(x=>'<div class="dayGuestTime"><b>'+safe(x[1])+'</b><span>'+safe(x[0])+'</span></div>').join(''):'<div class="meta">Ingen tidspunkt er registrert ennå.</div>')+'</div>';
+ $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';
+}
 function openOrganizerDayPlan(id){
  const r=state.requests.find(x=>x.id===id);if(!r)return;organizerDayPlanId=id;activeProfileEditor='organizerDayPlan';profileFocus=document.activeElement;const d=dayPlanDetails(r);$('profileEditorTitle').textContent='Dagsplan og steder';$('profileEditorEyebrow').textContent=r.name+' · arrangør';$('profileSaveError').textContent='';$('memberProfileForm').querySelector('[type=submit]').hidden=false;
  $('profileEditorBody').innerHTML='<p class="glassDesc">Opplysningene vises direkte i medlemsappen. Legg inn restaurantnavn og adresse, så får bandet kartlenke under «Middag».</p><div class="glassFormGrid">'+organizerDayPlanFields.map(([key,label,type])=>`<label class="glassField ${type==='textarea'?'full':''}">${safe(label)}${type==='textarea'?`<textarea data-day-plan="${key}">${safe(d[key]||'')}</textarea>`:`<input data-day-plan="${key}" type="${type}" value="${safe(d[key]||'')}">`}</label>`).join('')+'</div>';$('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';$('profileEditorBody').querySelector('input')?.focus();
@@ -1776,7 +1804,7 @@ function renderOrganizerPortal(){
   }
   const a=artistBy(r.artistId),p=ensurePeople(r.id),details=contractDetails(r);
   const peopleBody=`<div class="organizerPeople">${organizerPeopleHtml(r,true)}</div>`;
-  const dayBody=`<div class="meta" style="margin:12px 0">Hold tider, restaurant, venue og praktisk dagsplan samlet her.</div><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Åpne og rediger dagsplan</button>`;
+  const dayBody=`<div class="meta" style="margin:12px 0">Hold tider, restaurant, venue og praktisk dagsplan samlet her.</div><div class="actions"><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Åpne og rediger dagsplan</button></div><h3 style="margin:18px 0 5px">Dagsplantilgang</h3>${dayAccessHtml(r)}`;
   const techBody=`<div style="margin-top:12px">${backlineRequirements(r)}</div>`;
   const travelBody=`<div class="organizerQuick"><div class="organizerQuickItem"><small>Hotell</small><b>${esc(details.hotel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Reise</small><b>${esc(details.travel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Venue</small><b>${esc(r.venue||'Ikke satt')}</b></div></div>`;
   const agreementBody=`<div class="rolecard" style="margin-top:12px"><b>Signert avtale</b><small><br>${esc(contractStatusText(r))}. Avtalen ligger til grunn for dette arrangementet.</small><div class="actions" style="margin-top:12px"><button class="btn primary" type="button" onclick="printContract(${r.id})">Åpne signert kontrakt</button></div></div>`;
