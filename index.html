@@ -1423,8 +1423,7 @@ function getBookingPref(id){return bookingPrefs[id]||{mode:'hybrid',notifyAgency
 function storeBookingPrefs(){localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs))}
 
 const defaults=structuredClone(DEMO_REQUESTS);
-let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state||!Array.isArray(state.requests))state={requests:defaults};
-if(state.requests.length===0){state.requests=structuredClone(defaults);try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
+let state;try{state=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!state||!Array.isArray(state.requests)||state.requests.length===0){state={requests:structuredClone(defaults)};try{localStorage.setItem(KEY,JSON.stringify(state))}catch{}}
 state.requests.forEach(r=>{
  if(!r.bookingOwner)r.bookingOwner='agency';
  if(typeof r.ownerSigned==='undefined')r.ownerSigned=!!r.agencySigned;
@@ -1454,8 +1453,8 @@ function cleanSalesObject(value){
 }
 try{
  if(localStorage.getItem(SALES_CLEANUP_KEY)!=='done'){
-  cleanSalesObject(state.requests);
-  localStorage.setItem(KEY,JSON.stringify(state));
+  cleanSalesObject(state.requests);cleanSalesObject(eventPeople);
+  localStorage.setItem(KEY,JSON.stringify(state));localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople));
   localStorage.setItem(SALES_CLEANUP_KEY,'done');
  }
 }catch{}
@@ -1464,7 +1463,6 @@ try{
 const PEOPLE_KEY='booking-event-people-v1';
 let eventPeople;try{eventPeople=JSON.parse(localStorage.getItem(PEOPLE_KEY))}catch(e){}
 if(!eventPeople)eventPeople=structuredClone(DEMO_PEOPLE);
-try{cleanSalesObject(eventPeople);localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople))}catch{}
 function savePeople(){localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople))}
 function ensurePeople(id){
   const key=String(id);
@@ -2370,7 +2368,7 @@ function openBrandEditor(key){
  <iframe id="brandWebsitePreview" title="Forhåndsvisning av design" sandbox="" style="width:100%;height:330px;border:1px solid var(--line);border-radius:12px;background:white"></iframe><div id="agencyBrandPreview" style="margin:12px 0;border-radius:12px;overflow:hidden"></div><div class="brandPreviewActions"><button class="btn" type="button" onclick="previewAgencyDocument()">Se dokument / PDF</button></div></section>`;
  $('profileGlassOverlay').classList.add('on');document.body.style.overflow='hidden';updateAgencyBrandPreview();
 }
-function collectAgencyBrand(){if(!agencyBrandDraft)return;const name=$('agencyBrandName'),primary=$('agencyBrandPrimary'),accent=$('agencyBrandAccent');if(name)agencyBrandDraft.name=name.value.trim();if(primary)agencyBrandDraft.primary=primary.value;if(accent)agencyBrandDraft.accent=accent.value;if(agencyBrandDraft.theme)agencyBrandDraft.theme.background=agencyBrandDraft.primary}
+function collectAgencyBrand(){if(!agencyBrandDraft)return;agencyBrandDraft.name=$('agencyBrandName').value.trim();agencyBrandDraft.primary=$('agencyBrandPrimary').value;agencyBrandDraft.accent=$('agencyBrandAccent').value;if(agencyBrandDraft.theme)agencyBrandDraft.theme.background=agencyBrandDraft.primary}
 function updateAgencyBrandPreview(){collectAgencyBrand();const b=agencyBrandDraft;$('agencyBrandPreview').innerHTML=`<div style="background:${b.primary};color:${contrastInk(b.primary)};border-bottom:4px solid ${b.accent};padding:20px;display:flex;align-items:center;gap:14px">${b.logo?`<img src="${b.logo}" alt="Logo" style="max-width:140px;max-height:64px;object-fit:contain;${brandLogoStyle(b)}">`:''}<div><strong>${safe(b.name||'Ditt navn')}</strong><div style="font-size:12px;margin-top:4px">Kontrakter og dokumenter</div></div></div><div style="padding:18px;background:#fff;color:#21343b"><b>Konsert- og bookingavtale</b><p style="font-size:13px;margin:8px 0">Forhåndsvisning av dokumentprofilen.</p><span style="display:inline-block;background:${b.accent};color:${contrastInk(b.accent)};padding:5px 10px;border-radius:5px;font-size:12px">Profilfarge</span></div>`;fullBrandPreview()}
 async function loadAgencyBrandLogo(input){const file=input.files[0];if(!file)return;const draft=agencyBrandDraft;if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>2*1024*1024){$('profileSaveError').textContent='Velg PNG, JPG eller WebP under 2 MB.';input.value='';return}try{const url=URL.createObjectURL(file),img=new Image();try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url});if(agencyBrandDraft!==draft||activeProfileEditor!=='agencyBrand')return;const scale=Math.min(1,700/img.width,300/img.height),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);draft.logo=canvas.toDataURL('image/png');draft.logoTone='auto';$('profileSaveError').textContent='';syncBrandColorPicker('agencyBrandPrimary');syncBrandColorPicker('agencyBrandAccent');updateAgencyBrandPreview()}finally{URL.revokeObjectURL(url)}}catch{$('profileSaveError').textContent='Logoen kunne ikke leses. Prøv en annen bildefil.'}}
 function saveAgencyBrand(){if(!['agency','artist'].includes(currentRole)||!$('memberProfileForm').reportValidity())return;collectAgencyBrand();if(!agencyBrandDraft.name){$('profileSaveError').textContent='Skriv inn navn.';return}try{let all;try{all=JSON.parse(localStorage.getItem(AGENCY_BRAND_KEY)||'{}')}catch{all={}}all[brandEditorKey]=agencyBrandDraft;localStorage.setItem(AGENCY_BRAND_KEY,JSON.stringify(all))}catch{$('profileSaveError').textContent='Kunne ikke lagre. Prøv en mindre logo eller frigjør nettleserlagring.';return}closeProfileEditor();applyAgencyBrand();renderAll();toast('Dokumentprofilen er lagret')}
@@ -2428,46 +2426,40 @@ function normalizeWebsiteTheme(t){
 }
 function brandMix(a,b,amount){const x=a.slice(1).match(/../g).map(v=>parseInt(v,16)),y=b.slice(1).match(/../g).map(v=>parseInt(v,16));return '#'+x.map((v,i)=>Math.round(v+(y[i]-v)*amount).toString(16).padStart(2,'0')).join('')}
 function brandReadable(fg,bg){const ratio=(a,b)=>(Math.max(brandLuminance(a),brandLuminance(b))+.05)/(Math.min(brandLuminance(a),brandLuminance(b))+.05);for(let n=0;n<=100;n++){const c=brandMix(fg,contrastInk(bg),n/100);if(ratio(c,bg)>=4.5)return c}return contrastInk(bg)}
-function hexRgb(hex){return hex.slice(1).match(/../g).map(x=>parseInt(x,16))}
-function rgbHex(rgb){return '#'+rgb.map(x=>Math.max(0,Math.min(255,Math.round(x))).toString(16).padStart(2,'0')).join('')}
-function mixHex(a,b,amount){const A=hexRgb(a),B=hexRgb(b);return rgbHex(A.map((v,i)=>v+(B[i]-v)*amount))}
-function brandUiPalette(brand,t){const light=brandLuminance(t.background)>.48,primary=brand.primary,accent=brand.accent,base=light?mixHex('#ffffff',primary,.035):mixHex('#090d0f',primary,.10),surface=light?mixHex('#ffffff',primary,.055):mixHex('#11181c',primary,.12),surface2=light?mixHex('#f4f5f5',primary,.05):mixHex('#172126',primary,.10),border=light?mixHex('#d9dfe1',accent,.08):mixHex('#39474e',accent,.10),accentSoft=mixHex(surface,accent,light?.10:.12),accentMedium=mixHex(surface,accent,light?.18:.20),text=bestTextColor(base),muted=ensureReadableOn(light?'#586268':'#aab5ba',base,4.5),accentReadable=ensureReadableOn(accent,base,4.5);return{base,surface,surface2,border,accentSoft,accentMedium,text,muted,accentReadable,light}}
 function websiteThemeCSS(brand,s='body:not(.artist-role):not(.organizer-role)',heroTarget='#dashboard>.headrow'){
  const t=normalizeWebsiteTheme(brand.theme);if(!t)return '';
- const p=brandUiPalette(brand,t),light=p.light,text=p.text,muted=p.muted,accentText=p.accentReadable,soft=p.surface2,font=t.font==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif",heading=t.headingFont==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif";
+ const light=brandLuminance(t.background)>.4,text=brandReadable(t.text,t.background),muted=brandReadable(t.muted,t.background),accentText=brandReadable(brand.accent,t.background),soft=brandMix(t.background,brand.accent,light?.065:.11),font=t.font==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif",heading=t.headingFont==='serif'?"Georgia,'Times New Roman',serif":"Arial,Helvetica,sans-serif";
  const rules=(selectors,body)=>selectors.split(',').map(v=>s+' '+v.trim()).join(',')+'{'+body+'}';
- return `${s}{--bg:${t.background};--panel:${t.surface};--panel2:${soft};--text:${text};--muted:${muted};--line:${t.border};--gold:${accentText};--green:${light?'#176546':'#69d7a7'};--blue:${accentText};--orange:${accentText};--yellow:${accentText};color:${text};background:${p.base};font-family:${font}}
- ${rules('.top,.layout,.topin,.agencyNavBlock.mobileNav,.artistNavBlock.mobileNav','background:'+p.base+';color:'+text+';border-color:'+p.border)}
+ return `${s}{--bg:${t.background};--panel:${t.surface};--panel2:${soft};--text:${text};--muted:${muted};--line:${t.border};--gold:${accentText};--green:${light?'#176546':'#69d7a7'};--blue:${light?'#16578c':'#8ec5ff'};--orange:${light?'#965019':'#ef9b5f'};--yellow:${light?'#705000':'#efc86b'};color:${text};background:${t.background};font-family:${font}}
+ ${rules('.top,.layout,.topin,.agencyNavBlock.mobileNav,.artistNavBlock.mobileNav','background:'+t.background+';color:'+text+';border-color:'+t.border)}
  ${rules('.top .brand,#userRoleName','color:'+text+'!important')}
  ${rules('#userRoleSub,.group,.lead,.meta,.rmeta,.rtype,.glassDesc,.field label,.glassField label','color:'+muted)}
  ${rules('h1,h2,h3,.caseTitle,.eventTitle','font-family:'+heading+';font-weight:'+t.headingWeight+';letter-spacing:-.025em')}
- ${rules('.card,.pipe,.case,.eventrow,.mini,.stat,.calendarListCard,.day,.calendarListJob,.member-card,.contract,.signcard,.summaryBox,.rolecard,.contractRow,.results,.result,.rolegrid>div,#requestFilterBar,.journeyCard,.nextAction','background:'+p.surface+';color:'+text+';border-color:'+p.border+';border-radius:'+t.cardRadius+'px;box-shadow:none')}
- ${rules('.pipe','background:'+p.surface+';border-top:2px solid '+brand.accent)}
- ${rules('.datebox,.quickStats,.statbar,.roleSwitch,.ricon,.avatar','background:'+p.surface2+';color:'+text+';border-color:'+p.border)}
- ${rules('.journeyTrack,.miniJourneyTrack,.journeyDot','background:'+p.surface2+';border-color:'+p.border)}
+ ${rules('.card,.pipe,.case,.eventrow,.mini,.stat,.calendarListCard,.day,.calendarListJob,.member-card,.contract,.signcard,.summaryBox,.rolecard,.contractRow,.results,.result,.rolegrid>div,#requestFilterBar,.journeyCard,.nextAction','background:'+t.surface+';color:'+text+';border-color:'+t.border+';border-radius:'+t.cardRadius+'px;box-shadow:none')}
+ ${rules('.pipe','background:'+soft+';border-top:3px solid '+brand.accent)}
+ ${rules('.datebox,.quickStats,.statbar,.roleSwitch,.ricon,.avatar','background:'+soft+';color:'+text+';border-color:'+t.border)}
+ ${rules('.journeyTrack,.miniJourneyTrack,.journeyDot','background:'+soft+';border-color:'+t.border)}
  ${rules('.journeyHead b,.nextActionText b','color:'+text)}
  ${rules('.journeyHead small,.nextActionText span,.miniJourneyHead,.miniJourney small','color:'+muted)}
  ${rules('.quickStat b,.timeitem .time','color:'+text)}
  ${rules('.pipe .pipeHint,.day .num,.dow,.quickStat,.pipe .pipeArrow','color:'+muted)}
  ${rules('.datebox,.statbar','border-radius:'+t.cardRadius+'px')}
- ${rules('.btn,.tab,.stage,.roleSwitch button,.agencyNavBlock.mobileNav button,.artistNavBlock.mobileNav button,.calendarControls button','background:'+p.surface+';color:'+text+';border-color:'+p.border+';border-radius:'+t.buttonRadius+'px')}
+ ${rules('.btn,.tab,.stage,.roleSwitch button,.agencyNavBlock.mobileNav button,.artistNavBlock.mobileNav button,.calendarControls button','background:'+t.surface+';color:'+text+';border-color:'+t.border+';border-radius:'+t.buttonRadius+'px')}
  ${rules('.btn.primary,.tab.on,.stage.current,.roleSwitch button.on,.agencyNavBlock.mobileNav button.on,.artistNavBlock.mobileNav button.on','background:'+brand.accent+';color:'+contrastInk(brand.accent)+';border-color:'+brand.accent)}
- ${rules('input:not([type=checkbox]):not([type=radio]):not([type=color]),textarea,select,.search,#brandWebsite','background:'+p.surface+';color:'+text+';border-color:'+p.border)}
+ ${rules('input:not([type=checkbox]):not([type=radio]):not([type=color]),textarea,select,.search,#brandWebsite','background:'+t.surface+';color:'+text+';border-color:'+t.border)}
  ${rules('input::placeholder,textarea::placeholder','color:'+muted+';opacity:.85')}
  ${rules('.jobGlassModal,.profileGlassModal,.modal,.modalbox,.modalBox','background:'+t.background+'f5;color:'+text+';border-color:'+t.border+';box-shadow:0 20px 70px #0003')}
  ${rules('.jobGlassHead,.profileGlassHead,.profileGlassFoot','background:'+t.background+';border-color:'+t.border)}
  ${rules('.profileGlassBody,.modal,.wstep,.calendarListCard,.calendarMonthPicker','color-scheme:'+(light?'light':'dark')+';scrollbar-color:'+t.border+' '+t.background)}
  ${rules('.glassField input[type=color]','min-height:38px;padding:4px;background:'+t.surface+';border-color:'+t.border)}
- ${rules('.bg-yellow,.bg-orange,.bg-blue','background:'+p.accentSoft+';color:'+brandReadable(brand.accent,p.accentSoft)+';border-color:'+brand.accent+'55')}
+ ${rules('.bg-yellow','background:'+(light?'#fff1ce':'#3a3016')+';color:'+(light?'#705000':'#f0d57d'))}
+ ${rules('.bg-orange','background:'+(light?'#ffeadb':'#432817')+';color:'+(light?'#884100':'#f5b37e'))}
  ${rules('.bg-green,.stage.done','background:'+(light?'#def4e8':'#123427')+';color:'+(light?'#135a38':'#7ce0ad'))}
- ${rules('.bg-red','background:'+p.accentMedium+';color:'+brandReadable(brand.accent,p.accentMedium)+';border-color:'+brand.accent+'66')}
- ${rules('.artistTitle,.case .artistTitle,.eventrow .artistTitle','color:'+accentText)}
- ${rules('.datebox','background:'+p.surface2+';border-color:'+brand.accent+'55')}
- ${rules('.datebox b,.datebox small','color:'+text)}
- ${rules('.badge:not(.bg-green),.stage:not(.done)','border-color:'+brand.accent+'55')}
+ ${rules('.bg-blue','background:'+(light?'#e0effc':'#172b40')+';color:'+(light?'#184f7e':'#9bcaff'))}
+ ${rules('.bg-red','background:'+(light?'#ffe6e9':'#3b1c20')+';color:'+(light?'#94273a':'#ff9da3'))}
  ${rules('.case:hover,.eventrow:hover,.result:hover,.pipe:hover,.btn:hover,.agencyNavBlock.mobileNav button:hover,.artistNavBlock.mobileNav button:hover','background:'+soft+';color:'+text+';border-color:'+brand.accent)}
  ${rules('button:focus-visible,a:focus-visible,input:focus-visible','outline:2px solid '+accentText+';outline-offset:3px')}
- ${t.hero?rules(heroTarget,'background:'+p.surface+';border:1px solid '+p.border+';border-top:3px solid '+brand.accent+';padding:28px 30px;border-radius:'+Math.max(t.cardRadius,8)+'px;color:#ffffff;margin:8px 0 28px')+rules(heroTarget+' .lead','color:#e9e4df')+rules(heroTarget+' .eyebrow','color:'+brandReadable(brand.accent,'#111111')):''}
+ ${t.hero?rules(heroTarget,'background:linear-gradient(120deg,'+brandMix('#111111',brand.accent,.12)+',#111111);padding:28px 30px;border-radius:'+Math.max(t.cardRadius,8)+'px;color:#ffffff;margin:8px 0 28px')+rules(heroTarget+' .lead','color:#e9e4df')+rules(heroTarget+' .eyebrow','color:'+brandReadable(brand.accent,'#111111')):''}
  ${rules('main','padding-top:28px')}
  @media(max-width:700px){${rules(heroTarget,'padding:20px')} ${rules('main','padding:20px 14px 60px')}}`;
 }
