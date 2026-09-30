@@ -1250,6 +1250,10 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
   <button id="techDemoFreelancer" onclick="switchTechnicalDemo('freelancer')">Freelancer<small>Oppdrag</small></button>
  </div>
  <div id="techAdminDemo" class="techSetup techAdminDemo">
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:14px;border-color:#6f6030;background:linear-gradient(135deg,#e7c86a10,#0b1216)">
+   <div><div class="eyebrow">Live demo</div><b style="display:block;font-size:1.15rem;margin-top:3px">Felles kjøreplan · Postgirobygget</b><small class="meta">Se produksjonsplanen og backstage-TV-visningen.</small></div>
+   <button class="btn primary" style="flex:0 0 auto" onclick="showView('technicalLive')">▶ Åpne LIVE</button>
+  </div>
   <div class="techHero"><div class="eyebrow">Førstegangsoppsett · teknisk leverandør</div><h1>Bygg organisasjonen.</h1><div class="lead">Firmaet oppretter organisasjonen og inviterer teamet. Hver ansatt eller freelancer får sin egen invitasjon og bygger sin egen profil med kompetanse, kontaktinformasjon og tilgjengelighet.</div></div>
   <div class="techSetupProgress"><div class="techSetupStep done">✓ 1 · Firma</div><div class="techSetupStep done">✓ 2 · Tjenester</div><div class="techSetupStep current">3 · Team</div><div class="techSetupStep">4 · Utstyr</div><div class="techSetupStep">5 · Klar</div></div>
   <div class="techGrid"><div class="card"><div class="headrow"><div><div class="eyebrow">Organisasjon</div><h2 id="techOrgName" style="margin:5px 0">Trøndelag Lyd & Lys AS</h2><div id="techOrgMeta" class="meta"></div></div><button class="btn" onclick="editTechnicalOrganization()">Rediger firma</button></div><div id="techServiceChips" class="techRoleChips"></div><div class="techOnboardActions"><button class="btn primary" onclick="inviteTechnicalPerson()">+ Inviter ansatt</button><button class="btn" onclick="inviteTechnicalFreelancer()">+ Inviter freelancer</button></div></div>
