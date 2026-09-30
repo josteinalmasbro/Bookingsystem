@@ -1779,7 +1779,7 @@ function renderOrganizerPortal(){
   const dayBody=`<div class="meta" style="margin:12px 0">Hold tider, restaurant, venue og praktisk dagsplan samlet her.</div><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Åpne og rediger dagsplan</button>`;
   const techBody=`<div style="margin-top:12px">${backlineRequirements(r)}</div>`;
   const travelBody=`<div class="organizerQuick"><div class="organizerQuickItem"><small>Hotell</small><b>${esc(details.hotel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Reise</small><b>${esc(details.travel||'Ikke avklart')}</b></div><div class="organizerQuickItem"><small>Venue</small><b>${esc(r.venue||'Ikke satt')}</b></div></div>`;
-  const agreementBody=`<div class="rolecard" style="margin-top:12px"><b>Signert avtale</b><small><br>${esc(contractStatusText(r))}. Avtalen ligger til grunn for dette arrangementet.</small></div>`;
+  const agreementBody=`<div class="rolecard" style="margin-top:12px"><b>Signert avtale</b><small><br>${esc(contractStatusText(r))}. Avtalen ligger til grunn for dette arrangementet.</small><div class="actions" style="margin-top:12px"><button class="btn primary" type="button" onclick="printContract(${r.id})">Åpne signert kontrakt</button></div></div>`;
   $('organizerEventSummary').innerHTML=`<div class="card">
     <div class="eyebrow">Bekreftet arrangement</div>
     <h2 style="font-size:1.6rem;margin:8px 0">${esc(r.name)}</h2>
