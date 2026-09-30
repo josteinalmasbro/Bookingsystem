@@ -473,6 +473,22 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 }
 
 
+/* === Presse & materiell i arrangørportal === */
+.pressKit{margin-top:14px;padding:16px;border:1px solid #34424a;border-radius:17px;background:linear-gradient(145deg,#10191d,#0b1114)}
+.pressKitHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
+.pressKitHead h3{margin:4px 0 3px;font-size:1.12rem}.pressKitHead p{margin:0;color:var(--muted);font-size:.78rem;line-height:1.4}
+.pressKitBadge{white-space:nowrap;border-radius:999px;padding:6px 9px;font-size:.66rem;font-weight:950;background:#123427;color:#7ce0ad}
+.pressKit.locked{border-color:#3b4145;background:#0c1215}.pressKit.locked .pressKitBadge{background:#2a3034;color:#9ba6ac}
+.pressKitGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pressAsset{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px;border:1px solid #2b3840;border-radius:12px;background:#0d1519}
+.pressAssetIcon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:#e7c86a16;color:var(--gold);font-weight:950}
+.pressAsset b{display:block;font-size:.82rem}.pressAsset small{display:block;color:var(--muted);font-size:.68rem;margin-top:2px}
+.pressAsset .btn{padding:7px 9px;font-size:.7rem}.pressKitActions{display:flex;gap:8px;margin-top:10px}
+.pressKitLock{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid #303b41;border-radius:12px;background:#0a1013}
+.pressKitLockIcon{width:38px;height:38px;flex:0 0 38px;border-radius:10px;display:grid;place-items:center;background:#242d32;font-size:1.05rem}
+.pressKitLock b{display:block}.pressKitLock small{display:block;color:var(--muted);line-height:1.4;margin-top:3px}
+@media(max-width:760px){.pressKit{padding:13px}.pressKitHead{display:block}.pressKitBadge{display:inline-block;margin-top:9px}.pressKitGrid{grid-template-columns:1fr}.pressAsset{grid-template-columns:36px minmax(0,1fr) auto}.pressKitActions .btn{width:100%}}
+
 /* === Personer, roller og arrangørportal === */
 .organizerNavBlock{display:none}
 .organizer-role .agencyNavBlock,
@@ -1714,6 +1730,25 @@ function openOrganizerDayPlan(id){
 function saveOrganizerDayPlan(){
  const r=state.requests.find(x=>x.id===organizerDayPlanId);if(!r)return;const values=Object.fromEntries([...document.querySelectorAll('[data-day-plan]')].map(el=>[el.dataset.dayPlan,el.value.trim()]));if(values.restaurantName&&!values.restaurantAddress){$('profileSaveError').textContent='Legg inn adressen til restauranten, slik at kartlenken virker.';return}r.contractDetails={...r.contractDetails,...values};try{save()}catch{$('profileSaveError').textContent='Kunne ikke lagre dagsplanen.';return}closeProfileEditor();renderOrganizerPortal();renderMemberApp();toast('Dagsplanen er oppdatert')
 }
+function artistPressKit(artistId){
+  const a=artistBy(artistId);
+  return [
+    {icon:'▧',title:'Pressebilder',meta:'Høyoppløselige artist- og konsertbilder',file:(a?.name||'Artist')+' · Pressebilder'},
+    {icon:'◇',title:'Logoer',meta:'PNG / SVG / PDF',file:(a?.name||'Artist')+' · Logoer'},
+    {icon:'¶',title:'Presseskriv & bio',meta:'Kort og lang presentasjonstekst',file:(a?.name||'Artist')+' · Presseskriv'},
+    {icon:'▶',title:'Promo & video',meta:'Video, reels og promoressurser',file:(a?.name||'Artist')+' · Promo'},
+    {icon:'▤',title:'SoMe-materiell',meta:'Godkjent grafikk til sosiale medier',file:(a?.name||'Artist')+' · SoMe'},
+    {icon:'📄',title:'Pressepakke',meta:'Samlet materiell fra artistprofilen',file:(a?.name||'Artist')+' · Pressepakke'}
+  ];
+}
+function downloadPressAsset(name){toast('Demo: '+name+' er klar for nedlasting')}
+function downloadAllPressAssets(artistId){const a=artistBy(artistId);toast('Demo: Samlet pressepakke for '+(a?.name||'artisten')+' er klar')}
+function organizerPressKitHtml(r){
+  const unlocked=!!(r.ownerSigned??r.agencySigned)&&!!r.organizerSigned;
+  if(!unlocked)return `<div class="pressKit locked"><div class="pressKitHead"><div><div class="eyebrow">Presse & materiell</div><h3>Artistens pressepakke</h3><p>Materialet deles automatisk fra artistprofilen.</p></div><span class="pressKitBadge">LÅST</span></div><div class="pressKitLock"><div class="pressKitLockIcon">🔒</div><div><b>Tilgjengelig etter signering</b><small>Pressebilder, logoer, presseskriv og promoteringsmateriell blir tilgjengelig når begge kontraktsparter har signert avtalen.</small></div></div></div>`;
+  const assets=artistPressKit(r.artistId);
+  return `<div class="pressKit"><div class="pressKitHead"><div><div class="eyebrow">Presse & materiell</div><h3>Artistens pressepakke</h3><p>Alltid siste godkjente versjon fra artistprofilen.</p></div><span class="pressKitBadge">✓ TILGJENGELIG</span></div><div class="pressKitGrid">${assets.map(x=>`<div class="pressAsset"><div class="pressAssetIcon">${x.icon}</div><div><b>${esc(x.title)}</b><small>${esc(x.meta)}</small></div><button class="btn" type="button" onclick="downloadPressAsset('${esc(x.file)}')">Hent</button></div>`).join('')}</div><div class="pressKitActions"><button class="btn primary" type="button" onclick="downloadAllPressAssets(${r.artistId})">↓ Last ned alt</button></div></div>`;
+}
 function renderOrganizerPortal(){
   const signed=state.requests.filter(r=>r.stage==='signed');
   const r=signed[0];
@@ -1729,6 +1764,7 @@ function renderOrganizerPortal(){
     <div class="gold" style="font-weight:900">${esc(a?.name||'Artist')}</div>
     <div class="meta" style="margin-top:5px">${esc(r.date)} · ${esc(r.city)} · ${esc(r.venue)}</div>
     <div class="stagebar">${journeyHtml(productionJourney(r),r.id,'event')}</div>
+    ${organizerPressKitHtml(r)}
     <div class="actions" style="margin-top:12px"><button class="btn primary" type="button" onclick="openOrganizerDayPlan(${r.id})">Rediger dagsplan, restaurant og hotell</button></div>
     <div class="rolecard" style="margin-top:14px"><b>Personer arrangøren bør avklare</b><small><br>Artistvert, lokal sjåfør ved behov og øvrige kontakter som artist/bookingbyrå kan ha behov for å ringe.</small></div>
     <div class="organizerPeople" style="margin-top:12px">${organizerPeopleHtml(r,true)}</div>
