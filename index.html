@@ -921,13 +921,13 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
   <div class="marketSearch">
    <div class="marketField"><label>Hvor?</label><input id="marketPlace" placeholder="By eller område" oninput="renderPublicArtists()"></div>
    <div class="marketField"><label>Når?</label><input id="marketDate" type="date" onchange="renderPublicArtists()"></div>
-   <div class="marketField"><label>Budsjett fra</label><input id="marketMin" type="number" inputmode="numeric" placeholder="5 000" oninput="renderPublicArtists()"></div>
-   <div class="marketField"><label>Budsjett til</label><input id="marketMax" type="number" inputmode="numeric" placeholder="30 000" oninput="renderPublicArtists()"></div>
+   <div class="marketField"><label>Budsjett fra · filter</label><input id="marketMin" type="number" inputmode="numeric" placeholder="5 000" oninput="renderPublicArtists()"></div>
+   <div class="marketField"><label>Budsjett til · filter</label><input id="marketMax" type="number" inputmode="numeric" placeholder="30 000" oninput="renderPublicArtists()"></div>
    <button class="marketSearchBtn" type="button" onclick="renderPublicArtists()">Finn artister →</button>
   </div>
  </div>
  <main class="marketMain">
-  <div class="marketFilterBar"><select id="marketType" onchange="renderPublicArtists()"><option value="">Alle artisttyper</option><option>Band</option><option>Trubadur</option><option>DJ</option><option>Soloartist</option><option>Klassisk</option></select><select id="marketGenre" onchange="renderPublicArtists()"><option value="">Alle sjangre</option><option>Pop</option><option>Rock</option><option>Party</option><option>Akustisk</option><option>Folk</option><option>Klassisk</option><option>Elektronisk</option></select><span id="marketCount" class="marketCount"></span></div>
+  <div class="marketFilterBar"><input id="marketArtistSearch" type="search" placeholder="Søk etter artistnavn …" oninput="renderPublicArtists()" style="flex:2;min-width:220px;padding:10px 13px;border:1px solid #34434c;border-radius:999px;background:#0d1519;color:#fff"><select id="marketType" onchange="renderPublicArtists()"><option value="">Alle artisttyper</option><option>Band</option><option>Trubadur</option><option>DJ</option><option>Soloartist</option><option>Klassisk</option></select><select id="marketGenre" onchange="renderPublicArtists()"><option value="">Alle sjangre</option><option>Pop</option><option>Rock</option><option>Party</option><option>Akustisk</option><option>Folk</option><option>Klassisk</option><option>Elektronisk</option></select><span id="marketCount" class="marketCount"></span></div>
   <div id="artistMarketGrid" class="artistMarketGrid"></div>
   <section class="marketRegister"><div><div class="eyebrow">Spiller du selv?</div><h2>Bli synlig for nye kunder.</h2><p>Opprett artistprofil, legg inn honorar fra–til og motta forespørsler direkte i systemet.</p></div><button class="btn primary" type="button" onclick="openArtistRegistration()">Registrer artist →</button></section>
  </main>
@@ -1430,8 +1430,27 @@ const portalParams=new URLSearchParams(location.search);
 const PUBLIC_ARTISTS=[
  {id:'hs',type:'Band',genre:'Party / rock',place:'Trondheim',min:35000,max:55000,tags:['Firmafest','Festival','Privat']}
 ];
-function publicArtistRows(){return PUBLIC_ARTISTS.map(x=>{const pref=getBookingPref(x.id);return {...x,min:Number(pref.publicMin||x.min),max:Number(pref.publicMax||x.max),artist:artists.find(a=>a.id===x.id),pref}}).filter(x=>x.artist&&x.pref.publicListing===true&&x.min>0&&x.max>=x.min)}
-function renderPublicArtists(){const grid=document.getElementById('artistMarketGrid');if(!grid)return;const place=($('marketPlace')?.value||'').toLowerCase(),min=Number($('marketMin')?.value||0),max=Number($('marketMax')?.value||Infinity),type=$('marketType')?.value||'',genre=($('marketGenre')?.value||'').toLowerCase();const rows=publicArtistRows().filter(x=>(!place||x.place.toLowerCase().includes(place))&&(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre))&&x.max>=min&&x.min<=max);$('marketCount').textContent=rows.length+' artister';grid.innerHTML=rows.length?rows.map(x=>{const a=x.artist,initials=a.name.split(/\s+/).map(v=>v[0]).join('').slice(0,2);return '<article class="artistMarketCard" onclick="openPublicArtist(\''+x.id+'\')"><div class="artistMarketVisual"><div class="artistMarketInitials">'+safe(initials)+'</div></div><div class="artistMarketBody"><h3>'+safe(a.name)+'</h3><div class="artistMarketMeta">'+safe(x.type)+' · '+safe(x.genre)+'<br>'+safe(x.place)+'</div>'+x.tags.map(t=>'<span class="marketTag">'+safe(t)+'</span>').join('')+'<div class="artistMarketPrice"><div><small class="meta">Typisk honorar</small><br><b>'+x.min.toLocaleString('nb-NO')+'–'+x.max.toLocaleString('nb-NO')+' kr</b></div><span>Se profil →</span></div></div></article>'}).join(''):'<div class="marketEmpty">Ingen artister traff filtrene. Prøv et større budsjett eller område.</div>'}
+function publicArtistRows(){return PUBLIC_ARTISTS.map(x=>{const pref=getBookingPref(x.id);return {...x,min:Number(pref.publicMin||x.min),max:Number(pref.publicMax||x.max),artist:artists.find(a=>a.id===x.id),pref}}).filter(x=>x.artist)}
+function publicDirectoryLookupRows(query){
+ const q=String(query||'').trim().toLowerCase();if(!q)return [];
+ return artists.filter(a=>a.name.toLowerCase().includes(q)).map(a=>{const known=PUBLIC_ARTISTS.find(x=>x.id===a.id)||{},pref=getBookingPref(a.id);return {...known,id:a.id,artist:a,pref,type:known.type||'Artist',genre:known.genre||'',place:known.place||'',tags:known.tags||[],directoryOnly:!pref.publicListing}})
+}
+function renderPublicArtists(){
+ const grid=document.getElementById('artistMarketGrid');if(!grid)return;
+ const nameQ=($('marketArtistSearch')?.value||'').trim().toLowerCase(),place=($('marketPlace')?.value||'').toLowerCase(),min=Number($('marketMin')?.value||0),max=Number($('marketMax')?.value||Infinity),type=$('marketType')?.value||'',genre=($('marketGenre')?.value||'').toLowerCase();
+ let rows;
+ if(nameQ){
+   rows=publicDirectoryLookupRows(nameQ).filter(x=>(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre)));
+ }else{
+   rows=publicArtistRows().filter(x=>x.pref.publicListing===true&&x.min>0&&x.max>=x.min&&(!place||x.place.toLowerCase().includes(place))&&(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre))&&x.max>=min&&x.min<=max);
+ }
+ $('marketCount').textContent=rows.length+' '+(rows.length===1?'artist':'artister');
+ grid.innerHTML=rows.length?rows.map(x=>{
+   const a=x.artist,initials=a.name.split(/\s+/).map(v=>v[0]).join('').slice(0,2),directoryOnly=x.directoryOnly;
+   return '<article class="artistMarketCard" onclick="'+(directoryOnly?"contactAgencyForArtist('"+x.id+"')":"openPublicArtist('"+x.id+"')")+'"><div class="artistMarketVisual"><div class="artistMarketInitials">'+safe(initials)+'</div></div><div class="artistMarketBody"><h3>'+safe(a.name)+'</h3><div class="artistMarketMeta">'+safe(x.type)+(x.genre?' · '+safe(x.genre):'')+(x.place?'<br>'+safe(x.place):'')+'</div>'+x.tags.map(t=>'<span class="marketTag">'+safe(t)+'</span>').join('')+'<div class="artistMarketPrice"><div>'+(directoryOnly?'<small class="meta">Representert av bookingbyrå</small><br><b>Kontakt bookingbyrået</b>':'<small class="meta">Tilgjengelig for forespørsel</small><br><b>Se artistprofil</b>')+'</div><span>'+(directoryOnly?'Kontakt →':'Se profil →')+'</span></div></div></article>';
+ }).join(''):'<div class="marketEmpty">'+(nameQ?'Ingen artist med dette navnet ble funnet.':'Ingen artister traff filtrene. Prøv et større budsjett eller område.')+'</div>';
+}
+function contactAgencyForArtist(id){const a=artistBy(id);toast((a?.name||'Artisten')+' representeres av bookingbyrået · kontaktfunksjon kommer i neste steg')}
 function openPublicArtist(id){currentPortalArtistId=id;localStorage.setItem('portal-artist-id',id);toast((artistBy(id)?.name||'Artisten')+' · offentlig profil kommer i neste steg')}
 function openArtistRegistration(){toast('Artistregistrering kommer i neste steg')}
 function initializePublicMarket(){const publicMode=!portalParams.get('portal');const market=document.getElementById('publicMarket');if(market)market.classList.toggle('on',publicMode);if(publicMode){$('portalChooser')?.classList.remove('on');document.body.style.overflow='';requestAnimationFrame(renderPublicArtists)}}
