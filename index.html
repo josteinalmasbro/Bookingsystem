@@ -473,6 +473,9 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 }
 
 
+/* === Byråteam og roller === */
+.teamRolePills{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.teamRolePill{padding:4px 7px;border-radius:999px;background:#17242a;color:#b9c6cc;font-size:.65rem;font-weight:800}.ownerCard{border-color:#725f2e;background:linear-gradient(145deg,#171b18,#0c1316)}.agentAssign{margin-top:12px}.agentAssign select{width:100%;background:#0a1013;color:#fff;border:1px solid #34434c;border-radius:10px;padding:10px}
+
 /* === Riderknapper === */
 .riderButtons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:0}
 .riderButtons .btn{width:100%;min-width:0;padding:10px 9px;font-size:.78rem;line-height:1.2;white-space:normal;text-align:center}
@@ -910,7 +913,7 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
   <button data-view="requests">Forespørsler</button>
   <button data-view="calendar">Kalender</button>
   <button data-view="events">Arrangement</button>
-  <button data-view="services">Tilleggstjenester</button>
+  <button data-view="services">Tilleggstjenester</button><button data-view="agencyTeam">Team</button>
  </div>
  <div class="mobileNav artistNavBlock">
   <button class="on" data-view="artistDashboard">Min side</button><button onclick="openArtistBrand()">Logo / dokumentdesign</button>
@@ -982,7 +985,7 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
   <div class="group" style="margin-top:20px">Produksjon</div>
   <a href="#" class="nav" data-view="events">★ Bekreftede arrangement <span class="count" id="eventCount">0</span></a>
   <div class="group" style="margin-top:20px">Konto</div>
-  <a href="#" class="nav" data-view="services">✦ Tilleggstjenester</a>
+  <a href="#" class="nav" data-view="services">✦ Tilleggstjenester</a><a href="#" class="nav" data-view="agencyTeam">● Team & roller</a>
  </div>
  <div class="artistNavBlock">
   <div class="group">Artist</div>
@@ -1062,6 +1065,12 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
 <section id="events" class="view">
  <div><div class="eyebrow">Fase 2 · Produksjon</div><h1>Bekreftede arrangement.</h1><div class="lead">Kun jobber hvor begge kontraktsparter har signert vises her.</div></div>
  <div id="allEvents" class="eventList" style="margin-top:18px"></div>
+</section>
+
+<section id="agencyTeam" class="view">
+ <div class="headrow"><div><div class="eyebrow">Byrå · administrasjon</div><h1>Team & roller.</h1><div class="lead">Eier administrerer abonnement, brukere og rettigheter. Hver booking har én ansvarlig agent som mottar varsler for saken.</div></div><div class="actions"><button class="btn primary" type="button" onclick="addAgencyAgent()">+ Legg til agent</button></div></div>
+ <div id="agencyOwnerCard" class="card" style="margin-top:18px"></div>
+ <div class="sectionTitle"><h2>Bookingagenter</h2></div><div id="agencyTeamGrid" class="rolegrid"></div>
 </section>
 
 <section id="services" class="view">
@@ -1416,6 +1425,21 @@ function ensurePeople(id){
 
 let currentRequestId=null,currentEventId=null;
 const $=id=>document.getElementById(id), artistBy=id=>artists.find(a=>a.id===id), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const AGENCY_TEAM_KEY='booking-agency-team-v1';
+let agencyTeam;try{agencyTeam=JSON.parse(localStorage.getItem(AGENCY_TEAM_KEY))}catch{}
+if(!agencyTeam)agencyTeam={owner:{id:'owner-1',name:'Byråeier',email:'eier@bookingbyra.no',phone:'+47 900 00 001'},agents:[{id:'agent-1',name:'Bookingagent 1',email:'agent@bookingbyra.no',phone:'+47 900 00 002',permissions:['booking','offers','contracts','events']}]};
+function saveAgencyTeam(){localStorage.setItem(AGENCY_TEAM_KEY,JSON.stringify(agencyTeam))}
+function agencyUsers(){return [agencyTeam.owner,...agencyTeam.agents]}
+function responsibleAgent(r){return agencyUsers().find(x=>x.id===r.responsibleAgentId)||agencyTeam.owner}
+function renderAgencyTeam(){
+ const owner=$('agencyOwnerCard'),grid=$('agencyTeamGrid');if(!owner||!grid)return;
+ owner.className='card ownerCard';owner.innerHTML='<div class="eyebrow">Eier · hovedadministrator</div><h2 style="margin:7px 0">'+safe(agencyTeam.owner.name)+'</h2><div class="meta">'+safe(agencyTeam.owner.email)+' · '+safe(agencyTeam.owner.phone)+'</div><div class="teamRolePills"><span class="teamRolePill">Abonnement</span><span class="teamRolePill">Fakturering</span><span class="teamRolePill">Team & roller</span><span class="teamRolePill">Alle rettigheter</span></div><p class="meta" style="margin-top:12px">Eier er brukeren som opprettes ved salg av systemet og inviterer deretter egne bookingagenter.</p>';
+ grid.innerHTML=agencyTeam.agents.length?agencyTeam.agents.map(a=>'<div class="rolecard"><b>'+safe(a.name)+'</b><small><br>'+safe(a.email)+' · '+safe(a.phone)+'</small><div class="teamRolePills">'+a.permissions.map(p=>'<span class="teamRolePill">'+safe(({booking:'Booking',offers:'Tilbud',contracts:'Kontrakter',events:'Arrangement'})[p]||p)+'</span>').join('')+'</div><div class="actions" style="margin-top:10px"><button class="btn" onclick="editAgencyAgent(\''+a.id+'\')">Rettigheter</button></div></div>').join(''):'<div class="card"><div class="meta">Ingen bookingagenter lagt til.</div></div>';
+}
+function addAgencyAgent(){const name=prompt('Navn på bookingagent');if(!name?.trim())return;const email=prompt('E-post')||'';agencyTeam.agents.push({id:'agent-'+Date.now(),name:name.trim(),email:email.trim(),phone:'',permissions:['booking','offers','contracts','events']});saveAgencyTeam();renderAgencyTeam();toast('Bookingagent lagt til')}
+function editAgencyAgent(id){const a=agencyTeam.agents.find(x=>x.id===id);if(!a)return;const raw=prompt('Rettigheter (kommaseparert): booking, offers, contracts, events',a.permissions.join(', '));if(raw===null)return;const allowed=['booking','offers','contracts','events'];a.permissions=raw.split(',').map(x=>x.trim()).filter(x=>allowed.includes(x));saveAgencyTeam();renderAgencyTeam();toast('Rettigheter oppdatert')}
+function responsibleAgentControl(r){if(r.bookingOwner==='artist')return '';const users=agencyUsers();return '<div class="rolecard agentAssign"><b>Kontraktsansvarlig</b><small><br>Denne personen mottar varsler som gjelder akkurat denne bookingen.</small><select onchange="setResponsibleAgent('+r.id+',this.value)">'+users.map(u=>'<option value="'+safe(u.id)+'" '+(responsibleAgent(r).id===u.id?'selected':'')+'>'+safe(u.name)+(u.id===agencyTeam.owner.id?' · Eier':'')+'</option>').join('')+'</select></div>'}
+function setResponsibleAgent(id,userId){const r=state.requests.find(x=>x.id===id);if(!r||!agencyUsers().some(x=>x.id===userId))return;r.responsibleAgentId=userId;save();if(currentRequestId===id){currentRequestId=null;openRequest(id)}toast('Kontraktsansvarlig er oppdatert')}
 const SMS_DEMO_KEY='booking-sms-service-v1';
 const SMS_PLANS={basis:{name:'Basis',price:149,included:40},plus:{name:'Pluss',price:249,included:100,recommended:true},pro:{name:'Pro',price:499,included:300}};
 const SMS_OVERAGE=1.90;
@@ -1536,10 +1560,10 @@ function fmtDate(iso){const d=new Date(iso+'T12:00:00'),m=['JAN','FEB','MAR','AP
 function stageLabel(s){return s==='new'?'FORespørsel':s==='offer'?'TILBUD':s==='contract'?'KONTRAKT SENDT':'SIGNERT'}
 function stageBadge(s,r){if(r&&s==='offer')return '<span class="badge bg-blue">'+esc(offerStateText(r))+'</span>';if(r&&(s==='contract'||s==='signed'))return `<span class="badge ${r.ownerSigned&&r.organizerSigned?'bg-green':'bg-orange'}">${esc(contractStatusText(r))}</span>`;return s==='new'?'<span class="badge bg-yellow">FORESPØRSEL</span>':s==='offer'?'<span class="badge bg-blue">TILBUD</span>':s==='contract'?'<span class="badge bg-orange">KONTRAKT UTE</span>':'<span class="badge bg-green">BEKREFTET</span>'}
 function showView(id){
- const av=['artistDashboard','artistCalendar','artistRequests','artistProfile','artistTour','artistMedia'],ov=['organizerDashboard','organizerPeople'],bv=['dashboard','requests','calendar','events','services'];
+ const av=['artistDashboard','artistCalendar','artistRequests','artistProfile','artistTour','artistMedia'],ov=['organizerDashboard','organizerPeople'],bv=['dashboard','requests','calendar','events','services','agencyTeam'];
  if(currentRole==='artist'&&!av.includes(id))id='artistDashboard';if(currentRole==='organizer'&&!ov.includes(id))id='organizerDashboard';if(currentRole==='agency'&&!bv.includes(id))id='dashboard';
  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));document.querySelectorAll('[data-view]').forEach(n=>n.classList.toggle('on',n.dataset.view===id));
- $('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');if(av.includes(id))renderArtistPortal();if(id==='artistTour')renderTourBuilder();if(id==='services')renderSmsDemo();if(ov.includes(id))renderOrganizerPortal();requestAnimationFrame(()=>{if(id==='calendar')syncCalendarPanelHeight('agency');if(id==='artistCalendar')syncCalendarPanelHeight('artist')});window.scrollTo({top:0,behavior:'smooth'});
+ $('bookingWorkspace').classList.remove('on');$('eventWorkspace').classList.remove('on');if(av.includes(id))renderArtistPortal();if(id==='artistTour')renderTourBuilder();if(id==='services')renderSmsDemo();if(id==='agencyTeam')renderAgencyTeam();if(ov.includes(id))renderOrganizerPortal();requestAnimationFrame(()=>{if(id==='calendar')syncCalendarPanelHeight('agency');if(id==='artistCalendar')syncCalendarPanelHeight('artist')});window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('[data-view]').forEach(n=>n.addEventListener('click',e=>{e.preventDefault();if(n.dataset.view==='requests')bookingStageFilter=null;showView(n.dataset.view);if(n.dataset.view==='requests'){$('requestFilterBar')?.classList.remove('on');renderCaseList('allRequests')}}));
 function switchRole(role){
@@ -2390,14 +2414,14 @@ function renderSmsDemo(){
  if(!smsDemo.ordered){area.innerHTML=order+'<div class="smsLocked">Bestill en pakke for å åpne varslingsinnstillinger og forbruksoversikt.</div>';applyContextHelp();return}
  const eventRows=[['newRequest','Ny forespørsel','Varsle når en ny booking kommer inn.'],['offer','Tilbud og svar','Varsle når tilbud sendes eller besvares.'],['signature','Kontrakt og signatur','Varsle når en part signerer.'],['changes','Endring i dato eller program','Varsle ved viktige endringer i en jobb.'],['reminder','Påminnelse 24 timer før','Send en påminnelse før arrangementet.']];
  const meter=Math.min(100,Math.round(usage/plan.included*100));
- area.innerHTML=order+`<div class="smsActiveBanner"><div><b><span class="smsActiveDot"></span>SMS-varsling er aktiv</b><span>${plan.name} · ${plan.included} inkludert per måned</span></div><button class="btn" type="button" onclick="sendSmsDemoTest()">Send simulert test-SMS</button></div><div class="smsManageGrid"><div class="smsManageCard"><h3>Hva skal varsles?</h3>${eventRows.map(([key,title,text])=>`<label class="smsToggleRow"><span><b>${title}</b><small>${text}</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.events[key]?'checked':''} onchange="toggleSmsEvent('${key}',this.checked)"><span></span></span></label>`).join('')}<h3 style="margin-top:24px">SMS til artistmedlemmer</h3><label class="smsToggleRow"><span><b>La artistmedlemmer velge SMS-varsler</b><small>Åpner personlige SMS-valg i hvert medlems egen profil. Forbruk belastes byråets SMS-pakke.</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.artistSmsEnabled?'checked':''} onchange="toggleArtistSmsEnabled(this.checked)"><span></span></span></label>${smsDemo.artistSmsEnabled?'<div class="meta" style="margin:12px 0 5px">Byrået bestemmer hvilke varseltyper medlemmene kan velge mellom:</div>'+MEMBER_SMS_EVENTS.map(([key,title,text])=>`<label class="smsToggleRow"><span><b>${safe(title)}</b><small>${safe(text)}</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.artistEvents[key]!==false?'checked':''} onchange="toggleArtistSmsEvent('${key}',this.checked)"><span></span></span></label>`).join(''):''}</div><div class="smsManageCard"><h3>Mottaker og forbruk</h3><div class="smsPhoneRow"><input id="smsPhone" type="tel" value="${esc(smsDemo.phone)}" aria-label="Varslingsnummer"><button class="btn" type="button" onclick="saveSmsPhone()">Lagre</button></div><div class="smsUsage"><div class="smsUsageHead"><span><b>${usage} / ${plan.included}</b><br><small class="meta">SMS-segmenter denne måneden</small></span><strong>${meter}%</strong></div><div class="smsMeter"><i style="width:${meter}%"></i></div><div class="meta">${over?over+' segmenter over pakken · '+smsMoney(over*SMS_OVERAGE)+' ekstra':'Du har '+Math.max(0,plan.included-usage)+' segmenter igjen i pakken.'}</div></div><h3 style="margin-top:20px">Siste varsler</h3><div class="smsLog">${(smsDemo.logs||[]).map(x=>`<div class="smsLogRow"><div><b>${esc(x.type)}</b><small>${esc(x.time)} · ${x.segments} segment</small></div><span>${esc(x.status)}</span></div>`).join('')}</div></div></div>`;applyContextHelp();
+ area.innerHTML=order+`<div class="smsActiveBanner"><div><b><span class="smsActiveDot"></span>SMS-varsling er aktiv</b><span>${plan.name} · ${plan.included} inkludert per måned</span></div><button class="btn" type="button" onclick="sendSmsDemoTest()">Send test-SMS</button></div><div class="smsManageGrid"><div class="smsManageCard"><h3>Hva skal varsles?</h3>${eventRows.map(([key,title,text])=>`<label class="smsToggleRow"><span><b>${title}</b><small>${text}</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.events[key]?'checked':''} onchange="toggleSmsEvent('${key}',this.checked)"><span></span></span></label>`).join('')}<h3 style="margin-top:24px">SMS til artistmedlemmer</h3><label class="smsToggleRow"><span><b>La artistmedlemmer velge SMS-varsler</b><small>Åpner personlige SMS-valg i hvert medlems egen profil. Forbruk belastes byråets SMS-pakke.</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.artistSmsEnabled?'checked':''} onchange="toggleArtistSmsEnabled(this.checked)"><span></span></span></label>${smsDemo.artistSmsEnabled?'<div class="meta" style="margin:12px 0 5px">Byrået bestemmer hvilke varseltyper medlemmene kan velge mellom:</div>'+MEMBER_SMS_EVENTS.map(([key,title,text])=>`<label class="smsToggleRow"><span><b>${safe(title)}</b><small>${safe(text)}</small></span><span class="smsSwitch"><input type="checkbox" ${smsDemo.artistEvents[key]!==false?'checked':''} onchange="toggleArtistSmsEvent('${key}',this.checked)"><span></span></span></label>`).join(''):''}</div><div class="smsManageCard"><h3>Forbruk</h3><p class="meta">Varsler for en booking sendes til sakens kontraktsansvarlige. Eier administrerer abonnement og SMS-pakke.</p><div class="smsUsage"><div class="smsUsageHead"><span><b>${usage} / ${plan.included}</b><br><small class="meta">SMS-segmenter denne måneden</small></span><strong>${meter}%</strong></div><div class="smsMeter"><i style="width:${meter}%"></i></div><div class="meta">${over?over+' segmenter over pakken · '+smsMoney(over*SMS_OVERAGE)+' ekstra':'Du har '+Math.max(0,plan.included-usage)+' segmenter igjen i pakken.'}</div></div><h3 style="margin-top:20px">Siste varsler</h3><div class="smsLog">${(smsDemo.logs||[]).map(x=>`<div class="smsLogRow"><div><b>${esc(x.type)}</b><small>${esc(x.time)} · ${x.segments} segment</small></div><span>${esc(x.status)}</span></div>`).join('')}</div></div></div>`;applyContextHelp();
 }
 
 function renderAll(){renderOrganizerOffers();applyAgencyBrand();updateDemoSummary();renderSmsDemo();
  const active=state.requests.filter(r=>r.stage!=='signed'),signed=state.requests.filter(r=>r.stage==='signed');
  $('requestCount').textContent=active.length;$('eventCount').textContent=signed.length;$('statRequests').textContent=active.length;$('statContracts').textContent=state.requests.filter(r=>r.stage==='contract').length;$('statEvents').textContent=signed.length;
  $('pipeNew').textContent=state.requests.filter(r=>r.stage==='new').length;$('pipeOffer').textContent=state.requests.filter(r=>r.stage==='offer').length;$('pipeContract').textContent=state.requests.filter(r=>r.stage==='contract').length;$('pipeSigned').textContent=signed.length;
- renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();renderArtistPortal();renderOrganizerPortal();renderArtistDriver();applyContextHelp();
+ renderAgencyTeam();renderCaseList('dashboardRequests',4);renderCaseList('allRequests');renderEvents();renderCalendar();renderArtistPortal();renderOrganizerPortal();renderArtistDriver();applyContextHelp();
 }
 function bookingJourney(r){
  const order=['new','offer','contract','signed'],labels=['Forespørsel','Tilbud','Kontrakt','Bekreftet'],index=Math.max(0,order.indexOf(r.stage)),complete=r.stage==='signed';
@@ -2486,7 +2510,7 @@ function openRequest(id){if(currentRole==='agency'&&!jobPopupState)return openNe
   <div class="rolecard"><b>Type jobb</b><small><br>${esc(r.type)}</small></div>
   <div class="rolecard"><b>Venue</b><small><br>${esc(r.venue)} · ${esc(r.city)}</small></div>
   ${priceOverview(r)}
- </div>${inviteHtml}${r.stage==='new'?'<div style="margin-top:14px"><button class="btn primary" onclick="moveToOffer()">Lag tilbud</button></div>':''}`;
+ </div>${responsibleAgentControl(r)}${inviteHtml}${r.stage==='new'?'<div style="margin-top:14px"><button class="btn primary" onclick="moveToOffer()">Lag tilbud</button></div>':''}`;
 
  $('caseOverview').innerHTML+=backlineControl(r);
  $('offer').innerHTML=offerPane(r);
@@ -2817,7 +2841,7 @@ function createRequest(){if(!requestStepValid(1)||!requestStepValid(2)||!request
    id:Date.now(),artistFee:Number($('rqArtistFee').value),name,artistId,date,organizer,contact:contact||'Ikke satt',organizerEmail,
    organizerInvited:inviteNow&&!!organizerEmail,organizerInviteSentAt:inviteNow&&organizerEmail?new Date().toISOString():null,
    city:city||'Sted ikke satt',venue:venue||'Venue ikke satt',fee,type,stage:'new',
-   bookingOwner,ownerSigned:false,agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0,
+   bookingOwner,responsibleAgentId:bookingOwner==='agency'?agencyTeam.owner.id:null,ownerSigned:false,agencySigned:false,organizerSigned:false,offerAccepted:false,contractVersion:0,
    agencyNotified:bookingOwner==='agency'||!!pref.notifyAgency
  };
  state.requests.unshift(item);save();renderAll();closeNewRequest();
