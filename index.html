@@ -1427,6 +1427,35 @@ state.requests.forEach(r=>{
  if(typeof r.organizerInvited==='undefined')r.organizerInvited=false;
  if(typeof r.organizerEmail==='undefined')r.organizerEmail='';
 });
+const SALES_CLEANUP_KEY='booking-sales-cleanup-v2';
+function cleanSalesText(value){
+ if(typeof value!=='string')return value;
+ return value
+  .replace(/\s*\[DEMO\]/gi,'')
+  .replace(/^\s*DEMO\s*[·:–-]\s*/i,'')
+  .replace(/\s*[·:–-]\s*DEMO\s*$/i,'')
+  .replace(/\bDemokontakt\b/gi,'Kontakt')
+  .replace(/\bDemoarrangør(en)?\b/gi,'Arrangør')
+  .replace(/\bDemoproduksjonsleder\b/gi,'Produksjonsleder')
+  .replace(/\bdemobeløpet\b/gi,'honoraret')
+  .replace(/\bdemorider\b/gi,'rider')
+  .replace(/\bdemooppsett\b/gi,'oppsett')
+  .replace(/\bdemoprofil(en)?\b/gi,'profil$1')
+  .replace(/\s{2,}/g,' ').trim();
+}
+function cleanSalesObject(value){
+ if(Array.isArray(value))return value.map(cleanSalesObject);
+ if(value&&typeof value==='object'){for(const key of Object.keys(value))value[key]=cleanSalesObject(value[key]);return value}
+ return cleanSalesText(value);
+}
+try{
+ if(localStorage.getItem(SALES_CLEANUP_KEY)!=='done'){
+  cleanSalesObject(state.requests);cleanSalesObject(eventPeople);
+  localStorage.setItem(KEY,JSON.stringify(state));localStorage.setItem(PEOPLE_KEY,JSON.stringify(eventPeople));
+  localStorage.setItem(SALES_CLEANUP_KEY,'done');
+ }
+}catch{}
+
 
 const PEOPLE_KEY='booking-event-people-v1';
 let eventPeople;try{eventPeople=JSON.parse(localStorage.getItem(PEOPLE_KEY))}catch(e){}
@@ -1443,7 +1472,7 @@ function ensurePeople(id){
 }
 
 let currentRequestId=null,currentEventId=null;
-const $=id=>document.getElementById(id), artistBy=id=>artists.find(a=>a.id===id), esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+const $=id=>document.getElementById(id), artistBy=id=>artists.find(a=>a.id===id), esc=s=>String(s??'').replace(/\s*\[DEMO\]/gi,'').replace(/^\s*DEMO\s*[·:–-]\s*/i,'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 const AGENCY_TEAM_KEY='booking-agency-team-v1';
 let agencyTeam;try{agencyTeam=JSON.parse(localStorage.getItem(AGENCY_TEAM_KEY))}catch{}
 if(!agencyTeam)agencyTeam={owner:{id:'owner-1',name:'Byråeier',email:'eier@bookingbyra.no',phone:'+47 900 00 001'},agents:[{id:'agent-1',name:'Bookingagent 1',email:'agent@bookingbyra.no',phone:'+47 900 00 002',permissions:['booking','offers','contracts','events']}]};
