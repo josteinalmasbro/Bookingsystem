@@ -1434,7 +1434,10 @@ function enterPortal(role){
 function openPortalChooser(){$('portalChooser')?.classList.add('on');document.body.style.overflow='hidden'}
 function initializePortalChooser(){
  const chooser=$('portalChooser');if(!chooser)return;
- chooser.classList.toggle('on',!['agency','artist','member','organizer'].includes(requestedRole));
+ // Demo launcher: a clean app/root launch always starts at portal selection.
+ // Explicit ?portal= links still open the requested portal.
+ const explicitPortal=['agency','artist','member','organizer'].includes(requestedRole);
+ chooser.classList.toggle('on',!explicitPortal);
  if(chooser.classList.contains('on'))document.body.style.overflow='hidden';
 }
 const artistProfiles=structuredClone(DEMO_PROFILES);
