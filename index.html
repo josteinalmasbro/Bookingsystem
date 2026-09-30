@@ -1189,6 +1189,14 @@ body.member-role{overflow-x:hidden}body.member-role>.top,body.member-role>.layou
    <label class="bookingToggle"><input id="prefAgencyManage" type="checkbox" onchange="saveBookingSettings()"><span><b>Bookingbyrået kan administrere direktebookingen</b><br><small class="meta">Gir byrået mulighet til å hjelpe videre med saken.</small></span></label>
   </div>
   <div id="bookingModeSummary" class="inviteStatus"></div>
+  <div class="bookingToggles" style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px">
+   <label class="bookingToggle"><input id="prefPublicListing" type="checkbox" onchange="saveBookingSettings()"><span><b>Vis artisten i åpent artistsøk</b><br><small class="meta">Standard er av. Slå på bare dersom artisten/byrået ønsker offentlige forespørsler.</small></span></label>
+   <div id="publicPriceFields" class="glassFormGrid" style="display:none">
+    <label class="glassField"><span>Offentlig honorar fra</span><input id="prefPublicMin" type="number" min="0" step="1000" placeholder="15 000" onchange="saveBookingSettings()"></label>
+    <label class="glassField"><span>Offentlig honorar til</span><input id="prefPublicMax" type="number" min="0" step="1000" placeholder="25 000" onchange="saveBookingSettings()"></label>
+    <div class="glassField full"><small class="meta">Brukes kun i den åpne søkeportalen og budsjettfilteret. Interne bookingpriser påvirkes ikke.</small></div>
+   </div>
+  </div>
  </div>
 
  <div class="profileRows" style="margin-top:12px">
@@ -1420,14 +1428,9 @@ const artists=DEMO_CATALOG;
 let wizardStep=1, selectedArtistId='hs', requestCreator='agency';
 const portalParams=new URLSearchParams(location.search);
 const PUBLIC_ARTISTS=[
- {id:'hs',type:'Band',genre:'Party / rock',place:'Trondheim',min:35000,max:55000,tags:['Firmafest','Festival','Privat']},
- {id:'pg',type:'Band',genre:'Pop / rock',place:'Oslo',min:90000,max:140000,tags:['Festival','Firma']},
- {id:'sd',type:'Band',genre:'Rock',place:'Trondheim',min:85000,max:130000,tags:['Festival','Firma']},
- {id:'sh',type:'Soloartist',genre:'Folk / pop',place:'Trøndelag',min:12000,max:25000,tags:['Privat','Bryllup']},
- {id:'ah',type:'Trubadur',genre:'Akustisk / pop',place:'Oslo',min:18000,max:35000,tags:['Privat','Firma']},
- {id:'tf',type:'Trubadur',genre:'Akustisk / rock',place:'Trondheim',min:18000,max:35000,tags:['Privat','Firma']}
+ {id:'hs',type:'Band',genre:'Party / rock',place:'Trondheim',min:35000,max:55000,tags:['Firmafest','Festival','Privat']}
 ];
-function publicArtistRows(){return PUBLIC_ARTISTS.map(x=>({...x,artist:artists.find(a=>a.id===x.id)})).filter(x=>x.artist)}
+function publicArtistRows(){return PUBLIC_ARTISTS.map(x=>{const pref=getBookingPref(x.id);return {...x,min:Number(pref.publicMin||x.min),max:Number(pref.publicMax||x.max),artist:artists.find(a=>a.id===x.id),pref}}).filter(x=>x.artist&&x.pref.publicListing===true&&x.min>0&&x.max>=x.min)}
 function renderPublicArtists(){const grid=document.getElementById('artistMarketGrid');if(!grid)return;const place=($('marketPlace')?.value||'').toLowerCase(),min=Number($('marketMin')?.value||0),max=Number($('marketMax')?.value||Infinity),type=$('marketType')?.value||'',genre=($('marketGenre')?.value||'').toLowerCase();const rows=publicArtistRows().filter(x=>(!place||x.place.toLowerCase().includes(place))&&(!type||x.type===type)&&(!genre||x.genre.toLowerCase().includes(genre))&&x.max>=min&&x.min<=max);$('marketCount').textContent=rows.length+' artister';grid.innerHTML=rows.length?rows.map(x=>{const a=x.artist,initials=a.name.split(/\s+/).map(v=>v[0]).join('').slice(0,2);return '<article class="artistMarketCard" onclick="openPublicArtist(\''+x.id+'\')"><div class="artistMarketVisual"><div class="artistMarketInitials">'+safe(initials)+'</div></div><div class="artistMarketBody"><h3>'+safe(a.name)+'</h3><div class="artistMarketMeta">'+safe(x.type)+' · '+safe(x.genre)+'<br>'+safe(x.place)+'</div>'+x.tags.map(t=>'<span class="marketTag">'+safe(t)+'</span>').join('')+'<div class="artistMarketPrice"><div><small class="meta">Typisk honorar</small><br><b>'+x.min.toLocaleString('nb-NO')+'–'+x.max.toLocaleString('nb-NO')+' kr</b></div><span>Se profil →</span></div></div></article>'}).join(''):'<div class="marketEmpty">Ingen artister traff filtrene. Prøv et større budsjett eller område.</div>'}
 function openPublicArtist(id){currentPortalArtistId=id;localStorage.setItem('portal-artist-id',id);toast((artistBy(id)?.name||'Artisten')+' · offentlig profil kommer i neste steg')}
 function openArtistRegistration(){toast('Artistregistrering kommer i neste steg')}
@@ -1477,7 +1480,8 @@ const artistProfiles=structuredClone(DEMO_PROFILES);
 const BOOKING_PREFS_KEY='booking-artist-prefs-v1';
 let bookingPrefs;try{bookingPrefs=JSON.parse(localStorage.getItem(BOOKING_PREFS_KEY))}catch(e){}
 if(!bookingPrefs)bookingPrefs=structuredClone(DEMO_PREFS);
-function getBookingPref(id){return bookingPrefs[id]||{mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false}}
+try{if(localStorage.getItem('public-listing-optin-v1')!=='done'){Object.keys(bookingPrefs).forEach(id=>{bookingPrefs[id].publicListing=id==='hs';if(id==='hs'){bookingPrefs[id].publicMin=35000;bookingPrefs[id].publicMax=55000}});localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs));localStorage.setItem('public-listing-optin-v1','done')}}catch{}
+function getBookingPref(id){if(!bookingPrefs[id])bookingPrefs[id]={mode:'hybrid',notifyAgency:true,agencyCalendar:true,agencyManage:false,publicListing:false,publicMin:0,publicMax:0};const p=bookingPrefs[id];if(typeof p.publicListing==='undefined')p.publicListing=false;if(typeof p.publicMin==='undefined')p.publicMin=0;if(typeof p.publicMax==='undefined')p.publicMax=0;return p}
 function storeBookingPrefs(){localStorage.setItem(BOOKING_PREFS_KEY,JSON.stringify(bookingPrefs))}
 
 const defaults=structuredClone(DEMO_REQUESTS);
@@ -1738,6 +1742,10 @@ function renderBookingSettings(){
  if($('prefNotifyAgency'))$('prefNotifyAgency').checked=!!p.notifyAgency;
  if($('prefAgencyCalendar'))$('prefAgencyCalendar').checked=!!p.agencyCalendar;
  if($('prefAgencyManage'))$('prefAgencyManage').checked=!!p.agencyManage;
+ if($('prefPublicListing'))$('prefPublicListing').checked=!!p.publicListing;
+ if($('prefPublicMin'))$('prefPublicMin').value=p.publicMin||'';
+ if($('prefPublicMax'))$('prefPublicMax').value=p.publicMax||'';
+ if($('publicPriceFields'))$('publicPriceFields').style.display=p.publicListing?'grid':'none';
  if($('bookingExtraSettings'))$('bookingExtraSettings').style.display=p.mode==='agency_only'?'none':'grid';
  const text=p.mode==='agency_only'?'All booking går via bookingbyrået.':
             p.mode==='direct_only'?'Artisten håndterer booking selv og er kontraktspart mot arrangøren.':
@@ -1751,9 +1759,12 @@ function saveBookingSettings(){
    mode:selected.value,
    notifyAgency:$('prefNotifyAgency')?.checked??true,
    agencyCalendar:$('prefAgencyCalendar')?.checked??true,
-   agencyManage:$('prefAgencyManage')?.checked??false
+   agencyManage:$('prefAgencyManage')?.checked??false,
+   publicListing:$('prefPublicListing')?.checked??false,
+   publicMin:Number($('prefPublicMin')?.value||0),
+   publicMax:Number($('prefPublicMax')?.value||0)
  };
- storeBookingPrefs();renderBookingSettings();renderArtistPortal();renderCalendar();
+ storeBookingPrefs();renderBookingSettings();renderArtistPortal();renderCalendar();renderPublicArtists();
  toast('Bookinginnstillinger lagret');
 }
 function sendOrganizerInvite(id){
