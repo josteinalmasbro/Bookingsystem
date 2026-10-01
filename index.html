@@ -544,6 +544,14 @@ main{padding:24px 28px 80px;min-width:0}.view{display:none}.view.on{display:bloc
 .technicalNavBlock{display:none}
 body.technical-role .agencyNavBlock,body.technical-role .artistNavBlock,body.technical-role .organizerNavBlock{display:none!important}
 body.technical-role .technicalNavBlock{display:block}
+/* Role-safe top navigation: always expose the complete menu for the active portal. */
+body:not(.artist-role):not(.organizer-role):not(.technical-role) .agencyNavBlock.mobileNav{display:flex!important}
+body.artist-role .artistNavBlock.mobileNav{display:flex!important}
+body.organizer-role .organizerNavBlock.mobileNav{display:flex!important}
+body.technical-role .technicalNavBlock.mobileNav{display:flex!important}
+body.artist-role .agencyNavBlock.mobileNav,body.artist-role .organizerNavBlock.mobileNav,body.artist-role .technicalNavBlock.mobileNav,
+body.organizer-role .agencyNavBlock.mobileNav,body.organizer-role .artistNavBlock.mobileNav,body.organizer-role .technicalNavBlock.mobileNav,
+body.technical-role .agencyNavBlock.mobileNav,body.technical-role .artistNavBlock.mobileNav,body.technical-role .organizerNavBlock.mobileNav{display:none!important}
 body.technical-role .layout{grid-template-columns:238px minmax(0,1fr)}
 .techHero{background:radial-gradient(circle at 88% 8%,#8ec5ff22,transparent 30%),linear-gradient(145deg,#151e23,#0b1114);border:1px solid #34424a;border-radius:20px;padding:20px}
 .techStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.techStat{background:#0c1215;border:1px solid #2a3740;border-radius:14px;padding:14px}.techStat small{color:var(--muted)}.techStat strong{display:block;font-size:1.55rem;margin-top:5px}
